@@ -330,7 +330,7 @@
 	<select id="getMaxFunctionByFunpid" parameterType="String" resultType="String">
 		select max(funid) from t_function
 		<where>
-			<if test="pid==null or pid==''">
+			<if test="pid==null or pid==''">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 				funpid is null
 			</if>
 			<if test="pid!=null and pid!=''">
