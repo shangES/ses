@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.quota.dao.QuotaDao">
+	<!-- 部门编制信息 -->
+	<sql id="searchQuotaWhere">
+		where a.postid=d.postid
+		and b.companyid = d.companyid
+		and c.deptid = d.deptid
+
+		<if test="parameters.postname!=null and parameters.postname!='' and parameters.postname!='null'">
+			and d.postname like CONCAT('%',CONCAT(#{parameters.postname},'%'))
+		</if>
+
+		<if test="parameters.companyid!=null and parameters.companyid!='' and parameters.companyid!='null'">
+			and b.companyid=#{parameters.companyid}
+		</if>
+		
+		<if test="parameters.postidofquota!=null and parameters.postidofquota!='' and parameters.postidofquota!='null'">
+			and a.postid=#{parameters.postidofquota}
+		</if>
+
+		<if test="parameters.deptid!=null and parameters.deptid!='' and parameters.deptid!='null'">
+			and c.deptid in (#{parameters.deptid})
+		</if>
+
+		<if test="parameters.deptcode!=null and parameters.deptcode!='' and parameters.deptcode!='null'">
+			AND c.deptcode LIKE CONCAT(#{parameters.deptcode},'%')
+		</if>
+
+		<if test="parameters.companycode!=null and parameters.companycode!=''  and parameters.companycode!='null'">
+			AND b.companycode LIKE CONCAT(#{parameters.companycode},'%')
+		</if>
+
+	</sql>
+
+	<select id="countQuota" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_o_quota a,h_o_company b,h_o_department c,h_o_post d
+		<include refid="searchQuotaWhere" />
+	</select>
+
+	<select id="searchQuota" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.quota.entity.Quota">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.quotaid,
+		a.quotacode,
+		a.postid,
+		a.budgettype,
+		a.budgetnumber,
+		a.budgetdate,
+		a.state,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_o_quota a,h_o_company b,h_o_department c,h_o_post d
+		<include refid="searchQuotaWhere" />
+		order by a.moditimestamp desc 
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="getMaxQuotaCode" resultType="String">
+		select max(quotacode) from h_o_quota
+	</select>
+
+	<select id="countEmployeeByQuotaId" resultType="Integer">
+		select count(quotaid) from h_e_position t where t.quotaid=#{quotaid}
+		and isstaff=1
+		<![CDATA[AND t.startdate <=sysdate]]>
+		<![CDATA[AND (t.enddate >sysdate OR t.enddate is null)]]>
+	</select>
+
+	<select id="countEmployeeByDeptCode" resultType="Integer">
+		select count(t.postionguid) from h_e_position t,h_e_employee a where t.deptid in (select deptid from h_o_department where deptcode like CONCAT(#{deptcode},'%'))
+		and t.isstaff=1
+		<![CDATA[AND t.startdate <=sysdate]]>
+		<![CDATA[AND (t.enddate >sysdate OR t.enddate is null)]]>
+		and a.workstate in(0,1)
+		and t.employeeid=a.employeeid
+	</select>
+
+	<select id="getQuotaByPostid" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_quota
+		where
+		postid=#{postid}
+		order by quotacode
+	</select>
+	
+	<select id="getAllQuota" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_quota
+		where 1=1
+		<if test="valid!=null and valid!='' and valid==1">
+			and valid=#{valid}
+		</if>
+		order by quotacode
+	</select>
+
+	<insert id="insertQuota" parameterType="com.mk.quota.entity.Quota">
+		insert into h_o_quota
+		(quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{quotaid},
+		#{quotacode},
+		#{postid},
+		#{budgettype},
+		#{budgetnumber},
+		#{budgetdate},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateQuota" parameterType="com.mk.quota.entity.Quota">
+		update h_o_quota
+		set quotaid = #{quotaid},
+		quotacode = #{quotacode},
+		postid = #{postid},
+		budgettype = #{budgettype},
+		budgetnumber = #{budgetnumber},
+		budgetdate = #{budgetdate},
+		state = #{state},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where quotaid = #{quotaid}
+	</update>
+
+	<select id="getQuotaById" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_quota
+		where
+		quotaid=#{quotaid}
+	</select>
+	
+	<select id="getQuotaByProcessinstanceId" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_quota
+	</select>
+
+	<select id="getQuotaByPostIdAndBudgettype" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select quotaid,
+		quotacode,
+		postid,
+		budgettype,
+		budgetnumber,
+		budgetdate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_quota
+		where 
+		state=#{state} 
+		<if test="postid!=null and postid!='' and postid!='null'">
+			and postid=#{postid}
+		</if>
+		and budgettype=#{budgettype}
+		<if test="quotaid!=null and quotaid!=''">
+			and quotaid != #{quotaid}
+		</if>
+	</select>
+
+	<select id="getQuotaByPostIdAndBudgettypename" parameterType="String" resultType="com.mk.quota.entity.Quota">
+		select a.quotaid,
+		a.quotacode,
+		a.postid,
+		a.budgettype,
+		a.budgetnumber,
+		a.budgetdate,
+		a.state,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_o_quota a,
+		h_o_budgettype b
+		where a.postid=#{postid}
+		and a.state=#{state}
+		and b.budgettypename=#{budgettype}
+		and a.budgettype=b.budgettypeid
+	</select>
+
+	<delete id="delQuotaByQuotaid" parameterType="String">
+		delete h_o_quota
+		where quotaid = #{quotaid}
+	</delete>
+	
+	<delete id="delQuotaByPostId" parameterType="String">
+		delete h_o_quota
+		where postid = #{postid}
+	</delete>
+
+	<select id="sumRecruitprogramByQoutaId" resultType="int">
+		select decode(sum(t.Postnum),null,0,sum(t.Postnum)) as postnumber from J_RecruitProgram t where t.quotaid=#{quotaid}
+		and t.state=2
+	</select>
+
+	<select id="sumQuotaNumByDeptCode" resultType="int">
+		select decode(sum(t.budgetnumber),null,0,sum(t.budgetnumber)) as quotanumber from h_o_quota t where postid in(select postid from H_O_Post
+		a,h_o_department b where a.deptid=b.deptid and b.deptcode like CONCAT(#{deptcode},'%'))
+	</select>
+
+	<select id="sumQuotaOperateByQoutaId" resultType="int">
+		select decode(sum(t.OperateNum),null,0,sum(t.OperateNum)) as operatenum from J_QuotaOperate t where t.quotaid=#{quotaid}
+		and t.operatestate=3
+	</select>
+
+	<select id="sumInterviewNumberByRecruitprogramId" resultType="int">
+		select decode(sum(t.OperateNum),null,0,sum(t.OperateNum)) as operatenum from J_RecruitProgramOperate t where
+		t.recruitprogramguid=#{recruitprogramguid}
+		and t.operatestate=3
+	</select>
+
+
+	<!-- 编制操作 -->
+	<sql id="searchQuotaOperateWhere">
+		where 1=1
+		<if test="parameters.quotaid!=null and parameters.quotaid!='' and parameters.quotaid!='null' ">
+			and quotaid = #{parameters.quotaid}
+		</if>
+
+	</sql>
+
+	<select id="countQuotaOperate" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from J_QuotaOperate
+		<include refid="searchQuotaOperateWhere" />
+	</select>
+
+	<select id="searchQuotaOperate" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.quota.entity.QuotaOperate">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select quotaoperateguid,
+		quotaid,
+		operatestate,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		operatenum
+		from j_quotaoperate
+		<include refid="searchQuotaOperateWhere" />
+		order by moditimestamp
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertQuotaOperate" parameterType="com.mk.quota.entity.QuotaOperate">
+		insert into j_quotaoperate
+		(quotaoperateguid,
+		quotaid,
+		operatestate,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		operatenum)
+		values
+		(#{quotaoperateguid},
+		#{quotaid:VARCHAR},
+		#{operatestate},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{operatenum})
+	</insert>
+
+	<delete id="delQuotaOperateById" parameterType="String">
+		delete j_quotaoperate
+		where quotaoperateguid = #{quotaoperateguid}
+	</delete>
+
+	<delete id="delQuotaOperateByQuotaid" parameterType="String">
+		delete j_quotaoperate
+		where quotaid = #{quotaid}
+	</delete>
+	
+	<delete id="delQuotaOperateByPostId" parameterType="String">
+		delete j_quotaoperate
+		where quotaid in(select quotaid from H_O_Quota where postid=#{postid})
+	</delete>
+
+	<!-- 11月21日20：58加的 -->
+	<select id="countEmployeeByPostCode" resultType="int">
+		select count(postid) from h_e_position t where t.postid in (select postid from h_o_post where interfacecode=#{code} and state=1)
+		and isstaff=1
+		<![CDATA[AND t.startdate <=sysdate]]>
+		<![CDATA[AND (t.enddate >sysdate OR t.enddate is null)]]>
+	</select>
+
+	<select id="countQuotaByPostCode" resultType="com.mk.webservice.entity.WSPostNum">
+		select a.budgettype,
+		(SELECT H_O_BudgetType.Budgettypename
+		FROM H_O_BudgetType
+		where a.Budgettype = H_O_BudgetType.Budgettypeid) as Budgettypename,
+		sum(a.budgetnumber) as budgetnumber
+		from h_o_quota a
+		where a.postid in(select postid from h_o_post where interfacecode=#{code} and state=1)
+		group by a.budgettype
+	</select>
+
+
+</mapper>

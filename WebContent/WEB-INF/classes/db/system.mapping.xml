@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.system.dao.SystemDao">
+
+	<!-- 用户 -->
+	<sql id="searchUserWhere">
+		<where>
+			t.employeeid = a.employeeid
+			and a.employeeid = b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and t.isadmin=0
+			and
+			t.state=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND a.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+			<if test="parameters.jobnumber!=null and parameters.jobnumber!=''">
+				AND a.jobnumber like CONCAT('%',CONCAT(#{parameters.jobnumber},'%'))
+			</if>
+
+
+			<if test="parameters.companyid!=null and parameters.companyid!=''">
+				and b.companyid=#{parameters.companyid}
+			</if>
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+			<if test="parameters.postid!=null and parameters.postid!=''">
+				and b.postid=#{parameters.postid}
+			</if>
+		</where>
+	</sql>
+	<select id="countUser" parameterType="String" resultType="int">
+		select count(1) from t_sysuser t,
+		h_e_employee a,
+		h_e_position b,
+		h_o_company,
+		h_o_department,
+		h_o_post
+		<include refid="searchUserWhere" />
+	</select>
+
+	<select id="searchUser" parameterType="String" resultType="com.mk.system.entity.User">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+
+		select h_o_company.companyname,
+		h_o_department.deptname,
+		h_o_post.postname,
+		a.name as username,
+		a.jobnumber,
+		t.userguid,
+		t.employeeid,
+		t.loginname,
+		t.password,
+		t.isadmin,
+		t.state,
+		t.memo,
+		t.modiuser,
+		t.moditimestamp,
+		t.modimemo
+		from t_sysuser t,
+		h_e_employee a,
+		h_e_position b,
+		h_o_company,
+		h_o_department,
+		h_o_post
+		<include refid="searchUserWhere" />
+		order by h_o_company.companycode,
+		h_o_department.deptcode,
+		h_o_post.postcode,
+		a.dorder
+
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<select id="getAllUser" parameterType="String" resultType="com.mk.system.entity.User">
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		where isadmin=0
+		and
+		state=1
+		order by loginname
+	</select>
+
+
+
+	<insert id="insertUser" parameterType="com.mk.system.entity.User">
+		insert into t_sysuser
+		(userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{userguid},
+		#{employeeid:VARCHAR},
+		#{loginname},
+		#{password},
+		#{isadmin},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+
+
+	<update id="updateUser" parameterType="com.mk.system.entity.User">
+		update t_sysuser
+		set userguid = #{userguid},
+		employeeid = #{employeeid:VARCHAR},
+		loginname = #{loginname},
+		password = #{password},
+		isadmin = #{isadmin},
+		state =
+		#{state},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where userguid = #{userguid}
+	</update>
+
+
+	<delete id="delUserByUserId" parameterType="String">
+		delete t_sysuser
+		where userguid = #{userguid}
+	</delete>
+	<delete id="delUserByEmployeeId" parameterType="String">
+		delete t_sysuser
+		where employeeid = #{employeeid}
+	</delete>
+
+
+	<select id="getUserByUserId" parameterType="String" resultType="com.mk.system.entity.User">
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		where
+		userguid=#{userguid}
+	</select>
+
+	<select id="getUserByUserEmployeeId" parameterType="String" resultType="com.mk.system.entity.User">
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		where
+		employeeid=#{employeeid}
+	</select>
+
+
+	<select id="getUserByLoginName" parameterType="String" resultType="com.mk.system.entity.User">
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		where
+		loginname=#{loginname}
+		and state=1
+	</select>
+
+
+	<select id="getHasUsers" parameterType="String" resultType="com.mk.system.entity.User">
+		select a.userguid,
+		a.employeeid,
+		a.loginname,
+		a.password,
+		a.isadmin,
+		a.state,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from t_sysuser
+		a,t_h_usermanagerange b
+		where a.userguid=b.userguid
+		and a.userguid=#{userguid}
+		and a.state=1
+		order by a.loginname
+	</select>
+
+
+	<select id="asyncUserTree" parameterType="String" resultType="com.mk.system.entity.User">
+		select a.userguid,
+		a.employeeid,
+		a.loginname,
+		a.password,
+		a.isadmin,
+		a.state,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		b.name as
+		username
+		from t_sysuser a, h_e_employee b
+		where a.employeeid =
+		b.employeeid(+)
+		and a.isadmin = 0
+		and a.employeeid in(
+		select employeeid from h_e_position
+		where deptid=#{deptid}
+		<![CDATA[AND startdate <=#{postdate_s}]]>
+		<![CDATA[AND (enddate >#{postdate_e} OR enddate is null)]]>
+		)
+		order by a.loginname
+	</select>
+
+
+	<select id="getRecruiterUser" parameterType="String" resultType="com.mk.system.entity.User">
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		where userguid
+		in(select userguid from t_userrole where roleid in (select roleid from t_role t where rolename=#{rolename})) and state=1
+	</select>
+
+
+	<!-- 菜单 -->
+	<insert id="saveFunction" parameterType="com.mk.system.entity.Function">
+		insert into t_function
+		(funid,
+		funpid,
+		orderid,
+		labelname,
+		funtype,
+		javaevent,
+		rmk,
+		titlepicture)
+		values
+		(#{funid},
+		#{funpid:VARCHAR},
+		#{orderid},
+		#{labelname},
+		#{funtype},
+		#{javaevent:VARCHAR},
+		#{rmk:VARCHAR},
+		#{titlepicture:VARCHAR})
+	</insert>
+
+	<update id="updateFunction" parameterType="com.mk.system.entity.Function">
+		update t_function
+		set funid = #{funid},
+		funpid = #{funpid:VARCHAR},
+		orderid = #{orderid},
+		labelname = #{labelname},
+		funtype = #{funtype},
+		javaevent =
+		#{javaevent:VARCHAR},
+		rmk = #{rmk:VARCHAR},
+		titlepicture = #{titlepicture:VARCHAR}
+		where funid = #{funid}
+	</update>
+
+
+	<delete id="delFunctionById" parameterType="String">
+		delete from t_function where funid LIKE CONCAT(#{id},'%')
+	</delete>
+
+	<select id="getFunctionById" parameterType="String" resultType="com.mk.system.entity.Function">
+		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function
+		where funid =#{funid}
+	</select>
+
+	<select id="getMaxFunctionByFunpid" parameterType="String" resultType="String">
+		select max(funid) from t_function
+		<where>
+			<if test="pid==null or pid==''">
+				funpid is null
+			</if>
+			<if test="pid!=null and pid!=''">
+				funpid = #{pid}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAllFunctions" parameterType="String" resultType="com.mk.system.entity.Function">
+		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function
+		order by orderid ASC
+	</select>
+
+
+
+	<select id="getUserFunctions" parameterType="String" resultType="com.mk.system.entity.Function">
+		select funid,
+		funpid,
+		orderid,
+		labelname,
+		funtype,
+		javaevent,
+		rmk,
+		titlepicture
+		from t_function
+		where funid in
+		(select funid
+		from
+		t_roleright
+		where roleid in
+		(select roleid
+		from t_userrole
+		where userguid = #{userguid}))
+		order by orderid
+	</select>
+
+
+	<!-- 角色 -->
+	<insert id="insertRole" parameterType="com.mk.system.entity.Role">
+		insert into t_role
+		(roleid,
+		rolename,
+		state,
+		dorder,
+		description)
+		values
+		(#{roleid},
+		#{rolename},
+		#{state},
+		#{dorder},
+		#{description:VARCHAR})
+	</insert>
+
+	<update id="updateRole" parameterType="com.mk.system.entity.Role">
+		update t_role
+		set roleid = #{roleid},
+		rolename = #{rolename},
+		state = #{state},
+		dorder = #{dorder},
+		description = #{description:VARCHAR}
+		where roleid =
+		#{roleid}
+	</update>
+
+	<delete id="delRoleById" parameterType="String">
+		delete t_role
+		where roleid =#{id}
+	</delete>
+
+	<select id="getRoleByUserId" parameterType="String" resultType="com.mk.system.entity.Role">
+		select a.roleid, a.rolename, a.state, a.dorder, a.description from t_role a,t_userrole b
+		where a.roleid=b.roleid
+		and
+		userguid=#{userguid}
+	</select>
+
+	<select id="getAllRole" resultType="com.mk.system.entity.Role">
+		select roleid, rolename, state, dorder, description from t_role
+		order by dorder
+	</select>
+
+	<select id="getRoleById" resultType="com.mk.system.entity.Role">
+		select roleid, rolename, state, dorder, description from t_role
+		where
+		roleid=#{id}
+	</select>
+	
+	<select id="getRoleByRoleName" resultType="com.mk.system.entity.Role">
+		select roleid, rolename, state, dorder, description from t_role
+		where
+		rolename = #{rolename}
+	</select>
+
+
+
+
+
+
+
+
+
+
+	<!-- 用户角色 -->
+	<insert id="insertUserRole" parameterType="com.mk.system.entity.UserRole">
+		insert into t_userrole
+		(roleid, userguid)
+		values
+		(#{roleid}, #{userguid})
+	</insert>
+
+	<delete id="delUserRoleByUserId" parameterType="String">
+		delete t_userrole
+		where userguid = #{userguid}
+	</delete>
+
+
+	<delete id="delUserRoleByRoleId" parameterType="String">
+		delete t_userrole
+		where roleid = #{roleid}
+	</delete>
+
+
+	<delete id="delUserRoleByEmployeeId" parameterType="String">
+		delete t_userrole
+		where userguid in(
+		select userguid from t_sysuser where employeeid=#{employeeid}
+		)
+	</delete>
+	<delete id="delUserRoleByUserRole" parameterType="String">
+		delete t_userrole
+		where roleid = #{roleid}
+		and userguid=#{userguid}
+	</delete>
+
+
+	<select id="getUserRoleByUserId" resultType="com.mk.system.entity.UserRole">
+		select roleid, userguid from t_userrole
+		where userguid = #{userguid}
+	</select>
+
+
+	<select id="getUserRoleByRoleId" resultType="com.mk.system.entity.UserRole">
+		select roleid, userguid from t_userrole
+		where roleid = #{roleid}
+	</select>
+
+
+	<select id="getAllUserRole" resultType="com.mk.system.entity.UserRole">
+		select a.roleid,b.rolename, a.userguid from t_userrole a,t_role b
+		where a.roleid=b.roleid
+	</select>
+	
+	<select id="getUserRoleByRoleAndUsergGuid" resultType="com.mk.system.entity.UserRole">
+		select roleid, userguid from t_userrole
+		where roleid = #{roleguid} and userguid=#{userguid}
+	</select>
+
+
+	<!-- 菜单角色 -->
+	<insert id="insertFunctionRole" parameterType="com.mk.system.entity.RoleRight">
+		insert into t_roleright
+		(roleid, funid)
+		values
+		(#{roleid}, #{funid})
+	</insert>
+
+	<delete id="delFunctionRoleByFunctionId" parameterType="String">
+		delete t_roleright
+		where funid = #{funid}
+	</delete>
+
+
+	<delete id="delFunctionRoleByRoleId" parameterType="String">
+		delete t_roleright
+		where roleid = #{roleid}
+	</delete>
+
+
+	<select id="getFunctionRoleByFunctionId" resultType="com.mk.system.entity.RoleRight">
+		select roleid, funid from t_roleright
+		where funid = #{funid}
+	</select>
+
+
+	<select id="getFunctionRoleByRoleId" resultType="com.mk.system.entity.RoleRight">
+		select roleid, funid from t_roleright
+		where roleid = #{roleid}
+	</select>
+
+
+
+
+
+
+	<!-- 用户公司 -->
+	<insert id="insertUserManageRange" parameterType="com.mk.system.entity.UserManageRange">
+		insert into t_h_usermanagerange
+		(userguid, companyid, isdefault)
+		values
+		(#{userguid}, #{companyid:VARCHAR}, #{isdefault})
+	</insert>
+
+	<delete id="delUserManageRangeByUserId" parameterType="String">
+		delete t_h_usermanagerange
+		where userguid = #{userguid}
+	</delete>
+
+
+	<delete id="delUserManageRangeByCompanyId" parameterType="String">
+		delete t_h_usermanagerange
+		where companyid = #{companyid}
+	</delete>
+
+
+	<delete id="delUserManageRangeByEmployeeId" parameterType="String">
+		delete t_h_usermanagerange
+		where userguid in(
+		select userguid from t_sysuser where employeeid=#{employeeid}
+		)
+	</delete>
+
+	<select id="getUserManageRangeByUserId" resultType="com.mk.system.entity.UserManageRange">
+		select userguid, companyid, isdefault from t_h_usermanagerange
+		where userguid = #{userguid}
+	</select>
+
+
+	<select id="getUserManageRangeByCompanyId" resultType="com.mk.system.entity.UserManageRange">
+		select userguid, companyid, isdefault from t_h_usermanagerange
+		where companyid = #{companyid}
+	</select>
+	
+	
+	<select id="getUserManageRangeByUserIdAndCompanyId" resultType="com.mk.system.entity.UserManageRange">
+		select userguid, companyid, isdefault from t_h_usermanagerange
+		where companyid = #{companyid}
+		and userguid=#{userguid}
+	</select>
+
+	<!-- 用户通讯录 -->
+	<insert id="saveUserAddressCompany" parameterType="com.mk.system.entity.User">
+		insert into t_h_useraddresscompany
+		(userguid, companyid)
+		values
+		(#{userguid}, null)
+	</insert>
+
+	<insert id="insertUserAddressCompany" parameterType="com.mk.system.entity.UserAddressCompany">
+		insert into t_h_useraddresscompany
+		(userguid, companyid)
+		values
+		(#{userguid}, #{companyid:VARCHAR})
+	</insert>
+
+	<delete id="delUserAddressCompanyByUserId" parameterType="String">
+		delete t_h_useraddresscompany
+		where userguid = #{userguid}
+	</delete>
+
+	<delete id="delUserAddressCompanyByCompanyId" parameterType="String">
+		delete t_h_useraddresscompany
+		where companyid = #{companyid}
+	</delete>
+
+	<select id="getUserAddressCompanyByUserId" resultType="com.mk.system.entity.UserAddressCompany">
+		select userguid, companyid from t_h_useraddresscompany
+		where userguid = #{userguid}
+	</select>
+
+	<select id="getUserAddressCompanyByCompanyId" resultType="com.mk.system.entity.UserAddressCompany">
+		select userguid, companyid from t_h_useraddresscompany
+		where companyid = #{companyid}
+	</select>
+
+	<delete id="delUserAddressCompanyByEmployeeId" parameterType="String">
+		delete t_h_useraddresscompany
+		where userguid in(
+		select userguid from t_sysuser where employeeid=#{employeeid}
+		)
+	</delete>
+
+	<!-- 用户对部门 -->
+	<select id="getUserDepartmentByUserId" resultType="com.mk.system.entity.UserDepartment">
+		select userguid, deptguid from t_h_userdept
+		where userguid = #{userguid}
+	</select>
+
+	<insert id="insertUserDepartment" parameterType="com.mk.system.entity.UserDepartment">
+		insert into t_h_userdept(userguid, deptguid)
+		values(#{userguid}, #{deptguid})
+	</insert>
+
+	<delete id="delUserDepartmentByUserId" parameterType="String">
+		delete t_h_userdept
+		where userguid = #{userguid}
+	</delete>
+	
+	<delete id="delUserDepartmentByEmployeeId" parameterType="String">
+		delete t_h_userdept
+		where userguid in(
+		select userguid from t_sysuser where employeeid=#{employeeid}
+		)
+	</delete>
+	
+	<!-- 用户对简历筛选 -->
+	<sql id="searchResumeFilterWhere">
+		where 1=1
+	</sql>
+
+	<select id="searchResumeFilter" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.system.entity.ResumeFilter">
+		select filterguid, filterconditions, tablecolumnname, code,memo from t_h_resumefilter
+		order by tablecolumnname
+	</select>
+
+	<insert id="insertResumeFilter" parameterType="com.mk.system.entity.ResumeFilter">
+		insert into t_h_resumefilter
+		(filterguid, filterconditions, tablecolumnname, code,memo)
+		values
+		(#{filterguid},#{filterconditions},
+		#{tablecolumnname:VARCHAR},#{code:VARCHAR},#{memo:VARCHAR})
+	</insert>
+
+
+	<update id="updateResumeFilter" parameterType="com.mk.system.entity.ResumeFilter">
+		update t_h_resumefilter
+		set filterguid = #{filterguid},
+		filterconditions = #{filterconditions},
+		tablecolumnname = #{tablecolumnname:VARCHAR},
+		code = #{code:VARCHAR},
+		memo=#{memo:VARCHAR}
+		where filterguid = #{filterguid}
+	</update>
+
+	<select id="getResumeFilterById" resultType="com.mk.system.entity.ResumeFilter">
+		select filterguid, filterconditions, tablecolumnname, code,memo from t_h_resumefilter
+		where filterguid=#{filterguid}
+	</select>
+	
+	<select id="getResumefilterByUserid" resultType="com.mk.system.entity.ResumeFilter">
+		select a.userguid,b.filterconditions, b.tablecolumnname, b.code,b.memo from t_h_resumefilter b,
+		t_h_userfilter a
+		where b.filterguid=a.filterguid
+		and a.userguid=#{userguid}
+	</select>
+
+	<select id="getAllResumeFilter" resultType="com.mk.system.entity.ResumeFilter">
+		select filterguid, filterconditions, tablecolumnname, code,memo from t_h_resumefilter
+	</select>
+
+	<select id="getUserFilterByUserId" resultType="com.mk.system.entity.UserFilter">
+		select userguid, filterguid from t_h_userfilter
+		where userguid=#{userguid}
+	</select>
+
+	<insert id="insertUserFilter" parameterType="com.mk.system.entity.UserFilter">
+		insert into t_h_userfilter
+		(userguid, filterguid)
+		values
+		(#{userguid}, #{filterguid})
+	</insert>
+
+	<delete id="delUserFilterByUserId" parameterType="String">
+		delete t_h_userfilter
+		where userguid = #{userguid}
+	</delete>
+	
+	<delete id="delUserFilterByEmployeeId" parameterType="String">
+		delete t_h_userfilter
+		where userguid in(
+		select userguid from t_sysuser where employeeid=#{employeeid}
+		)
+	</delete>
+	
+	
+	<!-- 有筛选权限的人 -->
+	<sql id="searchUserFilterwhere">
+		where userguid in(select userguid from t_h_userfilter)
+	</sql>
+	
+	<select id="countUserFilter" parameterType="String" resultType="int">
+		select count(*) from t_sysuser
+		<include refid="searchUserFilterwhere" />
+	</select>
+
+	<select id="searchUserFilter" parameterType="String" resultType="com.mk.system.entity.User">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select userguid,
+		employeeid,
+		loginname,
+		password,
+		isadmin,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from t_sysuser
+		<include refid="searchUserFilterwhere" />	
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+	
+</mapper>

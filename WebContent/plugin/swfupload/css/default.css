@@ -1,0 +1,198 @@
+/*****************staticTable*******************/
+table.upload-table {
+	width: 100%;
+	table-layout: fixed;
+	border-top:1px solid #ccc;
+	border-right:1px solid #ccc;
+}
+
+table.upload-table th {
+	background:#f1f1f1;
+	border-left:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	height: 30px;
+	line-height: 30px;
+	padding:0px 5px;
+	
+	overflow: hidden;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	color:#000;
+}
+
+table.upload-table td {
+	border-left:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	qdisplay: block;
+	height: 30px;
+	padding:0px 5px;
+	overflow: hidden;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+}
+
+
+
+
+div.flash {
+	width: 100%;
+	margin: 10px 5px;
+	border-color: #D9E4FF;
+
+	-moz-border-radius-topleft : 5px;
+	-webkit-border-top-left-radius : 5px;
+    -moz-border-radius-topright : 5px;
+    -webkit-border-top-right-radius : 5px;
+    -moz-border-radius-bottomleft : 5px;
+    -webkit-border-bottom-left-radius : 5px;
+    -moz-border-radius-bottomright : 5px;
+    -webkit-border-bottom-right-radius : 5px;
+
+}
+
+
+
+#btnSubmit { margin: 0 0 0 155px ; }
+
+/* -- Table Styles ------------------------------- */
+
+.progressWrapper {
+	width: 100%;
+	overflow: hidden;
+}
+
+.progressContainer {
+	margin: 5px;
+	padding: 4px;
+	border: solid 1px #E8E8E8;
+	background-color: #F7F7F7;
+	overflow: hidden;
+}
+/* Message */
+.message {
+	margin: 1em 0;
+	padding: 10px 20px;
+	border: solid 1px #FFDD99;
+	background-color: #FFFFCC;
+	overflow: hidden;
+}
+/* Error */
+.uploadFileList .red {
+	border: solid 1px #B50000;
+	background-color: #FFEBEB;
+}
+
+/* Current */
+.uploadFileList .green {
+	border: solid 1px #DDF0DD;
+	background-color: #EBFFEB;
+}
+
+/* Complete */
+.uploadFileList .blue {
+	border: solid 1px #CEE2F2;
+	background-color: #F0F5FF;
+}
+
+.progressName {
+	font-size: 8pt;
+	font-weight: 700;
+	color: #555;
+	width: 100%;
+	height: 14px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.progressBarInProgress,
+.progressBarComplete,
+.progressBarError {
+	font-size: 0;
+	width: 0%;
+	height: 2px;
+	background-color: blue;
+	margin-top: 2px;
+}
+
+.progressBarComplete {
+	width: 100%;
+	background-color: green;
+	visibility: hidden;
+}
+
+.progressBarError {
+	width: 100%;
+	background-color: red;
+	visibility: hidden;
+}
+
+.progressBarStatus {
+	margin-top: 2px;
+	width: 100%;
+	font-size: 7pt;
+	font-family: Arial;
+	text-align: left;
+	white-space: nowrap;
+}
+
+a.progressCancel {
+	font-size: 0;
+	display: block;
+	height: 14px;
+	width: 14px;
+	background-image: url(../images/cancelbutton.gif);
+	background-repeat: no-repeat;
+	background-position: -14px 0px;
+	float: right;
+}
+
+a.progressCancel:hover {
+	background-position: 0px 0px;
+}
+
+
+/* -- SWFUpload Object Styles ------------------------------- */
+.swfupload {
+	vertical-align: top;
+}
+
+/* add by stephen 2008-10-16*/
+.uploadBar {
+	display:block;
+	width: 0px;
+	height: 5px;
+	border: solid 1px #445566;
+	background-color: blue;
+	overflow:hidden;
+}
+
+TR.uploadTR{color:#234245;height:22px;}
+
+.uploadCancel {
+	border-bottom: solid 1px blue;
+	cursor:pointer;
+}
+.uploadFileList {
+	width: 100%;
+	height: 5px;
+	border: solid 1px #999999;
+}
+TR.uploadTitle{height:22px;color:#000000}
+
+.more{
+	padding-left: 300px;
+}
+.btns {
+	padding: 2px; 
+	margin-left:2px;
+	cursor: pointer; 
+	/* float: right; */
+}
+

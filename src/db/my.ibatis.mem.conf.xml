@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+	</settings>
+	<mappers>
+		<mapper resource="db/system.mapping.xml" />
+		<mapper resource="db/option.mapping.xml" />
+		<mapper resource="db/company.mapping.xml" />
+		<mapper resource="db/department.mapping.xml" />
+		<mapper resource="db/post.mapping.xml" />
+		<mapper resource="db/employee.mapping.xml" />
+		<mapper resource="db/addresslist.mapping.xml" />
+		<mapper resource="db/syslog.mapping.xml" />
+		<mapper resource="db/webaddresslist.mapping.xml" />
+		<mapper resource="db/contract.mapping.xml" />
+		<mapper resource="db/report.mapping.xml" />
+		<mapper resource="db/todo.mapping.xml" />
+		<mapper resource="db/recruitment.mapping.xml" />
+		<mapper resource="db/resume.mapping.xml" />
+		<mapper resource="db/webuser.mapping.xml" />
+		<mapper resource="db/recruitprogram.mapping.xml" />
+		<mapper resource="db/quota.mapping.xml" />
+		<mapper resource="db/person.mapping.xml"/>
+		<mapper resource="db/thirdpartner.mapping.xml"/>
+		<mapper resource="db/bpmn.mapping.xml" />
+		<mapper resource="db/mycandidates.mapping.xml" />
+		<mapper resource="db/audition.mapping.xml" />
+	</mappers>
+</configuration>

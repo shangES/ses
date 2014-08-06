@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 创建调度任务 -->
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.mk.schedul.BusinessProcessCheckScheduler</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="resumeEamilService" value-ref="resumeEamilService" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- 定义触发时间 凌晨1,2点每5分钟发起-->
+	<bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobDetail" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/5 01,02 * * ?</value>
+		</property>
+	</bean>
+
+	<!-- 启动调度 -->
+	<bean id="startSchedul" lazy-init="false" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list value-type="org.quartz.Trigger">
+				
+			</list>
+		</property>
+		<property name="autoStartup" value="true" />
+	</bean>
+	
+	
+	
+	
+	<!-- 调度推荐失效和加锁定 -->
+	<bean id="jobTest" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.mk.schedul.TestScheduler</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="myCandidatesService" value-ref="myCandidatesService" />
+			</map>
+		</property>
+	</bean>
+	<bean id="jobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobTest" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/5 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 解锁 -->
+	<bean id="myCandidatesTest" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.mk.schedul.MyCandidatesScheduler</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="myCandidatesService" value-ref="myCandidatesService" />
+			</map>
+		</property>
+	</bean>
+	<bean id="myCandidatesTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="myCandidatesTest" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/5 * * * ?</value>
+		</property>
+	</bean>
+	
+	
+	<!-- 面试短信发给面试官 -->
+	<bean id="bussinessTest" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.mk.schedul.BussinessScheduler</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="recommendService" value-ref="recommendService" />
+				<entry key="personService" value-ref="personService" />
+				<entry key="auditionRecordService" value-ref="auditionRecordService" />
+			</map>
+		</property>
+	</bean>
+	<bean id="bussinessTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="bussinessTest" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 30 * * * ?</value>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- OA审批流程 凌晨1,2点每5分钟发起-->
+	<bean id="recruitProgramAuditTest" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.mk.schedul.RecruitProgramAuditScheduler</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="recruitProgramAuditService" value-ref="recruitProgramAuditService" />
+			</map>
+		</property>
+	</bean>
+	<bean id="recruitProgramAuditTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="recruitProgramAuditTest" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/5 01,02 * * ?</value>
+		</property>
+	</bean>
+</beans>

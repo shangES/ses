@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.recruitprogram.dao.RecruitprogramDao">
+
+	<!-- 招聘计划管理 -->
+
+	<sql id="searchRecruitprogramTreeWhere">
+		where
+		a.deptid=b.deptid
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND b.deptname like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+		<if test="parameters.companyid!=null and parameters.companyid!=''">
+			AND a.companyid =#{parameters.companyid}
+		</if>
+		<if test="parameters.deptid!=null and parameters.deptid!=''">
+			AND a.deptid =#{parameters.deptid}
+		</if>
+	</sql>
+
+	<select id="countRecruitprogramTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(1) from j_recruitprogram a,h_o_department b
+		<include refid="searchRecruitprogramTreeWhere" />
+	</select>
+
+	<select id="searchRecruitprogramTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		select a.recruitprogramguid,
+		a.interfacecode,
+		a.quotaid,
+		a.recruitprogramcode,
+		a.companyid,
+		a.deptid,
+		a.postid,
+		a.rankid,
+		a.applydate,
+		a.hillockdate,
+		a.postnum,
+		a.state,
+		a.processinstanceid,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from j_recruitprogram a,
+		h_o_department b
+		<include refid="searchRecruitprogramTreeWhere" />
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+
+	<!-- 招聘计划搜索 -->
+	<sql id="searchRecruitprogramWhere">
+		 where a.companyid = b.companyid
+	     and a.deptid = c.deptid
+	     and a.postid=d.postid(+)
+	     <![CDATA[ and a.postnum>0 ]]>
+	     
+		<if test="parameters.companyid!=null and parameters.companyid!=''">
+			and b.companyid=#{parameters.companyid}
+		</if>
+		
+		<if test="parameters.recruitprogramauditguid!=null and parameters.recruitprogramauditguid!=''">
+			and a.recruitprogramauditguid=#{parameters.recruitprogramauditguid}
+		</if>
+		
+		<if test="parameters.deptid!=null and parameters.deptid!=''">
+			${parameters.deptid}
+		</if>
+		
+		<if test="parameters.postname!=null and parameters.postname!=''">
+			and  d.postname like CONCAT('%',CONCAT(#{parameters.postname},'%'))
+		</if>
+		
+		<if test="parameters.quotaid!=null and parameters.quotaid!=''">
+			and a.quotaid=#{parameters.quotaid}
+		</if>
+		
+		<if test="parameters.myvalid!=null and parameters.myvalid!='' and parameters.myvalid==1" >
+			and a.state not in (0)
+		</if>
+		
+		<if test="parameters.rankid!=null and parameters.rankid!=''">
+			and a.rankid=#{parameters.rankid}
+		</if>
+	</sql>
+
+	<select id="searchRecruitprogram" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.recruitprogramguid,
+		a.interfacecode,
+		a.quotaid,
+		a.recruitprogramcode,
+		a.companyid,
+		a.deptid,
+		a.postid,
+		a.postname,
+		a.rankid,
+		a.rankname,
+		a.applydate,
+		a.hillockdate,
+		a.postnum,
+		a.state,
+		a.processinstanceid,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from j_recruitprogram a,h_o_company b,h_o_department c,h_o_post d
+		<include refid="searchRecruitprogramWhere" />
+		order by a.recruitprogramcode desc 
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countRecruitprogram" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_recruitprogram a,h_o_company b,h_o_department c,h_o_post d
+		<include refid="searchRecruitprogramWhere" />
+	</select>
+
+	<insert id="insertRecruitprogram" parameterType="com.mk.recruitprogram.entity.RecruitProgram">
+		insert into j_recruitprogram
+		(recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		postname,
+		rankid,
+		rankname,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{recruitprogramguid},
+		#{interfacecode:VARCHAR},
+		#{quotaid:VARCHAR},
+		#{recruitprogramcode},
+		#{companyid},
+		#{deptid},
+		#{postid:VARCHAR},
+		#{postname:VARCHAR},
+		#{rankid:VARCHAR},
+		#{rankname:VARCHAR},
+		#{applydate},
+		#{hillockdate:DATE},
+		#{postnum},
+		#{state},
+		#{processinstanceid:VARCHAR},
+		#{memo:VARCHAR},
+		#{modiuser:VARCHAR},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateRecruitprogram" parameterType="com.mk.recruitprogram.entity.RecruitProgram">
+		update j_recruitprogram
+		set recruitprogramguid = #{recruitprogramguid},
+		interfacecode=#{interfacecode:VARCHAR},
+		quotaid =#{quotaid:VARCHAR},
+		recruitprogramcode=#{recruitprogramcode},
+		companyid
+		=#{companyid},
+		deptid =#{deptid},
+		postid=#{postid:VARCHAR},
+		postname=#{postname:VARCHAR},
+		rankid =#{rankid:VARCHAR},
+		rankname=#{rankname:VARCHAR},
+		applydate =#{applydate},
+		hillockdate =#{hillockdate:DATE},
+		postnum =#{postnum},
+		state =#{state},
+		processinstanceid=#{processinstanceid:VARCHAR},
+		memo=#{memo:VARCHAR},
+		modiuser =#{modiuser:VARCHAR},
+		moditimestamp =#{moditimestamp},
+		modimemo =#{modimemo:VARCHAR}
+		where recruitprogramguid =#{recruitprogramguid}
+	</update>
+
+	<update id="updateRecruitprogramStateById" parameterType="com.mk.recruitprogram.entity.RecruitProgram">
+		update j_recruitprogram
+		set state =#{state}
+		where recruitprogramguid =#{id}
+	</update>
+
+	<delete id="delRecruitprogramById" parameterType="String">
+		delete j_recruitprogram
+		where recruitprogramguid = #{id}
+	</delete>
+
+	<delete id="delRecruitprogramByQuotaId" parameterType="String">
+		delete j_recruitprogram
+		where quotaid = #{quotaid}
+	</delete>
+
+	<select id="getRecruitprogramById" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		postname,
+		rankid,
+		rankname,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		recruitprogramguid=#{id}
+	</select>
+	
+	<select id="getRecruitprogramByCode" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		postname,
+		rankid,
+		rankname,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		recruitprogramcode=#{recruitprogramcode}
+	</select>
+	
+	<select id="getRecruitprogramByQuotaidAndPostid" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		postname,
+		rankid,
+		rankname,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		postid=#{postid}
+		and quotaid=#{quotaid:VARCHAR}
+		and state in (1,3)
+		<![CDATA[ AND postnum>(select count(RecruitProgramOperateGuid) from J_RecruitProgramOperate where recruitprogramguid=j_recruitprogram.recruitprogramguid and OperateState=3) ]]>
+	</select>
+	
+	
+	<select id="getRecruitprogramByProcessinstanceId" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		rankid,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		processinstanceid=#{processinstanceid}
+	</select>
+
+	<select id="getAllRecruitprogramByDeptid" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		rankid,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		deptid=#{deptid}
+	</select>
+
+	<select id="getMaxRecruitProgramCode" resultType="String">
+		select max(recruitprogramcode) from j_recruitprogram
+	</select>
+
+	<select id="countRecruitprogramByCode" resultType="Integer">
+		select count(recruitprogramguid) from j_recruitprogram where recruitprogramcode like CONCAT(#{recruitprogramcode},'%')
+	</select>
+	
+
+	<select id="getAllRecruitprogram" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+		select recruitprogramguid,
+		interfacecode,
+		quotaid,
+		recruitprogramcode,
+		companyid,
+		deptid,
+		postid,
+		rankid,
+		applydate,
+		hillockdate,
+		postnum,
+		state,
+		processinstanceid,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogram
+		where
+		state=#{state}
+	</select>
+
+
+	<!-- 招聘计划OA审批 -->
+	<sql id="searchRecruitprogramauditWhere">
+		where
+		1=1
+		<if test="parameters.companyname!=null and parameters.companyname!=''">
+			and companyname=#{parameters.companyname}
+		</if>
+		
+		<if test="parameters.deptname!=null and parameters.deptname!=''">
+			and deptname=#{parameters.deptname}
+		</if>
+		
+		<if test="parameters.postname!=null and parameters.postname!=''">
+			and postname=#{parameters.postname}
+		</if>
+		
+		<if test="parameters.rankname!=null and parameters.rankname!=''">
+			and rankname=#{parameters.rankname}
+		</if>
+		
+	</sql>
+
+	<select id="searchRecruitprogramaudit" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select recruitprogramauditguid,
+		postnum,
+		startdate,
+		enddate,
+		auditresult,
+		state,
+		companyname,
+		deptname,
+		postname,
+		rankname,
+		interfacecode,
+		remainnum
+		from
+		j_recruitprogramaudit
+		<include refid="searchRecruitprogramauditWhere" />
+		order by startdate
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countRecruitprogramaudit" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_recruitprogramaudit
+		<include refid="searchRecruitprogramauditWhere" />
+	</select>
+
+	<insert id="insertRecruitprogramaudit" parameterType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+		insert into j_recruitprogramaudit
+		(recruitprogramauditguid,
+		postnum,
+		startdate,
+		enddate,
+		auditresult,
+		state,
+		companyname,
+		deptname,
+		postname,
+		rankname,
+		interfacecode,
+		remainnum
+		)
+		values
+		(#{recruitprogramauditguid},
+		#{postnum},
+		#{startdate},
+		#{enddate:DATE},
+		#{auditresult:VARCHAR},
+		#{state},
+		#{companyname},
+		#{deptname},
+		#{postname},
+		#{rankname:VARCHAR},
+		#{interfacecode},
+		#{remainnum}
+		)
+	</insert>
+
+	<update id="updateRecruitprogramaudit" parameterType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+		update j_recruitprogramaudit
+		set recruitprogramauditguid =#{recruitprogramauditguid},
+		postnum =#{postnum},
+		startdate =#{startdate},
+		enddate =#{enddate:DATE},
+		auditresult =#{auditresult:VARCHAR},
+		state =#{state},
+		companyname =#{companyname},
+		deptname =#{deptname},
+		postname =#{postname},
+		rankname =#{rankname:VARCHAR},
+		interfacecode=#{interfacecode},
+		remainnum=#{remainnum}
+		where
+		recruitprogramauditguid =#{recruitprogramauditguid}
+	</update>
+
+	<delete id="delRecruitprogramauditByAuditId" parameterType="String">
+		delete j_recruitprogramaudit
+		where recruitprogramauditguid = #{id}
+	</delete>
+
+	<delete id="delRecruitprogramauditByRpId" parameterType="String">
+		delete j_recruitprogramaudit
+		where recruitprogramguid = #{id}
+	</delete>
+
+	<select id="getRecruitprogramauditById" resultType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+		select recruitprogramauditguid,
+		postnum,
+		startdate,
+		enddate,
+		auditresult,
+		state,
+		companyname,
+		deptname,
+		postname,
+		rankname,
+		interfacecode,
+		remainnum
+		from
+		j_recruitprogramaudit
+		where
+		recruitprogramauditguid=#{id}
+	</select>
+	
+	<select id="getRecruitprogramauditByInterfacecode"  resultType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+	select recruitprogramauditguid,
+		postnum,
+		startdate,
+		enddate,
+		auditresult,
+		state,
+		companyname,
+		deptname,
+		postname,
+		rankname,
+		interfacecode,
+		remainnum
+		from
+		j_recruitprogramaudit
+		where
+		interfacecode=#{interfacecode}
+	</select>
+
+	<!-- 招聘计划操作 -->
+	<sql id="searchRecruitProgramOperateWhere">
+		where 1=1
+		<if test="parameters.recruitprogramguid!=null and parameters.recruitprogramguid!='' and parameters.recruitprogramguid!='null' ">
+			and recruitprogramguid = #{parameters.recruitprogramguid}
+		</if>
+
+	</sql>
+
+	<select id="countRecruitProgramOperate" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from J_RecruitProgramOperate
+		<include refid="searchRecruitProgramOperateWhere" />
+	</select>
+
+	<select id="searchRecruitProgramOperate" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitprogram.entity.RecruitProgramOperate">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select recruitprogramoperateguid,
+		recruitprogramguid,
+		operatenum,
+		operatestate,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recruitprogramoperate
+		<include refid="searchRecruitProgramOperateWhere" />
+		order by moditimestamp
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertRecruitProgramOperate" parameterType="com.mk.recruitprogram.entity.RecruitProgramOperate">
+		insert into j_recruitprogramoperate
+		(recruitprogramoperateguid,
+		recruitprogramguid,
+		operatenum,
+		operatestate,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{recruitprogramoperateguid},
+		#{recruitprogramguid:VARCHAR},
+		#{operatenum},
+		#{operatestate},
+		#{modiuser:VARCHAR},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<delete id="delRecruitProgramOperateById" parameterType="String">
+		delete j_recruitprogramoperate
+		where recruitprogramoperateguid = #{recruitprogramoperateguid}
+	</delete>
+
+	<delete id="delRecruitProgramOperateByRecruitProgramGuid" parameterType="String">
+		delete j_recruitprogramoperate
+		where recruitprogramguid = #{recruitprogramguid}
+	</delete>
+
+</mapper>
+	

@@ -1,0 +1,982 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.recruitment.dao.RecruitmentDao">
+
+
+	<!-- 职位类别 -->
+	<sql id="searchCategoryWhere">
+		where 1=1
+		<if test="parameters.categoryname!=null and parameters.categoryname!='' and parameters.categoryname!='null' ">
+			AND categoryname LIKE CONCAT(#{parameters.categoryname},'%')
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND valid=#{parameters.valid}
+		</if>
+	</sql>
+
+	<select id="countCategory" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_category
+		<include refid="searchCategoryWhere" />
+	</select>
+
+	<select id="searchCategory" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.Category">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select categoryguid, categoryname, valid, modtime, rmk,dorder from j_category
+		<include refid="searchCategoryWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertCategory" parameterType="com.mk.recruitment.entity.Category">
+		insert into j_category
+		(categoryguid, categoryname, valid, modtime, rmk,dorder)
+		values
+		(#{categoryguid}, #{categoryname}, #{valid}, #{modtime},
+		#{rmk:VARCHAR},#{dorder})
+	</insert>
+
+
+	<update id="updateCategory" parameterType="com.mk.recruitment.entity.Category">
+		update j_category
+		set categoryguid = #{categoryguid},
+		categoryname = #{categoryname},
+		valid = #{valid},
+		modtime = #{modtime},
+		dorder=#{dorder},
+		rmk =
+		#{rmk:VARCHAR}
+		where
+		categoryguid = #{categoryguid}
+	</update>
+
+	<delete id="delCategoryById" parameterType="String">
+		delete j_category
+		where categoryguid = #{categoryguid}
+	</delete>
+
+	<select id="getCategoryById" parameterType="String" resultType="com.mk.recruitment.entity.Category">
+		select categoryguid, categoryname, valid, modtime, rmk,dorder from j_category
+		where categoryguid = #{categoryguid}
+	</select>
+
+	<select id="getAllCategory" parameterType="String" resultType="com.mk.recruitment.entity.Category">
+		select categoryguid, categoryname, valid, modtime, rmk,dorder from j_category
+		<if test="valid==1">
+			where valid = #{valid}
+		</if>
+	</select>
+
+
+
+
+
+
+	<!--工作地点 -->
+	<sql id="searchWorkPlaceWhere">
+		where 1=1
+		<if test="parameters.workplacename!=null and parameters.workplacename!='' and parameters.workplacename!='null' ">
+			AND workplacename LIKE CONCAT(#{parameters.workplacename},'%')
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND valid=#{parameters.valid}
+		</if>
+	</sql>
+
+	<select id="countWorkPlace" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_workplace
+		<include refid="searchWorkPlaceWhere" />
+	</select>
+
+	<select id="searchWorkPlace" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.WorkPlace">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select workplaceguid, workplacename, valid, modtime, rmk,dorder from j_workplace
+		<include refid="searchWorkPlaceWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertWorkPlace" parameterType="com.mk.recruitment.entity.WorkPlace">
+		insert into j_workplace
+		(workplaceguid, workplacename, valid, modtime, rmk,dorder)
+		values
+		(#{workplaceguid}, #{workplacename}, #{valid}, #{modtime},
+		#{rmk:VARCHAR},#{dorder})
+	</insert>
+
+
+	<update id="updateWorkPlace" parameterType="com.mk.recruitment.entity.WorkPlace">
+		update j_workplace
+		set
+		workplacename = #{workplacename},
+		valid = #{valid},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR},
+		dorder=#{dorder}
+		where workplaceguid
+		=
+		#{workplaceguid}
+	</update>
+
+	<delete id="delWorkPlaceById" parameterType="String">
+		delete j_workplace
+		where workplaceguid = #{workplaceguid}
+	</delete>
+
+	<select id="getWorkPlaceById" parameterType="String" resultType="com.mk.recruitment.entity.WorkPlace">
+		select workplaceguid, workplacename, valid, modtime, rmk,dorder from j_workplace
+		where workplaceguid = #{workplaceguid}
+	</select>
+
+	<select id="getAllWorkPlace" parameterType="String" resultType="com.mk.recruitment.entity.WorkPlace">
+		select workplaceguid, workplacename, valid, modtime, rmk,dorder from j_workplace
+		<if test="valid==1">
+			where valid = #{valid}
+		</if>
+	</select>
+
+
+
+
+
+
+	<!-- 招聘职位 -->
+	<sql id="searchRecruitPostWhere">
+		where 1=1
+		<if test="parameters.postname!=null and parameters.postname!='' and parameters.postname!='null' ">
+			AND postname LIKE CONCAT(#{parameters.postname},'%')
+		</if>
+
+		<if test="parameters.workplaceguid!=null and parameters.workplaceguid!='' and parameters.workplaceguid!='null' ">
+			AND workplaceguid=#{parameters.workplaceguid}
+		</if>
+
+		<if test="parameters.deptid!=null and parameters.deptid!='' and parameters.deptid!='null' ">
+			AND deptid=#{parameters.deptid}
+		</if>
+
+		<if test="parameters.posttype!=null and parameters.posttype!='' and parameters.posttype!='null' ">
+			AND posttype=#{parameters.posttype}
+		</if>
+
+		<if test="parameters.categoryguid!=null and parameters.categoryguid!='' and parameters.categoryguid!='null' ">
+			and categoryguid in (${parameters.categoryguid})
+		</if>
+
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			AND keyword like CONCAT('%',CONCAT(#{parameters.keyword},'%'))
+		</if>
+
+		<if test="parameters.isaudited!=null and parameters.isaudited!='' ">
+			AND isaudited=#{parameters.isaudited}
+		</if>
+
+		<if test="parameters.modtime_s!=null and parameters.modtime_s!=''">
+			<![CDATA[AND releasedate >=to_date(#{parameters.modtime_s},'YYYY-MM-DD HH:MI:SS')]]>
+		</if>
+
+		<if test="parameters.modtime_e!=null and parameters.modtime_e!=''">
+			<![CDATA[AND releasedate <=to_date(#{parameters.modtime_e},'yyyy-MM-dd hh24:mi:ss')]]>
+		</if>
+
+		<if test="parameters.userguid!=null and parameters.userguid!=''">
+			and deptid in (select deptguid from T_H_UserDept where userguid = #{parameters.userguid})
+		</if>
+
+		<if test="parameters.companyid!=null and parameters.companyid!='' ">
+			AND companyid=#{parameters.companyid}
+		</if>
+	</sql>
+
+	<select id="countRecruitPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_recruitpost
+		<include refid="searchRecruitPostWhere" />
+	</select>
+
+	<select id="countInternalPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_recruitpost
+		<include refid="searchRecruitPostWhere" />
+		<![CDATA[ AND (validdate>sysdate OR validdate is null)]]>
+	</select>
+
+	<select id="searchRecruitPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.RecruitPost">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		<include refid="searchRecruitPostWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="searchInternalPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.RecruitPost">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		<include refid="searchRecruitPostWhere" />
+		<![CDATA[ AND (validdate>sysdate OR validdate is null)]]>
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertRecruitPost" parameterType="com.mk.recruitment.entity.RecruitPost">
+		insert into j_recruitpost
+		(recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk,
+		dorder,
+		posttype,
+		isurgent)
+		values
+		(#{recruitpostguid},
+		#{recruitprogramguid:VARCHAR},
+		#{companyid},
+		#{workplaceguid},
+		#{categoryguid},
+		#{deptid:VARCHAR},
+		#{functions:VARCHAR},
+		#{postname},
+		#{keyword:VARCHAR},
+		#{postnum:INTEGER},
+		#{workage},
+		#{language},
+		#{educational:INTEGER},
+		#{validdate:DATE},
+		#{traffic:INTEGER},
+		#{collection:INTEGER},
+		#{releasedate},
+		#{pubuser},
+		#{audituser:VARCHAR},
+		#{isaudited},
+		#{modtime},
+		#{rmk:VARCHAR},
+		#{dorder},
+		#{posttype},
+		#{isurgent:INTEGER})
+	</insert>
+
+
+	<update id="updateRecruitPost" parameterType="com.mk.recruitment.entity.RecruitPost">
+		update j_recruitpost
+		set recruitpostguid = #{recruitpostguid},
+		recruitprogramguid=#{recruitprogramguid:VARCHAR},
+		companyid=#{companyid},
+		workplaceguid
+		= #{workplaceguid},
+		categoryguid = #{categoryguid},
+		deptid = #{deptid:VARCHAR},
+		functions = #{functions:VARCHAR},
+		postname = #{postname},
+		keyword = #{keyword:VARCHAR},
+		postnum = #{postnum:INTEGER},
+		workage =#{workage},
+		language = #{language},
+		educational = #{educational:INTEGER},
+		validdate = #{validdate:DATE},
+		traffic = #{traffic:INTEGER},
+		collection = #{collection:INTEGER},
+		releasedate = #{releasedate},
+		pubuser = #{pubuser},
+		audituser = #{audituser:VARCHAR},
+		isaudited = #{isaudited},
+		modtime = #{modtime},
+		dorder=#{dorder},
+		rmk = #{rmk:VARCHAR},
+		posttype=#{posttype},
+		isurgent=#{isurgent:INTEGER}
+		where
+		recruitpostguid = #{recruitpostguid}
+	</update>
+
+	<delete id="delRecruitPostByRecruitPostId" parameterType="String">
+		delete j_recruitpost
+		where recruitpostguid = #{recruitpostguid}
+	</delete>
+
+	<select id="getRecruitPostByRecruitPostId" parameterType="String" resultType="com.mk.recruitment.entity.RecruitPost">
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		where recruitpostguid =
+		#{recruitpostguid}
+	</select>
+
+	<select id="getRecruitPostByRecruitPostName" parameterType="String" resultType="com.mk.recruitment.entity.RecruitPost">
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		where postname =
+		#{postname}
+		order by modtime desc
+	</select>
+
+
+	<select id="getAllRecruitPost" resultType="com.mk.recruitment.entity.RecruitPost">
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		where
+		isaudited=0
+	</select>
+
+	<select id="getRecruitPostByUser" resultType="com.mk.recruitment.entity.RecruitPost" parameterType="String">
+		select recruitpostguid,
+		recruitprogramguid,
+		companyid,
+		workplaceguid,
+		categoryguid,
+		deptid,
+		functions,
+		postname,
+		posttype,
+		isurgent,
+		dorder,
+		keyword,
+		postnum,
+		workage,
+		language,
+		educational,
+		validdate,
+		traffic,
+		collection,
+		releasedate,
+		pubuser,
+		audituser,
+		isaudited,
+		modtime,
+		rmk
+		from j_recruitpost
+		where
+		isaudited=0
+		and deptid in (select deptguid from T_H_UserDept where userguid = #{userguid})
+	</select>
+
+
+
+	<!-- 投递历史信息 -->
+
+
+	<!-- 职位介绍 -->
+	<insert id="insertPostContent" parameterType="com.mk.recruitment.entity.PostContent">
+		insert into j_postcontent
+		(recruitpostguid, postcontent)
+		values
+		(#{recruitpostguid}, #{postcontent})
+	</insert>
+
+
+	<delete id="delPostContentByRecruitPostId" parameterType="String">
+		delete j_postcontent
+		where recruitpostguid = #{recruitpostguid}
+	</delete>
+
+	<select id="getPostContentByRecruitPostId" parameterType="String" resultType="com.mk.recruitment.entity.PostContent">
+		select recruitpostguid, postcontent from j_postcontent
+		where recruitpostguid = #{recruitpostguid}
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--輪播圖片 -->
+	<sql id="searchCarouselWhere">
+		where 1=1
+		<if test="parameters.title!=null and parameters.title!=''">
+			AND title like CONCAT('%',CONCAT(#{parameters.title},'%'))
+		</if>
+
+		<if test="parameters.isaudited!=null and parameters.isaudited!='' ">
+			AND isaudited=#{parameters.isaudited}
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND valid=#{parameters.valid}
+		</if>
+
+		<if test="parameters.modtime_s!=null and parameters.modtime_s!=''">
+			<![CDATA[AND modtime >=to_date(#{parameters.modtime_s},'YYYY-MM-DD HH:MI:SS')]]>
+		</if>
+		<if test="parameters.modtime_e!=null and parameters.modtime_e!=''">
+			<![CDATA[AND modtime <=to_date(#{parameters.modtime_e},'yyyy-MM-dd hh24:mi:ss')]]>
+		</if>
+	</sql>
+
+	<select id="countCarousel" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_carousel
+		<include refid="searchCarouselWhere" />
+	</select>
+
+	<select id="searchCarousel" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.Carousel">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select carouselguid,
+		title,
+		pubuser,
+		isaudited,
+		titlepic,
+		audituser,
+		valid,
+		modtime,
+		rmk,
+		dorder
+		from j_carousel
+		<include refid="searchCarouselWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertCarousel" parameterType="com.mk.recruitment.entity.Carousel">
+		insert into j_carousel
+		(carouselguid,
+		title,
+		pubuser,
+		isaudited,
+		titlepic,
+		audituser,
+		valid,
+		modtime,
+		rmk,
+		dorder)
+		values
+		(#{carouselguid},
+		#{title},
+		#{pubuser},
+		#{isaudited},
+		#{titlepic:VARCHAR},
+		#{audituser:VARCHAR},
+		#{valid},
+		#{modtime},
+		#{rmk:VARCHAR},
+		#{dorder})
+	</insert>
+
+
+	<update id="updateCarousel" parameterType="com.mk.recruitment.entity.Carousel">
+		update j_carousel
+		set
+		title = #{title},
+		pubuser = #{pubuser},
+		isaudited = #{isaudited},
+		titlepic = #{titlepic:VARCHAR},
+		audituser = #{audituser:VARCHAR},
+		valid = #{valid},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR},
+		dorder=#{dorder}
+		where carouselguid = #{carouselguid}
+	</update>
+
+	<delete id="delCarouselById" parameterType="String">
+		delete j_carousel
+		where carouselguid = #{carouselguid}
+	</delete>
+
+	<select id="getCarouselById" parameterType="String" resultType="com.mk.recruitment.entity.Carousel">
+		select carouselguid,
+		title,
+		pubuser,
+		isaudited,
+		titlepic,
+		audituser,
+		valid,
+		modtime,
+		rmk,
+		dorder
+		from j_carousel
+		where carouselguid =
+		#{carouselguid}
+	</select>
+
+	<!--輪播圖文 -->
+	<insert id="insertCarouselContent" parameterType="com.mk.recruitment.entity.CarouselContent">
+		insert into j_carouselcontent
+		(carouselguid, carouselcontent)
+		values
+		(#{carouselguid}, #{carouselcontent})
+	</insert>
+
+
+	<delete id="delCarouselContentById" parameterType="String">
+		delete j_carouselcontent
+		where carouselguid = #{carouselguid}
+	</delete>
+
+	<select id="getCarouselContentById" parameterType="String" resultType="com.mk.recruitment.entity.CarouselContent">
+		select carouselguid, carouselcontent from j_carouselcontent
+		where carouselguid = #{carouselguid}
+	</select>
+
+
+
+
+	<!--咨询内容 -->
+	<sql id="searchNewsWhere">
+		where 1=1
+		<if test="parameters.title!=null and parameters.title!=''">
+			AND title like CONCAT('%',CONCAT(#{parameters.title},'%'))
+		</if>
+
+		<if test="parameters.moduleguid!=null and parameters.moduleguid!=''">
+			AND moduleguid=#{parameters.moduleguid}
+		</if>
+
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			AND keyword like CONCAT('%',CONCAT(#{parameters.keyword},'%'))
+		</if>
+
+		<if test="parameters.isaudited!=null and parameters.isaudited!='' ">
+			AND isaudited=#{parameters.isaudited}
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND valid=#{parameters.valid}
+		</if>
+
+		<if test="parameters.modtime_s!=null and parameters.modtime_s!=''">
+			<![CDATA[AND modtime >=to_date(#{parameters.modtime_s},'YYYY-MM-DD HH:MI:SS')]]>
+		</if>
+		<if test="parameters.modtime_e!=null and parameters.modtime_e!=''">
+			<![CDATA[AND modtime <=to_date(#{parameters.modtime_e},'yyyy-MM-dd hh24:mi:ss')]]>
+		</if>
+	</sql>
+
+	<select id="countNews" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_news
+		<include refid="searchNewsWhere" />
+	</select>
+
+	<select id="searchNews" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.News">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select newsguid,
+		moduleguid,
+		title,
+		subtitle,
+		source,
+		keyword,
+		valid,
+		isaudited,
+		traffic,
+		titlepic,
+		audituser,
+		pubuser,
+		modtime,
+		rmk,
+		dorder
+		from j_news
+		<include refid="searchNewsWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertNews" parameterType="com.mk.recruitment.entity.News">
+		insert into j_news
+		(newsguid,
+		moduleguid,
+		title,
+		subtitle,
+		source,
+		keyword,
+		valid,
+		isaudited,
+		traffic,
+		titlepic,
+		audituser,
+		pubuser,
+		modtime,
+		rmk,
+		dorder)
+		values
+		(#{newsguid},
+		#{moduleguid},
+		#{title},
+		#{subtitle:VARCHAR},
+		#{source:VARCHAR},
+		#{keyword:VARCHAR},
+		#{valid},
+		#{isaudited},
+		#{traffic:INTEGER},
+		#{titlepic:VARCHAR},
+		#{audituser:VARCHAR},
+		#{pubuser},
+		#{modtime},
+		#{rmk:VARCHAR},
+		#{dorder})
+	</insert>
+
+
+	<update id="updateNews" parameterType="com.mk.recruitment.entity.News">
+		update j_news
+		set
+		moduleguid = #{moduleguid},
+		title = #{title},
+		subtitle = #{subtitle:VARCHAR},
+		source = #{source:VARCHAR},
+		keyword =#{keyword:VARCHAR},
+		valid =
+		#{valid},
+		isaudited = #{isaudited},
+		traffic = #{traffic:INTEGER},
+		titlepic =#{titlepic:VARCHAR},
+		audituser = #{audituser:VARCHAR},
+		pubuser = #{pubuser},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR},
+		dorder=#{dorder}
+		where
+		newsguid = #{newsguid}
+	</update>
+
+	<delete id="delNewsById" parameterType="String">
+		delete j_news
+		where newsguid = #{newsguid}
+	</delete>
+
+	<select id="getNewsById" parameterType="String" resultType="com.mk.recruitment.entity.News">
+		select newsguid,
+		moduleguid,
+		title,
+		subtitle,
+		source,
+		keyword,
+		valid,
+		isaudited,
+		traffic,
+		titlepic,
+		audituser,
+		pubuser,
+		modtime,
+		rmk,
+		dorder
+		from
+		j_news
+		where newsguid = #{newsguid}
+	</select>
+
+	<!--咨询正文 -->
+	<insert id="insertNewsContent" parameterType="com.mk.recruitment.entity.NewsContent">
+		insert into j_newscontent
+		(newsguid, newscontent)
+		values
+		(#{newsguid}, #{newscontent})
+	</insert>
+
+	<delete id="delNewsContentById" parameterType="String">
+		delete j_newscontent
+		where newsguid = #{newsguid}
+	</delete>
+
+	<select id="getNewsContentById" parameterType="String" resultType="com.mk.recruitment.entity.NewsContent">
+		select newsguid, newscontent from j_newscontent
+		where newsguid = #{newsguid}
+	</select>
+
+	<!-- 諮詢模塊 -->
+	<select id="getAllNewsModule" parameterType="String" resultType="com.mk.recruitment.entity.NewsModule">
+		select moduleguid, dorder, modulename, modtime, rmk from j_newsmodule
+		order by dorder
+	</select>
+
+	<select id="getNewsModuleById" parameterType="String" resultType="com.mk.recruitment.entity.NewsModule">
+		select moduleguid, dorder, modulename, modtime, rmk from j_newsmodule
+		where moduleguid=#{moduleguid}
+	</select>
+
+	<!-- 关于华数模塊 -->
+	<select id="getAllAbout" parameterType="String" resultType="com.mk.recruitment.entity.About">
+		select aboutguid, dorder, aboutname, modtime, rmk from j_about
+		order by dorder
+	</select>
+
+	<select id="getAboutById" parameterType="String" resultType="com.mk.recruitment.entity.About">
+		select aboutguid, dorder, aboutname, modtime, rmk from j_about
+		where aboutguid=#{aboutguid}
+	</select>
+
+	<!--关于华数正文 -->
+	<select id="getAboutContentById" parameterType="String" resultType="com.mk.recruitment.entity.AboutContent">
+		select aboutguid, aboutcontent from j_aboutcontent
+		where aboutguid = #{aboutguid}
+	</select>
+
+	<delete id="delAboutContentById" parameterType="String">
+		delete j_aboutcontent
+		where aboutguid = #{aboutguid}
+	</delete>
+
+	<insert id="insertAboutContent" parameterType="com.mk.recruitment.entity.AboutContent">
+		insert into j_aboutcontent
+		(aboutguid, aboutcontent)
+		values
+		(#{aboutguid}, #{aboutcontent})
+	</insert>
+
+	<!-- 统计当前职位投递简历次数 -->
+	<select id="countMyCandidatesByRecruitPostGuid" parameterType="String" resultType="Integer">
+		select count(1) from J_mycandidates
+		where recruitpostguid =#{recruitpostguid}
+	</select>
+
+	<select id="countMyCandidatesByRecruitPostGuidAndTime" parameterType="String" resultType="Integer">
+		select count(1) from J_mycandidates
+		where recruitpostguid =#{recruitpostguid}
+		AND candidatestime <![CDATA[ >= ]]>to_date(#{_datas},'YYYY-MM-DD
+		HH:MI:SS')
+		AND candidatestime <![CDATA[ <= ]]>to_date(#{_datae},'YYYY-MM-DD
+		hh24:mi:ss')
+	</select>
+
+
+	<!-- 我的竞聘 -->
+	<sql id="searchMyRecruitpostWhere">
+		where a.recruitpostguid=b.recruitpostguid
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			and a.webuserguid in (select employeeid from t_sysuser  where userguid=#{parameters.userguid})
+		</if>
+	</sql>
+
+
+	<select id="countMyRecruitpost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a,J_RecruitPost b
+		<include refid="searchMyRecruitpostWhere" />
+	</select>
+
+	<select id="searchMyRecruitpost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.RecruitPost">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.mycandidatesguid,
+		a.webuserguid,
+		a.candidatesstate,
+		a.recruitpostname,
+		a.moditimestamp,
+		b.companyid,
+		b.deptid,
+		b.postname,
+		b.workplaceguid,
+		b.categoryguid,
+		b.postnum
+		from j_mycandidates a,J_RecruitPost b
+		<include refid="searchMyRecruitpostWhere" />
+		order by a.moditimestamp
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<!-- 我的收藏 -->
+	<delete id="delMyFavoritesByRecruitPostGuid" parameterType="String">
+		delete j_myfavorites
+		where recruitpostguid = #{recruitpostguid}
+	</delete>
+
+</mapper>
+	

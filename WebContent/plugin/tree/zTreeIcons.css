@@ -1,0 +1,75 @@
+/*-------------------------------------
+zTree Icons Skin
+
+version:	2.0
+author:		Hunter.z
+email:		hunter.z@263.net
+website:	http://code.google.com/p/jquerytree/
+
+-------------------------------------*/
+.ztree li span.button.dept_ico_open{ margin-right:2px;background:url(./img/icon/dept.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.dept_ico_close{ margin-right:2px;background:url(./img/icon/dept.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.dept_ico_docu{margin-right:2px; background:url(./img/icon/dept.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+
+
+.ztree li span.button.company_ico_open{margin-right:2px; background:url(./img/icon/company.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.company_ico_close{margin-right:2px; background:url(./img/icon/company.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.company_ico_docu{margin-right:2px; background:url(./img/icon/company.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+.ztree li span.button.companylock_ico_open{margin-right:2px; background:url(./img/icon/region_lock.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.companylock_ico_close{margin-right:2px; background:url(./img/icon/region_lock.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.companylock_ico_docu{margin-right:2px; background:url(./img/icon/region_lock.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+
+
+
+.ztree li span.button.fun_ico_open{margin-right:2px; background:url(./img/icon/application_view_columns.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.fun_ico_close{margin-right:2px; background:url(./img/icon/application_view_columns.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.fun_ico_docu{margin-right:2px; background:url(./img/icon/application_view_columns.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.fun_button_ico_docu{margin-right:2px;background:url(./img/icon/button.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+.ztree li span.button.role_ico_docu{margin-right:2px; background:url(./img/icon/post.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.user_ico_docu{margin-right:2px; background:url(./img/icon/user.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+.ztree li span.button.groupuser_ico_open{margin-right:2px; background:url(./img/icon/group.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.groupuser_ico_close{margin-right:2px; background:url(./img/icon/group.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.groupuser_ico_docu{margin-right:2px; background:url(./img/icon/group.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+.ztree li span.button.post_ico_open{margin-right:2px; background:url(./img/icon/flag_blue.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.post_ico_close{margin-right:2px; background:url(./img/icon/flag_blue.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.post_ico_docu{margin-right:2px; background:url(./img/icon/flag_blue.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+
+
+.ztree li span.button.root_ico_open{margin-right:2px; background:url(./img/icon/root.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.root_ico_close{margin-right:2px; background:url(./img/icon/root.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.root_ico_docu{margin-right:2px; background:url(./img/icon/root.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+.ztree li span.button.lock_ico_open{margin-right:2px; background:url(./img/icon/lock.jpg) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.lock_ico_close{margin-right:2px; background:url(./img/icon/lock.jpg) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.lock_ico_docu{margin-right:2px; background:url(./img/icon/lock.jpg) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+
+.ztree li span.button.remove_ico_open{margin-right:2px; background:url(./img/icon/remove.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.remove_ico_close{margin-right:2px; background:url(./img/icon/remove.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.remove_ico_docu{margin-right:2px; background:url(./img/icon/remove.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+
+
+
+
+
+
+
+

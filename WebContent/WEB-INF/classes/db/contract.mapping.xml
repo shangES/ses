@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.contract.dao.ContractDao">
+	<!-- 合同 -->
+	<sql id="searchContractWhere">
+		where
+		a.employeeid=b.employeeid
+		<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+			AND a.employeeid=#{parameters.employeeid}
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND b.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		<if test="parameters.contracttype!=null and parameters.contracttype!=''">
+			and a.contracttype=#{parameters.contracttype}
+		</if>
+		
+		
+		<if test="parameters.enddate_s!=null and parameters.enddate_s!=''">
+			<![CDATA[AND a.enddate >=to_date(#{parameters.enddate_s},'yyyy-MM-dd')]]>
+		</if>
+		
+		<if test="parameters.enddate_e!=null and parameters.enddate_e!=''">
+			<![CDATA[AND a.enddate <=to_date(#{parameters.enddate_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.state!=null and parameters.state!='' and parameters.state==1">
+			AND a.state =1
+		</if>
+
+		and b.employeeid in(
+		select employeeid from H_E_POSITION
+		where isstaff=1
+		<if test="parameters.companyid!=null and parameters.companyid!=''">
+			and companyid=#{parameters.companyid}
+		</if>
+		
+		<if test="parameters.companyid==null or parameters.companyid==''">
+			<if test="parameters.admin==false">
+				and companyid in (
+				select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+		</if>
+		<if test="parameters.deptid!=null and parameters.deptid!=''">
+			and deptid=#{parameters.deptid}
+		</if>
+
+		<if test="parameters.postid!=null and parameters.postid!=''">
+			and postid=#{parameters.postid}
+		</if>
+		)
+	</sql>
+
+	<select id="countContract" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_o_contract a,h_e_employee b
+		<include refid="searchContractWhere" />
+	</select>
+
+	<select id="searchContract" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.contract.entity.Contract">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.contractid,
+		a.employeeid,
+		a.contractcode,
+		a.contracttype,
+		a.signdate,
+		a.startdate,
+		a.enddate,
+		a.hourssystem,
+		a.content,
+		a.state,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		a.companyid
+		from h_o_contract
+		a,h_e_employee b
+		<include refid="searchContractWhere" />
+		order by b.jobnumber
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertContract" parameterType="com.mk.contract.entity.Contract">
+		insert into h_o_contract
+		(contractid,
+		employeeid,
+		contractcode,
+		contracttype,
+		signdate,
+		startdate,
+		enddate,
+		hourssystem,
+		content,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		companyid)
+		values
+		(#{contractid},
+		#{employeeid},
+		#{contractcode:VARCHAR},
+		#{contracttype},
+		#{signdate},
+		#{startdate},
+		#{enddate:DATE},
+		#{hourssystem:INTEGER},
+		#{content:VARCHAR},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{companyid:VARCHAR})
+	</insert>
+
+
+	<update id="updateContract" parameterType="com.mk.contract.entity.Contract">
+		update h_o_contract
+		set contractid = #{contractid},
+		employeeid = #{employeeid},
+		contractcode = #{contractcode:VARCHAR},
+		contracttype = #{contracttype},
+		signdate = #{signdate},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		hourssystem = #{hourssystem:INTEGER},
+		content = #{content:VARCHAR},
+		state = #{state},
+		memo = #{memo:VARCHAR},
+		modiuser =
+		#{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		companyid=#{companyid:VARCHAR}
+		where contractid=#{contractid}
+	</update>
+
+	<delete id="delContractById" parameterType="String">
+		delete h_o_contract
+		where contractid=#{contractid}
+	</delete>
+
+	<delete id="delContractByEmployeeId" parameterType="String">
+		delete h_o_contract
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getContractById" parameterType="String" resultType="com.mk.contract.entity.Contract">
+		select contractid,
+		employeeid,
+		contractcode,
+		contracttype,
+		signdate,
+		startdate,
+		enddate,
+		hourssystem,
+		content,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		companyid
+		from h_o_contract
+		where contractid=#{contractid}
+	</select>
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.bpmn.dao.BpmnDao">
+
+	<!-- 审核历史记录 -->
+	<insert id="insertAuditHistory" parameterType="com.mk.bpmn.entity.AuditHistory">
+		insert into j_audithistory
+		(audithisid,
+		processinstanceid,
+		taskid,
+		taskname,
+		excutedate,
+		applyuserid,
+		applyusername,
+		actname,
+		applycompanyid,
+		applycompanyname,
+		applydeptid,
+		applydeptname,
+		opinion)
+		values
+		(#{audithisid},
+		#{processinstanceid:VARCHAR},
+		#{taskid:VARCHAR},
+		#{taskname:VARCHAR},
+		#{excutedate},
+		#{applyuserid},
+		#{applyusername},
+		#{actname},
+		#{applycompanyid:VARCHAR},
+		#{applycompanyname:VARCHAR},
+		#{applydeptid:VARCHAR},
+		#{applydeptname:VARCHAR},
+		#{opinion:VARCHAR})
+	</insert>
+
+
+	<delete id="delAuditHistoryByProcessInstanceId" parameterType="string">
+		delete j_audithistory
+		where processinstanceid = #{processinstanceid}
+	</delete>
+
+
+	<select id="getAuditHistoryByProcessInstanceId" parameterType="string" resultType="com.mk.bpmn.entity.AuditHistory">
+		select audithisid,
+		processinstanceid,
+		taskid,
+		taskname,
+		excutedate,
+		applyuserid,
+		applyusername,
+		actname,
+		applycompanyid,
+		applycompanyname,
+		applydeptid,
+		applydeptname,
+		opinion
+		from j_audithistory
+		where processinstanceid = #{processinstanceid}
+		order by excutedate
+	</select>
+
+
+</mapper>

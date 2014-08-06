@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.system.dao.SyslogDao">
+	
+	<sql id="searchWhere">
+		where 1=1
+		<if test="parameters.modiuser!=null and parameters.modiuser!=''">
+			and modiuser like CONCAT(#{parameters.modiuser},'%')
+		</if>
+	</sql>
+
+	<select id="searchSyslog" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.system.entity.Syslog">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select logguid,
+		subject,
+		source,
+		target,
+		description,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_syslog
+		<include refid="searchWhere"/>
+		order by moditimestamp
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<select id="countSyslog" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_e_syslog
+		<include refid="searchWhere"/>
+	</select>
+
+	<insert id="insertSyslog" parameterType="com.mk.system.entity.Syslog">
+		insert into h_e_syslog
+		(logguid,
+		subject,
+		source,
+		target,
+		description,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{logguid},
+		#{subject},
+		#{source:VARCHAR},
+		#{target:VARCHAR},
+		#{description:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateSyslog" parameterType="com.mk.system.entity.Syslog">
+		update h_e_syslog
+		set logguid = #{logguid},
+		subject = #{subject},
+		source = #{source:VARCHAR},
+		target = #{target:VARCHAR},
+		description = #{description:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where logguid = #{logguid}
+	</update>
+
+	<delete id="delSyslog" parameterType="String">
+		delete h_e_syslog
+		where logguid = #{id}
+	</delete>
+
+	<select id="getSyslogById" parameterType="String" resultType="com.mk.system.entity.Syslog">
+		select logguid,
+		subject,
+		source,
+		target,
+		description,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_syslog
+		where
+		logguid=#{id}
+	</select>
+
+</mapper>

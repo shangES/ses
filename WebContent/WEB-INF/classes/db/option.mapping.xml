@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.system.dao.OptionDao">
+
+	<!-- 选项管理 -->
+	<select id="getAllOptionType" resultType="com.mk.system.entity.OptionType">
+		select optiontypeguid,
+		code,
+		name,
+		dorder,
+		reserved,
+		rmk from t_optiontype
+	</select>
+
+	<select id="getOptionTypeById" resultType="com.mk.system.entity.OptionType">
+		select optiontypeguid,
+		code,
+		name,
+		dorder,
+		reserved,
+		rmk from t_optiontype
+		where optiontypeguid=#{id}
+	</select>
+
+	<insert id="insertOptionType" parameterType="com.mk.system.entity.OptionType">
+		insert into t_optiontype
+		(optiontypeguid, code, name, dorder, reserved, rmk)
+		values
+		(#{optiontypeguid}, #{code}, #{name}, #{dorder}, #{reserved},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateOptionType" parameterType="com.mk.system.entity.OptionType">
+		update t_optiontype
+		set optiontypeguid = #{optiontypeguid},
+		code = #{code},
+		name = #{name},
+		dorder = #{dorder},
+		reserved = #{reserved},
+		rmk =
+		#{rmk:VARCHAR}
+		where optiontypeguid = #{optiontypeguid}
+	</update>
+
+
+	<select id="getOptionTypeByCode" resultType="com.mk.system.entity.OptionType">
+		select optiontypeguid,
+		code,
+		name,
+		dorder,
+		reserved,
+		rmk from t_optiontype
+		where code=#{code}
+	</select>
+
+
+
+
+
+
+
+
+	<!-- 选项列表 -->
+	<select id="getOptionListByOptionTypeId" resultType="com.mk.system.entity.OptionList">
+		select optionid,
+		optiontypeguid,
+		code,
+		name,
+		isdefault,
+		dorder,
+		reserved,
+		rmk from t_optionlist
+		where optiontypeguid=#{id}
+		order by dorder
+	</select>
+
+	<insert id="insertOptionList" parameterType="com.mk.system.entity.OptionList">
+		insert into t_optionlist
+		(optionid,
+		optiontypeguid,
+		code,
+		name,
+		isdefault,
+		dorder,
+		reserved,
+		rmk)
+		values
+		(#{optionid},
+		#{optiontypeguid},
+		#{code},
+		#{name},
+		#{isdefault},
+		#{dorder},
+		#{reserved},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateOptionList" parameterType="com.mk.system.entity.OptionList">
+		update t_optionlist
+		set optionid = #{optionid},
+		optiontypeguid = #{optiontypeguid},
+		code = #{code},
+		name = #{name},
+		isdefault = #{isdefault},
+		dorder =
+		#{dorder},
+		reserved = #{reserved},
+		rmk = #{rmk:VARCHAR}
+		where optionid = #{optionid}
+	</update>
+
+	<delete id="delOptionListById" parameterType="String">
+		delete t_optionlist
+		where optionid = #{id}
+	</delete>
+
+	<select id="getOptionListByListId" resultType="com.mk.system.entity.OptionList">
+		select optionid,
+		optiontypeguid,
+		code,
+		name,
+		isdefault,
+		dorder,
+		reserved,
+		rmk from t_optionlist
+		where optionid=#{id}
+	</select>
+
+
+	<select id="getOptionListByTypeAndCode" resultType="com.mk.system.entity.OptionList">
+		select a.optionid,
+		a.optiontypeguid,
+		a.code,
+		a.name,
+		a.isdefault,
+		a.dorder,
+		a.reserved,
+		a.rmk
+		from t_optionlist a,t_optiontype b
+		where
+		a.optiontypeguid=b.optiontypeguid
+		and b.code=#{typecode}
+		and a.code=#{code}
+	</select>
+	
+	<select id="getMaxOptionListCodeByTypeId" parameterType="String" resultType="Integer">
+		select max(code) from t_optionlist
+		where optiontypeguid=#{optiontypeguid}
+	</select>
+	
+	
+	<select id="getOptionListByTypeAndName" resultType="com.mk.system.entity.OptionList">
+		select a.optionid,
+		a.optiontypeguid,
+		a.code,
+		a.name,
+		a.isdefault,
+		a.dorder,
+		a.reserved,
+		a.rmk
+		from t_optionlist a,t_optiontype b
+		where
+		a.optiontypeguid=b.optiontypeguid
+		and b.code=#{typecode}
+		and a.name=#{name}
+	</select>
+	
+	
+	<select id="checkOptionList" resultType="com.mk.system.entity.OptionList">
+		select optionid,
+		optiontypeguid,
+		code,
+		name,
+		isdefault,
+		dorder,
+		reserved,
+		rmk
+		from t_optionlist 
+		where
+		code=#{code}
+		and
+		optiontypeguid=#{optiontypeguid}
+		<if test="optionid!=null and optionid!=''">
+			and optionid!=#{optionid}
+		</if>
+	</select>
+</mapper>

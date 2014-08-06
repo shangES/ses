@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.thirdpartner.dao.ThirdPartnerDao">
+
+	<!-- 第三方机构基本信息管理 -->
+	<select id="getAllThirdPartner" resultType="com.mk.thirdpartner.entity.ThirdPartner">
+		select thirdpartnerguid,
+		thirdpartytype,
+		thirdpartnername,
+		rmk,
+		modtime,
+		name,
+		email,
+		mobile
+		from j_thirdpartner order by modtime desc
+	</select>
+
+	<select id="getThirdPartnerById" parameterType="String" resultType="com.mk.thirdpartner.entity.ThirdPartner">
+		select thirdpartnerguid,
+		thirdpartytype,
+		thirdpartnername,
+		rmk,
+		modtime,
+		name,
+		email,
+		mobile
+		from j_thirdpartner
+		where
+		thirdpartnerguid = #{guid}
+	</select>
+
+	<insert id="insertThirdPartner" parameterType="com.mk.thirdpartner.entity.ThirdPartner">
+		insert into j_thirdpartner
+		(thirdpartnerguid, thirdpartytype, thirdpartnername, rmk, modtime,name,email,mobile)
+		values
+		(#{thirdpartnerguid},
+		#{thirdpartytype},
+		#{thirdpartnername},
+		#{rmk:VARCHAR},
+		#{modtime},
+		#{name},
+		#{email},
+		#{mobile}
+		)
+	</insert>
+
+	<delete id="delThirdPartnerById" parameterType="String">
+		delete j_thirdpartner
+		where thirdpartnerguid = #{guid}
+	</delete>
+
+	<update id="updateThirdPartner" parameterType="com.mk.thirdpartner.entity.ThirdPartner">
+		update j_thirdpartner
+		set thirdpartnerguid = #{thirdpartnerguid},
+		thirdpartytype = #{thirdpartytype},
+		thirdpartnername = #{thirdpartnername},
+		rmk =
+		#{rmk:VARCHAR},
+		modtime = #{modtime},
+		name = #{name},
+		email = #{email},
+		mobile = #{mobile}
+		where thirdpartnerguid = #{thirdpartnerguid}
+	</update>
+
+
+
+	<!-- 第三方机构测评信息管理 -->
+
+	<sql id="getAllThirdPartyAssessWhere">
+		where 1=1
+		<if test="parameters.thirdpartnerguid!=null and parameters.thirdpartnerguid!=''">
+			AND thirdpartnerguid=#{parameters.thirdpartnerguid}
+		</if>
+	</sql>
+
+	<select id="getAllThirdPartyAssess" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.thirdpartner.entity.ThirdPartyAssess">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select thirdpartyassessguid,
+		thirdpartnerguid,
+		year,
+		thirdpartyassesslevel,
+		thirdpartyassessresult,
+		thirdpartyassessdate,
+		rmk
+		from j_thirdpartyassess
+		<include refid="getAllThirdPartyAssessWhere" />
+		order by thirdpartyassessdate desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="getThirdPartyAssessById" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.thirdpartner.entity.ThirdPartyAssess">
+		select thirdpartyassessguid,
+		thirdpartnerguid,
+		year,
+		thirdpartyassesslevel,
+		thirdpartyassessresult,
+		thirdpartyassessdate,
+		rmk
+		from j_thirdpartyassess
+		where thirdpartyassessguid = #{thirdpartyassessguid}
+	</select>
+
+	<select id="countThirdPartyAssess" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		SELECT count(1) FROM j_thirdpartyassess
+		<include refid="getAllThirdPartyAssessWhere" />
+	</select>
+
+	<insert id="insertThirdPartyAssess" parameterType="com.mk.thirdpartner.entity.ThirdPartyAssess">
+		insert into j_thirdpartyassess
+		(thirdpartyassessguid,
+		thirdpartnerguid,
+		year,
+		thirdpartyassesslevel,
+		thirdpartyassessresult,
+		thirdpartyassessdate,
+		rmk)
+		values
+		(#{thirdpartyassessguid},
+		#{thirdpartnerguid},
+		#{year},
+		#{thirdpartyassesslevel},
+		#{thirdpartyassessresult},
+		#{thirdpartyassessdate},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateThirdPartyAssess" parameterType="com.mk.thirdpartner.entity.ThirdPartyAssess">
+		update j_thirdpartyassess
+		set thirdpartyassessguid =#{thirdpartyassessguid},
+		thirdpartnerguid = #{thirdpartnerguid},
+		year = #{year},
+		thirdpartyassesslevel = #{thirdpartyassesslevel},
+		thirdpartyassessresult = #{thirdpartyassessresult},
+		thirdpartyassessdate = #{thirdpartyassessdate},
+		rmk = #{rmk:VARCHAR}
+		where thirdpartyassessguid =
+		#{thirdpartyassessguid}
+	</update>
+
+	<delete id="delThirdPartyAssessById" parameterType="String">
+		delete j_thirdpartyassess
+		where thirdpartyassessguid = #{thirdpartyassessguid}
+	</delete>
+
+	<delete id="delThirdPartyAssessByThirdPartnerGuid" parameterType="String">
+		delete j_thirdpartyassess
+		where thirdpartnerguid = #{thirdpartnerguid}
+	</delete>
+
+	<update id="setThirdPartyAssessLevel" parameterType="String">
+		update j_thirdpartyassess
+		set
+		thirdpartyassesslevel = 1
+		where thirdpartyassessguid = #{thirdpartyassessguid}
+	</update>
+
+	<!-- 体检机构树 -->
+	<select id="getAllPartner" resultType="com.mk.thirdpartner.entity.ThirdPartner">
+		select thirdpartnerguid,
+		thirdpartytype,
+		thirdpartnername,
+		rmk,
+		modtime,
+		name,
+		email,
+		mobile
+		from j_thirdpartner where thirdpartytype=1 order by modtime desc
+	</select>
+
+	<select id="checkYear" parameterType="String" resultType="com.mk.thirdpartner.entity.ThirdPartyAssess">
+		select thirdpartyassessguid,
+		thirdpartnerguid,
+		year,
+		thirdpartyassesslevel,
+		thirdpartyassessresult,
+		thirdpartyassessdate,
+		rmk
+		from
+		j_thirdpartyassess
+		where year = #{year}
+		and thirdpartnerguid =#{thirdpartnerguid}
+		<if test="thirdpartyassessguid!=null and thirdpartyassessguid!='' and thirdpartyassessguid!='null' ">
+			and thirdpartyassessguid!=#{thirdpartyassessguid}
+		</if>
+	</select>
+</mapper>

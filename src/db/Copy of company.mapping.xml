@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.company.dao.CompanyDao">
+	<!-- 公司 -->
+	<select id="getAllCompanys" parameterType="String" resultType="com.mk.company.entity.Company">
+		select companyid,
+		pcompanyid,
+		companyname,
+		companycode,
+		createdate,
+		regcapital,
+		companytype,
+		legalperson,
+		officeaddress,
+		businessscope,
+		description,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		1
+		as
+		isaudit
+		from
+		h_o_company
+		<if test="state==1">
+			where state=#{state}
+		</if>
+		order by companycode
+	</select>
+
+	<insert id="insertCompany" parameterType="com.mk.company.entity.Company">
+		insert into h_o_company
+		(companyid, pcompanyid, companyname, companycode, createdate, regcapital, companytype, legalperson, officeaddress,
+		businessscope, description, state, interfacecode, memo, modiuser, moditimestamp, modimemo)
+		values
+		(#{companyid},#{pcompanyid:VARCHAR},#{companyname},#{companycode:VARCHAR},#{createdate:DATE},#{regcapital:DOUBLE},#{companytype:INTEGER},#{legalperson:VARCHAR},#{officeaddress:VARCHAR},
+		#{businessscope:VARCHAR}, #{description:VARCHAR}, #{state}, #{interfacecode:VARCHAR}, #{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp}, #{modimemo:VARCHAR})
+	</insert>
+
+
+	<update id="updateCompany" parameterType="com.mk.company.entity.Company">
+		update h_o_company
+		set companyid = #{companyid},
+		pcompanyid = #{pcompanyid:VARCHAR},
+		companyname = #{companyname},
+		companycode = #{companycode:VARCHAR},
+		createdate = #{createdate:DATE},
+		regcapital = #{regcapital:DOUBLE},
+		companytype = #{companytype:INTEGER},
+		legalperson = #{legalperson:VARCHAR},
+		officeaddress = #{officeaddress:VARCHAR},
+		businessscope =
+		#{businessscope:VARCHAR},
+		description = #{description:VARCHAR},
+		state = #{state},
+		interfacecode = #{interfacecode:VARCHAR},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp =
+		#{moditimestamp},
+		modimemo =
+		#{modimemo:VARCHAR}
+		where companyid = #{companyid}
+	</update>
+
+	<delete id="delCompanyByCompanyCode" parameterType="String">
+		delete h_o_company
+		where companycode LIKE CONCAT(#{code},'%')
+	</delete>
+
+	<select id="getCompanyByCompanyId" parameterType="String" resultType="com.mk.company.entity.Company">
+		select companyid,
+		pcompanyid,
+		companyname,
+		companycode,
+		createdate,
+		regcapital,
+		companytype,
+		legalperson,
+		officeaddress,
+		businessscope,
+		description,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		h_o_company
+		where companyid = #{companyid}
+	</select>
+	
+	<select id="getCompanyByCompanyName" parameterType="String" resultType="com.mk.company.entity.Company">
+		select companyid,
+		pcompanyid,
+		companyname,
+		companycode,
+		createdate,
+		regcapital,
+		companytype,
+		legalperson,
+		officeaddress,
+		businessscope,
+		description,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		h_o_company
+		where companyname = #{companyname}
+	</select>
+
+	<select id="getCompanyByCode" parameterType="String" resultType="com.mk.company.entity.Company">
+		select companyid,
+		pcompanyid,
+		companyname,
+		companycode,
+		createdate,
+		regcapital,
+		companytype,
+		legalperson,
+		officeaddress,
+		businessscope,
+		description,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		h_o_company
+		<if test="code!=null and code!=''">
+			where companycode LIKE CONCAT(#{code},'%')
+		</if>
+		order by companycode
+	</select>
+
+	<select id="getMaxCompanyCodeByPCompanyId" parameterType="String" resultType="String">
+		select max(companycode) from h_o_company
+		<where>
+			<if test="pid==null or pid==''">
+				pcompanyid is null
+			</if>
+			<if test="pid!=null and pid!=''">
+				pcompanyid = #{pid}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 職務 -->
+	<select id="getAllJob" parameterType="String" resultType="com.mk.company.entity.Job">
+		select jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_job
+		<if test="state==1">
+			where state = #{state}
+		</if>
+	</select>
+
+
+
+
+	<sql id="searchJobWhere">
+		where 1=1
+		<if test="parameters.comid!=null and parameters.comid!=''">
+			AND companyid=#{parameters.comid}
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND state=#{parameters.valid}
+		</if>
+	</sql>
+
+	<select id="countJob" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		SELECT count(1) FROM h_o_job
+		<include refid="searchJobWhere" />
+	</select>
+
+	<select id="searchJob" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.company.entity.Job">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_job
+		<include refid="searchJobWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertJob" parameterType="com.mk.company.entity.Job">
+		insert into h_o_job
+		(jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{jobid},
+		#{companyid},
+		#{jobname},
+		#{description:VARCHAR},
+		#{state},
+		#{dorder},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateJob" parameterType="com.mk.company.entity.Job">
+		update h_o_job
+		set jobid = #{jobid},
+		companyid = #{companyid},
+		jobname = #{jobname},
+		description = #{description:VARCHAR},
+		state = #{state},
+		dorder = #{dorder},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where jobid = #{jobid}
+	</update>
+
+	<select id="getJobById" parameterType="String" resultType="com.mk.company.entity.Job">
+		select jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_job
+		where jobid = #{jobid}
+	</select>
+
+	<delete id="delJobByJobId" parameterType="String">
+		delete h_o_job where jobid = #{jobid}
+	</delete>
+
+	<delete id="delJobByCompanyCode" parameterType="String">
+		delete h_o_job
+		where companyid in(select companyid from h_o_company where companycode like CONCAT(#{companycode},'%') )
+	</delete>
+
+	<select id="getJobByCompanyId" parameterType="String" resultType="com.mk.company.entity.Job">
+		select jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_job
+		where companyid =
+		#{companyid}
+		order by dorder
+	</select>
+
+	<select id="getJobByName" parameterType="String" resultType="com.mk.company.entity.Job">
+		select jobid,
+		companyid,
+		jobname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_job
+		where companyid =
+		#{companyid}
+		and jobname=#{jobname}
+	</select>
+
+
+
+
+	<!-- 职级 -->
+	<select id="getAllRank" parameterType="String" resultType="com.mk.company.entity.Rank">
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		<if test="state==1">
+			where state = #{state}
+		</if>
+	</select>
+
+
+	<sql id="searchRankWhere">
+		where 1=1
+		<if test="parameters.comid!=null and parameters.comid!=''">
+			AND companyid=#{parameters.comid}
+		</if>
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND state=#{parameters.valid}
+		</if>
+	</sql>
+
+	<select id="countRank" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		SELECT count(1) FROM h_o_rank
+		<include refid="searchRankWhere" />
+	</select>
+
+	<select id="searchRank" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.company.entity.Rank">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		<include refid="searchRankWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertRank" parameterType="com.mk.company.entity.Rank">
+		insert into h_o_rank
+		(rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode)
+		values
+		(#{rankid},
+		#{companyid},
+		#{levelname},
+		#{description:VARCHAR},
+		#{state},
+		#{dorder},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{interfacecode:VARCHAR})
+	</insert>
+
+	<update id="updateRank" parameterType="com.mk.company.entity.Rank">
+		update h_o_rank
+		set rankid = #{rankid},
+		companyid = #{companyid},
+		levelname = #{levelname},
+		description = #{description:VARCHAR},
+		state = #{state},
+		dorder =
+		#{dorder},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		interfacecode=#{interfacecode:VARCHAR}
+		where rankid = #{rankid}
+	</update>
+
+	<select id="getRankById" parameterType="String" resultType="com.mk.company.entity.Rank">
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		where rankid=#{rankid}
+	</select>
+	
+	<!-- 只取华数传媒网络有限公司的职级(写死) 20140313 -->
+	<!-- 取不同公司的职级 -->
+	<select id="getRankByInterfacecode" parameterType="String" resultType="com.mk.company.entity.Rank">
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		where interfacecode=#{interfacecode}
+		and companyid=#{companyid}
+	</select>
+
+	<delete id="delRankByRankId" parameterType="String">
+		delete h_o_rank
+		where rankid=#{rankid}
+	</delete>
+
+	<delete id="delRankByCompanyCode" parameterType="String">
+		delete h_o_rank
+		where companyid in(select companyid from h_o_company where companycode like CONCAT(#{companycode},'%') )
+	</delete>
+
+	<select id="getRankByCompanyId" parameterType="String" resultType="com.mk.company.entity.Rank">
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		where companyid =
+		#{companyid}
+		order by dorder
+	</select>
+
+	<select id="getRankByName" parameterType="String" resultType="com.mk.company.entity.Rank">
+		select rankid,
+		companyid,
+		levelname,
+		description,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		interfacecode
+		from h_o_rank
+		where companyid
+		=#{companyid}
+		and levelname=#{rankname}
+	</select>
+
+	<!-- 编制类型 -->
+	<sql id="searchBudgetypeWhere">
+		where 1=1
+		<if test="parameters.comid!=null and parameters.comid!=''">
+			AND companyid=#{parameters.comid}
+		</if>
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND state=#{parameters.valid}
+		</if>
+	</sql>
+
+	<select id="countBudgetype" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		SELECT count(1) FROM h_o_budgettype
+		<include refid="searchBudgetypeWhere" />
+	</select>
+
+	<select id="searchBudgetype" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.company.entity.Budgetype">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select companyid,
+		budgettypeid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_budgettype
+		<include refid="searchBudgetypeWhere" />
+		order by dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertBudgetype" parameterType="com.mk.company.entity.Budgetype">
+		insert into h_o_budgettype
+		(budgettypeid,
+		companyid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{budgettypeid},
+		#{companyid},
+		#{budgettypename},
+		#{state},
+		#{dorder},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateBudgetype" parameterType="com.mk.company.entity.Budgetype">
+		update h_o_budgettype
+		set companyid = #{companyid},
+		budgettypename = #{budgettypename},
+		state = #{state},
+		dorder =
+		#{dorder},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where budgettypeid = #{budgettypeid}
+	</update>
+
+	<select id="getBudgetypeById" parameterType="String" resultType="com.mk.company.entity.Budgetype">
+		select companyid,
+		budgettypeid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_budgettype
+		where
+		budgettypeid = #{budgettypeid}
+	</select>
+
+	<select id="getQuotaBudgettypeByCompanyId" parameterType="String" resultType="com.mk.company.entity.Budgetype">
+		select companyid,
+		budgettypeid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_budgettype
+		where
+		companyid =#{companyid}
+		and state=1
+		order by dorder,budgettypeid
+	</select>
+	<select id="getAllQuotaBudgettype" parameterType="String" resultType="com.mk.company.entity.Budgetype">
+		select companyid,
+		budgettypeid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_budgettype
+	</select>
+
+	<delete id="delBudgetypeByBudgetypeId" parameterType="String">
+		delete h_o_budgettype
+		where budgettypeid = #{budgettypeid}
+	</delete>
+
+	<delete id="delBudgetypeByCompanyCode" parameterType="String">
+		delete h_o_budgettype
+		where companyid in(select companyid from h_o_company where companycode like CONCAT(#{companycode},'%') )
+	</delete>
+	
+	<select id="getBudgettypeByName" parameterType="String" resultType="com.mk.company.entity.Budgetype">
+		select companyid,
+		budgettypeid,
+		budgettypename,
+		state,
+		dorder,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_budgettype
+		where
+		companyid =#{companyid}
+		and budgettypename=#{budgettypename}
+		and state=1
+	</select>
+
+</mapper>

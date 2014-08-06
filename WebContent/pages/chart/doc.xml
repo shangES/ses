@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--anychart xml文件详解-->
+	<!--根元素-->
+<anychar>
+	<settings>
+		<!--初始化的时候是否显示动画效果-->
+		<animation enabled="True" />
+	</settings>
+	<charts>
+		<!--  
+		 plot_type="CategorizedBySeriesVertical"按series显示图形   
+		 plot_type="CategorizedVertical" 按point显示图形   
+		 plot_type="Pie" 饼图   
+		 -->
+		<chart plot_type="CategorizedBySeriesVertical">
+			<!--
+				enable_3d_mode 3D效果 z_aspect 3D效果的深度 default_series_type="Spline" 曲线 default_series_type="Bar" 柱型 default_series_type="StepLineForward"方型折线图 default_series_type="Line" 折线
+			-->
+			<data_plot_settings default_series_type="Bar" enable_3d_mode="true" z_aspect="1">
+				<!--   
+				 point_padding  同一组内柱直接的间距   
+				 group_padding  组之间的间距   
+				-->
+				<bar_series point_padding="0.2" group_padding="10">
+					<!--在图柱上显示的标签-->
+					<label_settings enabled="True" rotation="90">
+						<position anchor="Center" halign="Center" valign="Center" />
+						<!--   
+						{%Value} 显示值   
+						 {numDecimals:3}小数地精确位数   
+						-->
+						<format>{%Value}{numDecimals:3}</format>
+						<font bold="False" color="White">
+							<effects>
+								<drop_shadow enabled="True" opacity="0.5" distance="2" blur_x="1" blur_y="1" />
+							</effects>
+						</font>
+						<background enabled="False" />
+					</label_settings>
+					<!--鼠标停留在图上时是否显示提示信息-->
+					<tooltip_settings enabled="true">
+						<!--提示信息地格式-->
+						<format>Value: {%YValue}{numDecimals:2} Argument: {%Name}</format>
+						<!--anchor 标签的位置-->
+						<position anchor="CenterTop" padding="10" />
+						<background>
+							<border color="DarkColor(Gold)" thickness="5" />
+							<fill type="Solid" color="DarkColor(%Color)" />
+							<effects enabled="false" />
+							<inside_margin all="0" />
+						</background>
+						<font size="8" color="DarkColor(%Color)" />
+					</tooltip_settings>
+					<bar_style>
+						<states>
+							<normal>
+								<border color="DarkColor(%Color)" thickness="1" />
+							</normal>
+							<hover>
+								<border thickness="2" />
+							</hover>
+						</states>
+					</bar_style>
+				</bar_series>
+				<!--饼图设置信息-->
+				<pie_series>
+					<tooltip_settings enabled="true">
+						<format>
+							{%Name}
+							Sales: ${%Value}
+							Percent: {%YPercentOfSeries}{numDecimals: 2}% </format>
+					</tooltip_settings>
+					<label_settings enabled="true" mode="Outside" multi_line_align="Center">
+						<background enabled="false" />
+						<position anchor="Center" valign="Center" halign="Center" padding="20" />
+						<format>
+							{%Name}
+							${%Value} ({%YPercentOfSeries}{numDecimals:1}%)   
+ </format>
+						<font bold="False" />
+					</label_settings>
+					<connector color="Black" opacity="0.4" />
+				</pie_series>
+				<!--折线图配置信息-->
+				<line_series>
+					<marker_settings>
+						<marker size="8" />
+						<states>
+							<hover>
+								<marker size="12" />
+							</hover>
+						</states>
+					</marker_settings>
+					<tooltip_settings enabled="True" />
+				</line_series>
+			</data_plot_settings>
+			<!--图表设置信息-->
+			<chart_settings>
+				<!--图表标题-->
+				<title enabled="true">
+					<text>人员信息统计</text>
+				</title>
+				<!--图例显示设置-->
+				<legend enabled="true" position="left" align="Near" ignore_auto_item="true">
+					<format>{%Icon} {%Name} ({%Value})</format>
+					<template></template>
+					<title enabled="true">
+						<text>图列</text>
+					</title>
+					<columns_separator enabled="false" />
+					<background>
+						<inside_margin left="10" right="10" />
+					</background>
+					<items>
+						<item source="Points" />
+					</items>
+				</legend>
+				<axes>
+					<!--position="Opposite"    x轴在上面显示-->
+					<x_axis position="Opposite">
+						<!--y轴标题-->
+						<title enabled="true">
+							<text>Arguments</text>
+						</title>
+					</x_axis>
+					<!--position="Opposite"    y轴在右边显示-->
+					<y_axis position="Opposite">
+						<!--y轴标题-->
+						<title enabled="true">
+							<text>Values</text>
+						</title>
+						<!--   
+						 inverted   
+						 true0点在上面   
+						 false0点在下面   
+						 -->
+						<scale inverted="false" />
+						<!--   
+						 0刻度线设置   
+						 color颜色   
+						 opacity透明度   
+						 -->
+						<zero_line color="Red" opacity="0.5" />
+						<!--坐标轴显示的标签-->
+						<labels>
+							<!--   
+							 标签格式：   
+							 {%Value} 坐标值   
+							 {numDecimals:2} 精确地小数位数   
+							 -->
+							<format>{%Value}{numDecimals:2}</format>
+						</labels>
+						<!--   
+						 invertedtrue:y轴0坐标在上面   
+						 false:y轴0坐标在下面   
+						 minimum 起始坐标   
+						 -->
+						<scale inverted="true" minimum="0" />
+					</y_axis>
+				</axes>
+				<data_plot_background>
+					<effects enabled="false" />
+				</data_plot_background>
+			</chart_settings>
+			
+			<data>
+				<!--series  Default", "Silver", "AquaLight" and "AquaDark".  系列-->
+				<series name="伊犁" palette="Default">
+					<point name="第一季度" y="22.14" />
+					<point name="第二季度" y="21.61" />
+					<point name="第三季度" y="26.21" />
+					<point name="第四季度" y="32.98" />
+				</series>
+				<series name="和田">
+					<point name="第一季度" y="9.54" />
+					<point name="第二季度" y="20.19" />
+					<point name="第三季度" y="15.67" />
+					<point name="第四季度" y="12.43" />
+				</series>
+				<series name="乌鲁木齐">
+					<point name="第一季度" y="43.76" />
+					<point name="第二季度" y="61.34" />
+					<point name="第三季度" y="34.17" />
+					<point name="第四季度" y="45.72" />
+				</series>
+				<series name="阿勒泰">
+					<point name="第一季度" y="12.56" />
+					<point name="第二季度" y="8.12" />
+					<point name="第三季度" y="5.32" />
+					<point name="第四季度" y="33.08" />
+				</series>
+			</data>
+		</chart>
+	</charts>
+</anychar> 

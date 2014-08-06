@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.department.dao.PostDao">
+
+	<!-- 岗位信息 -->
+	<select id="getAllPost" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		<if test="state==1">
+			where state=#{state}
+		</if>
+		order by postcode
+	</select>
+
+	<sql id="searchPostWhere">
+		<if test="parameters.deptid!=null and parameters.deptid!=null">
+			where deptid=#{parameters.deptid}
+		</if>
+	</sql>
+
+	<select id="searchPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.department.entity.Post">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		<include refid="searchPostWhere" />
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			) 
+			ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countPost" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_o_post
+		<include refid="searchPostWhere" />
+	</select>
+
+	<select id="getPostByDeptid" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		where
+		deptid=#{deptid}
+		order by postcode
+	</select>
+	
+	<select id="getPostByDeptCode" resultType="com.mk.department.entity.Post">
+		select a.postid,
+		a.companyid,
+		a.deptid,
+		a.jobid,
+		a.postname,
+		a.postcode,
+		a.postduty,
+		a.state,
+		a.interfacecode,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_o_post a,h_o_department b
+		where
+		a.deptid=b.deptid
+		and b.deptcode like CONCAT(#{deptcode},'%')
+		order by a.postcode
+	</select>
+	
+
+	<select id="verificationPostname" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		where
+		postname=#{postname}
+		and deptid=#{deptid}
+		<if test="postid!=null and postid!=''">
+			and postid!=#{postid}
+		</if>
+	</select>
+
+	<insert id="insertPost" parameterType="com.mk.department.entity.Post">
+		insert into h_o_post
+		(postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{postid},
+		#{companyid},
+		#{deptid},
+		#{jobid:VARCHAR},
+		#{postname},
+		#{postcode},
+		#{postduty:VARCHAR},
+		#{state},
+		#{interfacecode:VARCHAR},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updatePost" parameterType="com.mk.department.entity.Post">
+		update h_o_post
+		set postid = #{postid},
+		companyid = #{companyid},
+		deptid = #{deptid},
+		jobid = #{jobid:VARCHAR},
+		postname = #{postname},
+		postcode = #{postcode},
+		postduty
+		= #{postduty:VARCHAR},
+		state = #{state},
+		interfacecode = #{interfacecode:VARCHAR},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where postid =
+		#{postid}
+	</update>
+
+	<delete id="delPostById" parameterType="String">
+		delete h_o_post
+		where postid =#{id}
+	</delete>
+
+	<delete id="delPostByDeptcode" parameterType="String">
+		delete from h_o_post a
+		where a.deptid in
+		(select deptid from h_o_department where deptcode like CONCAT(#{deptcode},'%'))
+	</delete>
+
+	<select id="getPostByPostId" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		where
+		postid=#{id}
+	</select>
+	<select id="getPostByPostName" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		where
+		companyid=#{companyid}
+		and deptid=#{deptid}
+		and postname=#{postname}
+	</select>
+
+	<update id="invalidOrReductionPostById" parameterType="com.mk.department.entity.Post">
+		update h_o_post
+		set state = #{state}
+		where postid = #{id}
+	</update>
+
+
+	<select id="getHasPost" parameterType="String" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		postcode,
+		postduty,
+		state,
+		interfacecode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_post
+		<where>
+			1=1
+			<if test="state==1">
+				and state=#{state}
+			</if>
+			and companyid in
+			(select companyid
+			from t_h_usermanagerange where userguid = #{userguid})
+		</where>
+	</select>
+
+	<select id="getMaxPostCodeByDepartmentId" parameterType="String" resultType="String">
+		select max(postcode) from h_o_post
+		where
+		deptid = #{deptid}
+	</select>
+
+
+
+
+</mapper>

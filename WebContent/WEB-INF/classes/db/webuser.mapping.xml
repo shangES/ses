@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.recruitment.dao.WebUserDao">
+
+	<insert id="insertWebUser" parameterType="com.mk.recruitment.entity.WebUser">
+		insert into j_webuser
+		(webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk)
+		values
+		(#{webuserguid},
+		#{thirdpartnerguid:VARCHAR},
+		#{email},
+		#{username},
+		#{password},
+		#{isadmin},
+		#{valid},
+		#{code},
+		#{mobile:VARCHAR},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateWebUser" parameterType="com.mk.recruitment.entity.WebUser">
+		update j_webuser
+		set webuserguid = #{webuserguid},
+		thirdpartnerguid = #{thirdpartnerguid:VARCHAR},
+		email = #{email},
+		username = #{username},
+		password =
+		#{password},
+		isadmin = #{isadmin},
+		valid = #{valid},
+		code = #{code},
+		mobile = #{mobile:VARCHAR},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where webuserguid = #{webuserguid}
+	</update>
+
+	<select id="getAllWebUser" parameterType="String" resultType="com.mk.recruitment.entity.WebUser">
+		select webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk
+		from j_webuser
+	</select>
+
+
+	<!--外网用户查询 -->
+	<sql id="searchWebUserWhere">
+		where 1=1
+		<if test="parameters.username!=null and parameters.username!='' and parameters.username!='null' ">
+			AND username LIKE CONCAT(#{parameters.username},'%')
+		</if>
+
+		<if test="parameters.valid!=null and parameters.valid!='' and parameters.valid==1 ">
+			AND valid=#{parameters.valid}
+		</if>
+
+		<if test="parameters.thirdpartnerguid!=null and parameters.thirdpartnerguid!='' ">
+			AND thirdpartnerguid=#{parameters.thirdpartnerguid}
+		</if>
+	</sql>
+
+	<select id="countWebUser" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_webuser
+		<include refid="searchWebUserWhere" />
+	</select>
+
+	<select id="searchWebUser" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.recruitment.entity.WebUser">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk
+		from j_webuser
+		<include refid="searchWebUserWhere" />
+		order by username
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<select id="getWebUserById" parameterType="String" resultType="com.mk.recruitment.entity.WebUser">
+		select webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk
+		from j_webuser
+		where
+		webuserguid=#{webuserguid}
+	</select>
+
+	<delete id="delWebUserById" parameterType="String">
+		delete j_webuser where webuserguid = #{webuserguid}
+	</delete>
+
+	<delete id="delWebUserByThirdpartnerId" parameterType="String">
+		delete j_webuser
+		where thirdpartnerguid = #{thirdpartnerguid}
+	</delete>
+
+	<select id="checkWebUserByEmail" parameterType="String" resultType="com.mk.recruitment.entity.WebUser">
+		select webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk
+		from j_webuser
+		where email=#{email}
+		<if test="webuserguid!=null and webuserguid!=''">
+			and webuserguid != #{webuserguid}
+		</if>
+	</select>
+
+
+
+	<!-- 邮箱树 -->
+	<sql id="searchEmailTreeWhere">
+		<where>
+			valid=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				and email like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+		</where>
+	</sql>
+
+	<select id="countEmailTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(1) from j_webuser
+		<include refid="searchEmailTreeWhere" />
+	</select>
+
+	<select id="searchEmailTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="com.mk.recruitment.entity.WebUser">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		select webuserguid,
+		thirdpartnerguid,
+		email,
+		username,
+		password,
+		isadmin,
+		valid,
+		code,
+		mobile,
+		modtime,
+		rmk
+		from j_webuser
+		<include refid="searchEmailTreeWhere" />
+		order by modtime
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+</mapper>

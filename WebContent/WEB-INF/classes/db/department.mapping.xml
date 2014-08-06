@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.department.dao.DepartmentDao">
+
+	<!-- 部门 -->
+	<select id="getAllDepartment" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		<if test="state==1">
+			where state=#{state}
+		</if>
+		order by deptcode
+	</select>
+	
+	<select id="getDepartmentByPDeptid" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		where pdeptid=#{pdeptid}
+		and companyid=#{companyid}
+	</select>
+
+
+	<insert id="insertDepartment" parameterType="com.mk.department.entity.Department">
+		insert into h_o_department
+		(deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy)
+		values
+		(#{deptid},
+		#{pdeptid:VARCHAR},
+		#{companyid},
+		#{deptname},
+		#{deptcode:VARCHAR},
+		#{deptfunction},
+		#{deptduty},
+		#{description:VARCHAR},
+		#{depttype:VARCHAR},
+		#{interfacecode:VARCHAR},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{assesshierarchy:INTEGER})
+	</insert>
+
+
+	<update id="updateDepartment" parameterType="com.mk.department.entity.Department">
+		update h_o_department
+		set deptid = #{deptid},
+		pdeptid = #{pdeptid:VARCHAR},
+		companyid = #{companyid},
+		deptname = #{deptname},
+		deptcode =
+		#{deptcode:VARCHAR},
+		deptfunction = #{deptfunction},
+		deptduty = #{deptduty},
+		description = #{description:VARCHAR},
+		depttype = #{depttype:VARCHAR},
+		interfacecode = #{interfacecode:VARCHAR},
+		state =
+		#{state},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		assesshierarchy=#{assesshierarchy:INTEGER}
+		where deptid = #{deptid}
+	</update>
+
+
+	<delete id="delDepartmentByDepartmentCode" parameterType="String">
+		delete h_o_department
+		where deptcode like CONCAT(#{deptcode},'%')
+	</delete>
+
+	<select id="getDepartmentByDepartmentCode" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		<if test="deptcode!=null and deptcode!=''">
+			where deptcode like CONCAT(#{deptcode},'%')
+		</if>
+		order by deptcode
+	</select>
+
+	<select id="getDepartmentByCompanyCode" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		where
+		companyid in(
+		select companyid from h_o_company where companycode like CONCAT(#{companycode},'%')
+		)
+	</select>
+
+	<select id="getDepartmentByCompanyId" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		where
+		state=1
+		and companyid= #{companyid}
+		order by deptcode
+	</select>
+
+	<select id="getDepartmentByDepartmentId" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		where deptid = #{deptid}
+	</select>
+
+	<select id="getDeptByDepartmentName" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		where deptname = #{deptname}
+		and companyid=#{companyid}
+	</select>
+
+
+
+
+	<select id="getHasDepartment" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from h_o_department
+		<where>
+			1=1
+			<if test="state==1">
+				and state=#{state}
+			</if>
+			and companyid in
+			(select companyid
+			from t_h_usermanagerange where userguid = #{userguid})
+		</where>
+		order by deptcode
+	</select>
+
+	<select id="getHasWebDepartment" parameterType="String" resultType="com.mk.department.entity.Department">
+
+		select h_o_department.deptid,
+		h_o_department.pdeptid,
+		h_o_department.companyid,
+		h_o_department.deptname,
+		h_o_department.deptcode,
+		h_o_department.deptfunction,
+		h_o_department.deptduty,
+		h_o_department.description,
+		h_o_department.depttype,
+		h_o_department.interfacecode,
+		h_o_department.state,
+		h_o_department.memo,
+		h_o_department.modiuser,
+		h_o_department.moditimestamp,
+		h_o_department.modimemo
+		from h_o_department, t_h_useraddresscompany
+		<where>
+			t_h_useraddresscompany.userguid =#{userguid}
+			<if test="state==1">
+				and h_o_department.state=#{state}
+			</if>
+			and (t_h_useraddresscompany.companyid = h_o_department.companyid or t_h_useraddresscompany.companyid is null)
+		</where>
+		ORDER BY h_o_department.deptcode
+	</select>
+
+
+
+
+
+
+
+
+
+
+	<select id="getMaxDepartmentCodeByPDepartmentId" parameterType="String" resultType="String">
+		select max(deptcode) from h_o_department
+		<where>
+			<if test="pdeptid==null or pdeptid==''">
+				pdeptid is null
+			</if>
+			<if test="pdeptid!=null and pdeptid!=''">
+				pdeptid = #{pdeptid}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 一级部门名称查询  -->
+	<select id="getDepartmentbyDepartmentName" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_department
+		where deptname = #{departmentname} 
+		and companyid=#{companyid} 
+		and pdeptid is null
+	</select>
+	
+	<!-- 是否是对应一级部门下二级部门  -->
+	<select id="getPDepartmentbyDepartmentName" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_department
+		where deptname = #{departmentname} 
+		and companyid=#{companyid} 
+		and pdeptid =#{pdeptid}
+	</select>
+	
+	<select id="getWSDepartmentByPostId" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_department
+		where deptid in (select deptid from H_O_Post where interfacecode=#{interfacecode})
+	</select>
+	
+	
+	<select id="getDepartmentByPostcode" parameterType="String" resultType="com.mk.department.entity.Department">
+		select deptid,
+		pdeptid,
+		companyid,
+		deptname,
+		deptcode,
+		deptfunction,
+		deptduty,
+		description,
+		depttype,
+		interfacecode,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_o_department
+		where interfacecode=#{interfacecode}
+	</select>
+
+</mapper>

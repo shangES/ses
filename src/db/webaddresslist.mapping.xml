@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.addresslist.dao.WebAddressListDao">
+
+	<sql id="searchWebAddressListWhere">
+		where 1=1
+
+		<if test="parameters.companycode!=null and parameters.companycode!='' and parameters.companycode!='null'">
+			AND companycode LIKE CONCAT(#{parameters.companycode},'%')
+		</if>
+
+		<if test="parameters.deptcode!=null and parameters.deptcode!='' and parameters.deptcode!='null'">
+			AND deptcode LIKE CONCAT(#{parameters.deptcode},'%')
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!='' and parameters.name!='null'">
+			AND(
+			name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			jobnumber like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			innerphone like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			email like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			extphone like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			mobilephone like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			or
+			mobilephone2 like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			)
+		</if>
+		<if test="parameters.userguid!=null and parameters.userguid!='' and parameters.userguid!='null'">
+			AND (exists (select companyid from T_H_UserAddressCompany where userguid = #{parameters.userguid} and companyid is null)
+			or companyid
+			in (select companyid from T_H_UserAddressCompany where
+			userguid = #{parameters.userguid})
+			)
+		</if>
+
+	</sql>
+
+	<select id="countWebAddressList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_a_addresslist
+		<include refid="searchWebAddressListWhere" />
+	</select>
+
+
+	<select id="searchWebAddressList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.addresslist.entity.WebAddressList">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		<include refid="searchWebAddressListWhere" />
+		order by companycode,deptcode,postcode,dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+
+	<select id="getWebAddressListById" parameterType="String" resultType="com.mk.addresslist.entity.WebAddressList">
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		where addresslistguid=#{addresslistguid}
+	</select>
+
+	<select id="getWebAddressListByUserId" parameterType="String" resultType="com.mk.addresslist.entity.WebAddressList">
+		select a.addresslistguid,
+		a.employeeid,
+		a.employeecode,
+		a.companyid,
+		a.companycode,
+		a.deptid,
+		a.deptcode,
+		a.postid,
+		a.postcode,
+		a.dorder,
+		a.jobnumber,
+		a.name,
+		a.sex,
+		a.innerphone,
+		a.extphone,
+		a.mobilephone,
+		a.mobilephone2,
+		a.email,
+		a.officeaddress,
+		a.refreshtimestamp,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_a_addresslist a, t_sysuser t
+		where a.employeeid = t.employeeid
+		and t.userguid=#{userid}
+	</select>
+
+	<update id="updateWebAddressList" parameterType="com.mk.addresslist.entity.WebAddressList">
+		update h_a_addresslist
+		set employeeid = #{employeeid:VARCHAR},
+		employeecode = #{employeecode:VARCHAR},
+		companyid = #{companyid},
+		companycode =
+		#{companycode},
+		deptid = #{deptid},
+		deptcode = #{deptcode},
+		postid = #{postid:VARCHAR},
+		postcode = #{postcode:VARCHAR},
+		dorder = #{dorder:VARCHAR},
+		jobnumber = #{jobnumber:VARCHAR},
+		name = #{name},
+		sex = #{sex},
+		innerphone =
+		#{innerphone:VARCHAR},
+		extphone = #{extphone:VARCHAR},
+		mobilephone = #{mobilephone:VARCHAR},
+		mobilephone2=#{mobilephone2},
+		email = #{email:VARCHAR},
+		officeaddress = #{officeaddress:VARCHAR},
+		refreshtimestamp = #{refreshtimestamp},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where addresslistguid=#{addresslistguid}
+	</update>
+
+	<select id="getWebAddressListByDpetId" parameterType="String" resultType="com.mk.addresslist.entity.WebAddressList">
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		where deptid=#{deptid}
+		<![CDATA[and addresslistguid<>#{id}]]>
+		order by companycode,deptcode,postcode,dorder
+	</select>
+
+</mapper>

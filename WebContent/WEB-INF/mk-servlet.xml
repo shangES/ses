@@ -1,0 +1,42 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
+				http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<!-- JSR-303 support will be detected on classpath and enabled automatically -->
+	<!-- mvc:annotation-driven /-->
+	<context:component-scan base-package="com.mk" use-default-filters="false">
+        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+    </context:component-scan>
+
+	<!-- json support -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+		<property name="webBindingInitializer">
+			<bean class="com.mk.framework.custom.CommonBindingInitializer" />
+		</property>
+	</bean>
+
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+
+	<mvc:interceptors>
+		<bean class="com.mk.framework.web.BaseUrlInterceptor"></bean>
+		<bean class="com.mk.framework.web.ButtonPurviewInterceptor"/>
+	</mvc:interceptors>
+
+	<bean id="exceptionResolver" class="com.mk.framework.exception.MkHandlerExceptionResolver">
+		<property name="defaultErrorView" value="failure" />
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.sql.SQLException">showDBError</prop>
+				<prop key="java.lang.RuntimeException">showError</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+
+	<description>Spring公共配置</description>
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean id="propertiesLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="false" />
+		<property name="locations">
+			<list>
+				<value>classpath*:/application.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.mk">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="driver" value="${jdbc.dbDriver}" />
+		<property name="driverUrl" value="${jdbc.dburl}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="alias" value="Pool_dbname" />
+		<property name="prototypeCount" value="0" />
+		<property name="maximumConnectionCount" value="50" />
+		<property name="minimumConnectionCount" value="2" />
+		<property name="simultaneousBuildThrottle" value="50" />
+		<property name="houseKeepingTestSql" value="select CURRENT_DATE" />
+	</bean>
+
+
+
+	<!-- SpringContext Holder -->
+	<bean id="springContextHolder" class="com.mk.framework.spring.SpringContextHolder" lazy-init="false" />
+	<!-- 事务管理器配置,单数据源事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/db/my.ibatis.mem.conf.xml" />
+	</bean>
+	<bean id="sessionTemplet" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+
+
+	<!-- OA数据源配置,使用应用内的DBCP数据库连接池 -->
+	<bean id="mydataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${oa.jdbc.dbDriver}" />
+		<property name="url" value="${oa.jdbc.dburl}" />
+		<property name="username" value="${oa.jdbc.username}" />
+		<property name="password" value="${oa.jdbc.password}" />
+		<property name="maxActive" value="100" />
+		<property name="maxIdle" value="30" />
+		<property name="maxWait" value="1000" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="60" />
+	</bean>
+
+	<!-- OA招聘计划 -->
+	<bean id="recruitprogramauditremotedao" class="com.mk.recruitprogram.dao.RecruitProgramAuditRemoteDao">
+		<property name="dataSource" ref="mydataSource"></property>
+	</bean>
+
+
+
+
+	<!--工作流相关部分 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="databaseSchemaUpdate" value="true" />
+		<property name="jobExecutorActivate" value="false" />
+	</bean>
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+	<bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
+	<bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />
+	<bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
+	<bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
+	<bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
+	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService" />
+
+
+
+
+
+
+
+	<!--邮件相关 -->
+	<bean id="sender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${send.mail.smtp.server}" />
+		<property name="username" value="${send.mail.server.username}" />
+		<property name="password" value="${send.mail.server.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="receive" class="com.mk.framework.mail.MailReceiveService">
+		<property name="host" value="${receive.mail.smtp.server}" />
+		<property name="username" value="${receive.mail.server.username}" />
+		<property name="password" value="${receive.mail.server.password}" />
+	</bean>
+
+	<!-- 配置freeMarkerConfigurer进行属性值的注入 -->
+	<bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPaths" value="classpath:mailTemplate" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">1800</prop>
+				<!-- 模板更新延时 -->
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- 定义自定义的类进行数据的注入 -->
+	<bean id="freeMarkService" class="com.mk.framework.mail.MailSendService">
+		<property name="sender" ref="sender" />
+		<property name="freeMarkerConfigurer" ref="freeMarkerConfigurer" />
+	</bean>
+
+
+	<!-- 定义自定义的类进行数据的注入 -->
+	<bean id="sendMessageService" class="com.mk.framework.mail.SendMessageService">
+		<property name="freeMarkerConfigurer" ref="freeMarkerConfigurer" />
+	</bean>
+</beans>

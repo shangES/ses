@@ -1,0 +1,2675 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.employee.dao.EmployeeDao">
+
+	<!-- 员工信息 -->
+	<sql id="searchEmployeeWhere">
+		<where>
+			a.employeeid=b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid =
+			h_o_post.postid(+)
+
+			<if test="parameters.workstate!=null and parameters.workstate!=''">
+				AND a.workstate ${parameters.workstate}
+			</if>
+			<if test="parameters.secrecy!=null and parameters.secrecy!=''">
+				AND a.secrecy = #{parameters.secrecy}
+			</if>
+
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND a.name like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+
+			<if test="parameters.sex!=null and parameters.sex!=''">
+				AND a.sex = #{parameters.sex}
+			</if>
+
+			<if test="parameters.jobnumber!=null and parameters.jobnumber!=''">
+				AND a.jobnumber like
+				CONCAT('%',CONCAT(#{parameters.jobnumber},'%'))
+			</if>
+
+			<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+				<![CDATA[AND a.birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+			</if>
+			<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+				<![CDATA[AND a.birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.classification!=null and parameters.classification!=''">
+				AND a.classification = #{parameters.classification}
+			</if>
+			<if test="parameters.employtype!=null and parameters.employtype!=''">
+				AND a.employtype = #{parameters.employtype}
+			</if>
+
+			<if test="parameters.joindate_s!=null and parameters.joindate_s!=''">
+				<![CDATA[AND a.joindate >=to_date(#{parameters.joindate_s},'yyyy-MM-dd')]]>
+			</if>
+			<if test="parameters.joindate_e!=null and parameters.joindate_e!=''">
+				<![CDATA[AND a.joindate <=to_date(#{parameters.joindate_e},'yyyy-MM-dd')]]>
+			</if>
+
+
+
+			<if test="parameters.companyid!=null and parameters.companyid!=''">
+				and b.companyid=#{parameters.companyid}
+			</if>
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from
+					t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+			<if test="parameters.postid!=null and parameters.postid!=''">
+				and b.postid=#{parameters.postid}
+			</if>
+			<if test="parameters.isstaff!=null and parameters.isstaff!=''">
+				and b.isstaff=#{parameters.isstaff}
+			</if>
+
+			<if test="parameters.startdate!=null and parameters.startdate!=''">
+				<![CDATA[AND b.startdate <=to_date(#{parameters.startdate},'yyyy-MM-dd')]]>
+				<![CDATA[AND (b.enddate >to_date(#{parameters.startdate},'yyyy-MM-dd') OR b.enddate is null)]]>
+			</if>
+			<if test="parameters.startdate==null or parameters.startdate==''">
+				<![CDATA[AND b.startdate <=sysdate]]>
+				<![CDATA[AND (b.enddate >sysdate OR b.enddate is null)]]>
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="countEmployee" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_e_employee a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<include refid="searchEmployeeWhere" />
+	</select>
+
+	<select id="searchEmployee" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Employee">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.rankid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.state,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.social,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		a.mobile2,
+		a.height,
+		a.societydate,
+		a.legaladdress,
+		a.payment,
+		a.starttime,
+		a.endtime,
+		a.skills,
+		a.hobbies
+		from
+		h_e_employee a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<include refid="searchEmployeeWhere" />
+		order by
+		h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode,
+		a.dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertEmployee" parameterType="com.mk.employee.entity.Employee">
+		insert into
+		h_e_employee
+		(employeeid,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		joinworkdate,
+		joingroupdate,
+		workstate,
+		jobnumber,
+		secrecy,
+		dorder,
+		classification,
+		employtype,
+		checknumber,
+		joindate,
+		officephone,
+		email,
+		social,
+		shortphone,
+		officeaddress,
+		studymonth,
+		officialdateplan,
+		officialdate,
+		officialmemo,
+		resignationdate,
+		resignationreason,
+		interfacecode,
+		contactphone,
+		contactrelationship,
+		contactname,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		mobile2,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies)
+		values
+		(#{employeeid},
+		#{name},
+		#{sex:INTEGER},
+		#{birthday:DATE},
+		#{cardnumber:VARCHAR},
+		#{culture:INTEGER},
+		#{nation:INTEGER},
+		#{mobile:VARCHAR},
+		#{addressmobile:VARCHAR},
+		#{residenceplace:VARCHAR},
+		#{homephone:VARCHAR},
+		#{homeplace:VARCHAR},
+		#{bloodtype:INTEGER},
+		#{domicilplace:VARCHAR},
+		#{nativeplace:VARCHAR},
+		#{politics:INTEGER},
+		#{married:INTEGER},
+		#{privateemail:VARCHAR},
+		#{photo:VARCHAR},
+		#{joinworkdate:DATE},
+		#{joingroupdate:DATE},
+		#{workstate},
+		#{jobnumber},
+		#{secrecy},
+		#{dorder},
+		#{classification:VARCHAR},
+		#{employtype:VARCHAR},
+		#{checknumber:VARCHAR},
+		#{joindate:DATE},
+		#{officephone:VARCHAR},
+		#{email:VARCHAR},
+		#{social:VARCHAR},
+		#{shortphone:VARCHAR},
+		#{officeaddress:VARCHAR},
+		#{studymonth:INTEGER},
+		#{officialdateplan:DATE},
+		#{officialdate:DATE},
+		#{officialmemo:VARCHAR},
+		#{resignationdate:VARCHAR},
+		#{resignationreason:INTEGER},
+		#{interfacecode:VARCHAR},
+		#{contactphone:VARCHAR},
+		#{contactrelationship:VARCHAR},
+		#{contactname:VARCHAR},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{mobile2:VARCHAR},
+		#{height:VARCHAR},
+		#{societydate:DATE},
+		#{legaladdress:VARCHAR},
+		#{payment:INTEGER},
+		#{starttime:DATE},
+		#{endtime:DATE},
+		#{skills:VARCHAR},
+		#{hobbies:VARCHAR})
+	</insert>
+
+
+	<update id="updateEmployee" parameterType="com.mk.employee.entity.Employee">
+		update h_e_employee
+		set employeeid = #{employeeid},
+		name = #{name},
+		sex = #{sex:INTEGER},
+		birthday = #{birthday:DATE},
+		cardnumber =
+		#{cardnumber:VARCHAR},
+		culture
+		= #{culture:INTEGER},
+		nation = #{nation:INTEGER},
+		mobile =
+		#{mobile:VARCHAR},
+		addressmobile=#{addressmobile:VARCHAR},
+		residenceplace = #{residenceplace:VARCHAR},
+		homephone =
+		#{homephone:VARCHAR},
+		homeplace =
+		#{homeplace:VARCHAR},
+		bloodtype =
+		#{bloodtype:INTEGER},
+		domicilplace = #{domicilplace:VARCHAR},
+		nativeplace = #{nativeplace:VARCHAR},
+		politics = #{politics:INTEGER},
+		married =
+		#{married:INTEGER},
+		privateemail =
+		#{privateemail:VARCHAR},
+		photo = #{photo:VARCHAR},
+		joinworkdate = #{joinworkdate:DATE},
+		joingroupdate = #{joingroupdate:DATE},
+		workstate = #{workstate},
+		jobnumber =
+		#{jobnumber},
+		secrecy = #{secrecy},
+		dorder = #{dorder},
+		classification = #{classification:VARCHAR},
+		employtype =
+		#{employtype:VARCHAR},
+		checknumber =
+		#{checknumber:VARCHAR},
+		joindate =
+		#{joindate:DATE},
+		officephone =
+		#{officephone:VARCHAR},
+		email =
+		#{email:VARCHAR},
+		social = #{social:VARCHAR},
+		shortphone =
+		#{shortphone:VARCHAR},
+		officeaddress = #{officeaddress:VARCHAR},
+		studymonth = #{studymonth:INTEGER},
+		officialdateplan =
+		#{officialdateplan:DATE},
+		officialdate =
+		#{officialdate:DATE},
+		officialmemo = #{officialmemo:VARCHAR},
+		resignationdate =
+		#{resignationdate:DATE},
+		resignationreason =
+		#{resignationreason:INTEGER},
+		interfacecode = #{interfacecode:VARCHAR},
+		contactphone = #{contactphone:VARCHAR},
+		contactrelationship =
+		#{contactrelationship:VARCHAR},
+		contactname =
+		#{contactname:VARCHAR},
+		memo =
+		#{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp =
+		#{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		mobile2=#{mobile2:VARCHAR},
+		height=#{height:VARCHAR},
+		societydate=#{societydate:DATE},
+		legaladdress=#{legaladdress:VARCHAR},
+		payment=#{payment:INTEGER},
+		starttime=#{starttime:DATE},
+		endtime=#{endtime:DATE},
+		skills=#{skills:VARCHAR},
+		hobbies=#{hobbies:VARCHAR}
+		where employeeid =#{employeeid}
+	</update>
+
+
+	<select id="getEmployeeById" parameterType="String" resultType="com.mk.employee.entity.Employee">
+		select employeeid,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		joinworkdate,
+		joingroupdate,
+		workstate,
+		jobnumber,
+		secrecy,
+		dorder,
+		classification,
+		employtype,
+		checknumber,
+		joindate,
+		officephone,
+		email,
+		social,
+		shortphone,
+		officeaddress,
+		studymonth,
+		officialdateplan,
+		officialdate,
+		officialmemo,
+		resignationdate,
+		resignationreason,
+		interfacecode,
+		contactphone,
+		contactrelationship,
+		contactname,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		mobile2,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from h_e_employee
+		where
+		employeeid=#{employeeid}
+	</select>
+
+
+
+	<delete id="delEmployeeById" parameterType="String">
+		delete from
+		h_e_employee
+		where employeeid=#{employeeid}
+	</delete>
+
+
+	<select id="getEmployeeByJobnumber" parameterType="String" resultType="com.mk.employee.entity.Employee">
+		select employeeid,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		joinworkdate,
+		joingroupdate,
+		workstate,
+		jobnumber,
+		secrecy,
+		dorder,
+		classification,
+		employtype,
+		checknumber,
+		joindate,
+		officephone,
+		email,
+		social,
+		shortphone,
+		officeaddress,
+		studymonth,
+		officialdateplan,
+		officialdate,
+		officialmemo,
+		resignationdate,
+		resignationreason,
+		interfacecode,
+		contactphone,
+		contactrelationship,
+		contactname,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		mobile2,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from h_e_employee
+		where jobnumber =
+		#{jobnumber}
+		and
+		workstate!=-1
+		<if test="employeeid!=null and employeeid!=''">
+			and employeeid != #{employeeid}
+		</if>
+	</select>
+
+
+
+	<select id="getEmployeeByCardnumber" parameterType="String" resultType="com.mk.employee.entity.Employee">
+		select employeeid,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		joinworkdate,
+		joingroupdate,
+		workstate,
+		jobnumber,
+		secrecy,
+		dorder,
+		classification,
+		employtype,
+		checknumber,
+		joindate,
+		officephone,
+		email,
+		social,
+		shortphone,
+		officeaddress,
+		studymonth,
+		officialdateplan,
+		officialdate,
+		officialmemo,
+		resignationdate,
+		resignationreason,
+		interfacecode,
+		contactphone,
+		contactrelationship,
+		contactname,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		mobile2,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from h_e_employee
+		where cardnumber =
+		#{cardnumber}
+		<if test="employeeid!=null and employeeid!=''">
+			and employeeid != #{employeeid}
+		</if>
+	</select>
+
+	<select id="getAllEmployee" parameterType="String" resultType="com.mk.employee.entity.Employee">
+		select employeeid,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		joinworkdate,
+		joingroupdate,
+		workstate,
+		jobnumber,
+		secrecy,
+		dorder,
+		classification,
+		employtype,
+		checknumber,
+		joindate,
+		officephone,
+		email,
+		social,
+		shortphone,
+		officeaddress,
+		studymonth,
+		officialdateplan,
+		officialdate,
+		officialmemo,
+		resignationdate,
+		resignationreason,
+		interfacecode,
+		contactphone,
+		contactrelationship,
+		contactname,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		mobile2,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from h_e_employee
+	</select>
+
+
+
+
+
+	<!-- 身份证 -->
+	<sql id="searchEmployeeTreeWhere">
+		<where>
+			a.employeeid=b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid =
+			h_o_post.postid(+)
+
+			<if test="parameters.workstate!=null and parameters.workstate!=''">
+				AND a.workstate ${parameters.workstate}
+			</if>
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND (a.name like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				or a.cardnumber like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				or a.jobnumber like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				)
+			</if>
+
+			<if test="parameters.companyid!=null and parameters.companyid!=''">
+				and b.companyid=#{parameters.companyid}
+			</if>
+
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from
+					t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >=sysdate OR b.enddate is null)]]>
+
+
+
+		</where>
+	</sql>
+
+	<select id="countEmployeeTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(1) from h_e_employee a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<include refid="searchEmployeeTreeWhere" />
+	</select>
+
+	<select id="searchEmployeeTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="com.mk.employee.entity.Employee">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_e_employee
+		a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<include refid="searchEmployeeTreeWhere" />
+		order by
+		h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode,
+		a.dorder
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+
+
+	<!-- 员工树 -->
+	<sql id="searchUsereTreeWhere">
+		<where>
+			a.employeeid=b.employeeid
+			and a.employeeid=c.employeeid
+			and b.companyid
+			= h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and
+			b.postid = h_o_post.postid(+)
+			and b.isstaff=1
+
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND (a.name like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				or a.cardnumber like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				or a.jobnumber like
+				CONCAT('%',CONCAT(#{parameters.name},'%'))
+				)
+			</if>
+
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from
+					t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+			
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >=sysdate OR b.enddate is null)]]>
+		</where>
+	</sql>
+
+	<select id="countUserTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(1) from h_e_employee a,h_e_position
+		b,h_o_company,h_o_department,h_o_post,t_sysuser c
+		<include refid="searchUsereTreeWhere" />
+	</select>
+
+	<select id="searchUserTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="com.mk.employee.entity.Employee">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		c.userguid
+		from h_e_employee
+		a,h_e_position
+		b,h_o_company,h_o_department,h_o_post,t_sysuser c
+		<include refid="searchUsereTreeWhere" />
+		order by
+		h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode,
+		a.dorder
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+
+
+
+
+
+
+
+
+	<!-- 员工任职 -->
+	<sql id="searchPositionWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+			<if test="parameters.isstaff!=null and parameters.isstaff!=''">
+				AND isstaff = #{parameters.isstaff}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countPosition" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_e_position
+		<include refid="searchPositionWhere" />
+	</select>
+
+	<select id="searchPosition" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Position">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		<include refid="searchPositionWhere" />
+		order by startdate asc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertPosition" parameterType="com.mk.employee.entity.Position">
+		insert into
+		h_e_position
+		(postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{postionguid},
+		#{employeeid},
+		#{companyid},
+		#{deptid:VARCHAR},
+		#{postid:VARCHAR},
+		#{jobid:VARCHAR},
+		#{quotaid:VARCHAR},
+		#{rankid:VARCHAR},
+		#{isstaff},
+		#{startdate},
+		#{enddate:DATE},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+
+
+	<update id="updatePosition" parameterType="com.mk.employee.entity.Position">
+		update h_e_position
+		set postionguid = #{postionguid},
+		employeeid = #{employeeid},
+		companyid
+		= #{companyid},
+		deptid = #{deptid:VARCHAR},
+		postid = #{postid:VARCHAR},
+		jobid =
+		#{jobid:VARCHAR},
+		quotaid = #{quotaid:VARCHAR},
+		rankid=#{rankid:VARCHAR},
+		isstaff = #{isstaff},
+		startdate =
+		#{startdate},
+		enddate = #{enddate:DATE},
+		state = #{state},
+		memo =
+		#{memo:VARCHAR},
+		modiuser =
+		#{modiuser},
+		moditimestamp =
+		#{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where postionguid =
+		#{postionguid}
+	</update>
+
+
+	<delete id="delPositionById" parameterType="String">
+		delete from
+		h_e_position
+		where postionguid=#{postionguid}
+	</delete>
+
+	<delete id="delPositionByEmployeeId" parameterType="String">
+		delete from
+		h_e_position
+		where employeeid=#{employeeid}
+	</delete>
+
+
+
+
+
+
+
+
+
+	<select id="getPositionById" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where
+		postionguid=#{postionguid}
+	</select>
+
+	<select id="getPositionByUserId" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where employeeid in(select employeeid
+		from
+		t_sysuser where userguid=#{userguid})
+		and isstaff=1
+		and state=1
+		<![CDATA[AND startdate<=sysdate]]>
+		<![CDATA[AND (enddate>sysdate OR enddate is null)]]>
+		order by startdate desc
+	</select>
+
+
+
+	<select id="getPositionByEmployeeIdAndIsstaff" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where
+		state=1
+		AND
+		employeeid=#{employeeid}
+		and
+		isstaff=1
+		and state=1
+		<![CDATA[AND startdate<=sysdate]]>
+		<![CDATA[AND (enddate>sysdate OR enddate is null)]]>
+		order by startdate desc
+	</select>
+
+	<select id="getPositionByDeptCode" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where deptid
+		in(
+		select deptid
+		from H_O_Department where DeptCode like CONCAT(#{deptcode},'%')
+		)
+	</select>
+
+
+	<select id="checkIndexCompanyDeptPost" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where employeeid=#{employeeid}
+		and
+		state
+		in(1,-1)
+		<if test="postionguid!=null and postionguid!=''">
+			<![CDATA[and postionguid<>#{postionguid}]]>
+		</if>
+
+		<if test="companyid!=null and companyid!=''">
+			and companyid=#{companyid}
+		</if>
+		<if test="deptid!=null and deptid!=''">
+			and deptid=#{deptid}
+		</if>
+		<if test="deptid==null or deptid==''">
+			and deptid is null
+		</if>
+
+		<if test="postid!=null and postid!=''">
+			and postid=#{postid}
+		</if>
+		<if test="postid==null or postid==''">
+			and postid is null
+		</if>
+	</select>
+
+
+
+
+
+
+
+	<!-- 教育经历 -->
+	<sql id="searchEduexperienceWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countEduexperience" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_eduexperience
+		<include refid="searchEduexperienceWhere" />
+	</select>
+
+	<select id="searchEduexperience" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Eduexperience">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select eduexperienceid,
+		employeeid,
+		eduorg,
+		learningtype,
+		startdate,
+		enddate,
+		professional,
+		culture,
+		description
+		from h_r_eduexperience
+		<include refid="searchEduexperienceWhere" />
+		order by enddate DESC
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertEduexperience" parameterType="com.mk.employee.entity.Eduexperience">
+		insert into
+		h_r_eduexperience
+		(eduexperienceid,
+		employeeid,
+		eduorg,
+		startdate,
+		enddate,
+		professional,
+		culture,
+		description,
+		learningtype)
+		values
+		(#{eduexperienceid},
+		#{employeeid},
+		#{eduorg},
+		#{startdate:DATE},
+		#{enddate:DATE},
+		#{professional:VARCHAR},
+		#{culture},
+		#{description:VARCHAR},
+		#{learningtype:INTEGER})
+	</insert>
+
+
+
+	<update id="updateEduexperience" parameterType="com.mk.employee.entity.Eduexperience">
+		update
+		h_r_eduexperience
+		set eduexperienceid = #{eduexperienceid},
+		employeeid =
+		#{employeeid},
+		eduorg = #{eduorg},
+		startdate =
+		#{startdate:DATE},
+		enddate
+		= #{enddate:DATE},
+		professional = #{professional:VARCHAR},
+		culture =
+		#{culture},
+		description = #{description:VARCHAR},
+		learningtype=#{learningtype:INTEGER}
+		where eduexperienceid =
+		#{eduexperienceid}
+	</update>
+
+
+	<delete id="delEduexperienceById" parameterType="String">
+		delete
+		h_r_eduexperience
+		where eduexperienceid = #{eduexperienceid}
+	</delete>
+
+	<delete id="delEduexperienceByEmployeeId" parameterType="String">
+		delete
+		h_r_eduexperience
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getEduexperienceById" parameterType="String" resultType="com.mk.employee.entity.Eduexperience">
+		select eduexperienceid,
+		employeeid,
+		eduorg,
+		startdate,
+		enddate,
+		professional,
+		culture,
+		description,
+		learningtype
+		from
+		h_r_eduexperience
+		where
+		eduexperienceid=#{eduexperienceid}
+	</select>
+
+	<select id="getEduexperienceByEmployeeId" parameterType="String" resultType="com.mk.employee.entity.Eduexperience">
+		select eduexperienceid,
+		employeeid,
+		eduorg,
+		startdate,
+		enddate,
+		professional,
+		culture,
+		description,
+		learningtype
+		from
+		h_r_eduexperience
+		where
+		employeeid=#{employeeid}
+	</select>
+
+	<!-- 培训经历 -->
+	<sql id="searchTrainWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countTrain" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_train
+		<include refid="searchTrainWhere" />
+	</select>
+
+	<select id="searchTrain" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Train">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select trainid,
+		employeeid,
+		traindate,
+		trainlength,
+		trainorg,
+		content,
+		result
+		from h_r_train
+		<include refid="searchTrainWhere" />
+		order by traindate DESC
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertTrain" parameterType="com.mk.employee.entity.Train">
+		insert into h_r_train
+		(trainid, employeeid, traindate, trainlength, trainorg, content,
+		result)
+		values
+		(#{trainid},
+		#{employeeid},
+		#{traindate},
+		#{trainlength:INTEGER},
+		#{trainorg:VARCHAR},
+		#{content:VARCHAR},
+		#{result:VARCHAR})
+	</insert>
+
+
+	<update id="updateTrain" parameterType="com.mk.employee.entity.Train">
+		update h_r_train
+		set
+		trainid = #{trainid},
+		employeeid = #{employeeid},
+		traindate =
+		#{traindate},
+		trainlength = #{trainlength:INTEGER},
+		trainorg =
+		#{trainorg:VARCHAR},
+		content = #{content:VARCHAR},
+		result =
+		#{result:VARCHAR}
+		where trainid=#{trainid}
+	</update>
+
+
+	<delete id="delTrainById" parameterType="String">
+		delete h_r_train
+		where
+		trainid=#{trainid}
+	</delete>
+
+	<delete id="delTrainByEmployeeId" parameterType="String">
+		delete h_r_train
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getTrainById" parameterType="String" resultType="com.mk.employee.entity.Train">
+		select trainid,
+		employeeid,
+		traindate,
+		trainlength,
+		trainorg,
+		content,
+		result
+		from h_r_train
+		where trainid=#{trainid}
+	</select>
+
+
+	<select id="getTrainByEmployeeId" parameterType="String" resultType="com.mk.employee.entity.Train">
+		select trainid,
+		employeeid,
+		traindate,
+		trainlength,
+		trainorg,
+		content,
+		result
+		from h_r_train
+		where employeeid=#{employeeid}
+	</select>
+
+	<!-- 职称认证 -->
+
+	<select id="getAllCertification" resultType="com.mk.employee.entity.Certification">
+		select
+		certificationid,
+		employeeid,
+		authdate,
+		authorg,
+		authname,
+		authlevel,
+		description
+		from h_r_certification
+		order by authname
+	</select>
+
+	<sql id="searchCertificationWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countCertification" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_certification
+		<include refid="searchCertificationWhere" />
+	</select>
+
+	<select id="searchCertification" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Certification">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select certificationid,
+		employeeid,
+		authdate,
+		authorg,
+		authname,
+		authlevel,
+		description
+		from h_r_certification
+		<include refid="searchCertificationWhere" />
+		order by authdate DESC
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertCertification" parameterType="com.mk.employee.entity.Certification">
+		insert into
+		h_r_certification
+		(certificationid,
+		employeeid,
+		authdate,
+		authorg,
+		authname,
+		authlevel,
+		description)
+		values
+		(#{certificationid},
+		#{employeeid},
+		#{authdate:DATE},
+		#{authorg:VARCHAR},
+		#{authname},
+		#{authlevel:VARCHAR},
+		#{description:VARCHAR})
+	</insert>
+
+
+	<update id="updateCertification" parameterType="com.mk.employee.entity.Certification">
+		update
+		h_r_certification
+		set certificationid = #{certificationid},
+		employeeid =
+		#{employeeid},
+		authdate = #{authdate:DATE},
+		authorg =
+		#{authorg:VARCHAR},
+		authname = #{authname},
+		authlevel =
+		#{authlevel:VARCHAR},
+		description = #{description:VARCHAR}
+		where
+		certificationid=#{certificationid}
+	</update>
+
+
+	<delete id="delCertificationById" parameterType="String">
+		delete
+		h_r_certification
+		where certificationid=#{certificationid}
+	</delete>
+
+	<delete id="delCertificationByEmployeeId" parameterType="String">
+		delete
+		h_r_certification
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getCertificationById" parameterType="String" resultType="com.mk.employee.entity.Certification">
+		select certificationid,
+		employeeid,
+		authdate,
+		authorg,
+		authname,
+		authlevel,
+		description
+		from h_r_certification
+		where
+		certificationid=#{certificationid}
+	</select>
+
+
+	<!-- 工作经历 -->
+	<sql id="searchWorkexperienceWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countWorkexperience" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_workexperience
+		<include refid="searchWorkexperienceWhere" />
+	</select>
+
+	<select id="searchWorkexperience" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Workexperience">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select workexperienceid,
+		employeeid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		email,
+		reporterphone,
+		reporter
+		from h_r_workexperience
+		<include refid="searchWorkexperienceWhere" />
+		order by enddate DESC
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertWorkexperience" parameterType="com.mk.employee.entity.Workexperience">
+		insert into
+		h_r_workexperience
+		(workexperienceid,
+		employeeid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		email,
+		reporterphone,
+		reporter)
+		values
+		(#{workexperienceid},
+		#{employeeid},
+		#{workunit},
+		#{startdate},
+		#{enddate:DATE},
+		#{job:VARCHAR},
+		#{description:VARCHAR},
+		#{email:VARCHAR},
+		#{reporterphone:VARCHAR},
+		#{reporter:VARCHAR})
+	</insert>
+
+
+	<update id="updateWorkexperience" parameterType="com.mk.employee.entity.Workexperience">
+		update
+		h_r_workexperience
+		set workexperienceid = #{workexperienceid},
+		employeeid = #{employeeid},
+		workunit = #{workunit},
+		startdate =
+		#{startdate},
+		enddate = #{enddate:DATE},
+		job = #{job:VARCHAR},
+		description = #{description:VARCHAR},
+		email=#{email:VARCHAR},
+		reporterphone=#{reporterphone:VARCHAR},
+		reporter=#{reporter:VARCHAR}
+		where
+		workexperienceid=#{workexperienceid}
+	</update>
+
+	<delete id="delWorkexperienceById" parameterType="String">
+		delete
+		h_r_workexperience
+		where workexperienceid=#{workexperienceid}
+	</delete>
+
+	<delete id="delWorkexperienceByEmployeeId" parameterType="String">
+		delete
+		h_r_workexperience
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getWorkexperienceById" parameterType="String" resultType="com.mk.employee.entity.Workexperience">
+		select workexperienceid,
+		employeeid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		email,
+		reporterphone,
+		reporter
+		from
+		h_r_workexperience
+		where
+		workexperienceid=#{workexperienceid}
+	</select>
+
+	<select id="getWorkexperienceByEmployeeId" parameterType="String" resultType="com.mk.employee.entity.Workexperience">
+		select workexperienceid,
+		employeeid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		email,
+		reporterphone,
+		reporter
+		from
+		h_r_workexperience
+		where
+		employeeid=#{employeeid}
+	</select>
+
+	<!-- 员工请假 -->
+	<sql id="searchVacationWhere">
+		where
+		a.employeeid=b.employeeid
+		<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+			AND a.employeeid=#{parameters.employeeid}
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND b.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+		
+		<if test="parameters.annualyear!=null and parameters.annualyear!=''">
+			AND a.annualyear=#{parameters.annualyear}
+		</if>
+		
+		<if test="parameters.vacationtype!=null and parameters.vacationtype!=''">
+			and a.vacationtype=#{parameters.vacationtype}
+		</if>
+		<if test="parameters.startdate!=null and parameters.startdate!=''">
+			<![CDATA[AND a.startdate >=to_date(#{parameters.startdate},'yyyy-MM-dd')]]>
+		</if>
+		<if test="parameters.enddate!=null and parameters.enddate!=''">
+			<![CDATA[AND a.enddate <=to_date(#{parameters.enddate},'yyyy-MM-dd')]]>
+		</if>
+
+
+		and b.employeeid in(
+		select employeeid from H_E_POSITION
+		where isstaff=1
+		<if test="parameters.companyid!=null and parameters.companyid!=''">
+			and companyid=#{parameters.companyid}
+		</if>
+		<if test="parameters.companyid==null or parameters.companyid==''">
+			<if test="parameters.admin==false">
+				and companyid in (
+				select companyid from
+				t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+		</if>
+		<if test="parameters.deptid!=null and parameters.deptid!=''">
+			and deptid=#{parameters.deptid}
+		</if>
+		<if test="parameters.postid!=null and parameters.postid!=''">
+			and postid=#{parameters.postid}
+		</if>
+		)
+
+
+	</sql>
+
+	<select id="countVacation" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from t_h_vacation a,h_e_employee b
+		<include refid="searchVacationWhere" />
+	</select>
+	<select id="searchVacation" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Vacation">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select a.vacationid,
+		a.employeeid,
+		a.reason,
+		a.vacationtype,
+		a.startdate,
+		a.datenumber,
+		a.enddate,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		a.annualyear
+		from t_h_vacation a,h_e_employee b
+		<include refid="searchVacationWhere" />
+		order by b.jobnumber
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertVacation" parameterType="com.mk.employee.entity.Vacation">
+		insert into
+		t_h_vacation
+		(vacationid,
+		employeeid,
+		reason,
+		vacationtype,
+		startdate,
+		datenumber,
+		enddate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		annualyear)
+		values
+		(#{vacationid},
+		#{employeeid},
+		#{reason:VARCHAR},
+		#{vacationtype},
+		#{startdate},
+		#{datenumber},
+		#{enddate:DATE},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{annualyear})
+	</insert>
+
+	<update id="updateVacation" parameterType="com.mk.employee.entity.Vacation">
+		update t_h_vacation
+		set vacationid = #{vacationid},
+		employeeid = #{employeeid},
+		reason =
+		#{reason:VARCHAR},
+		vacationtype = #{vacationtype},
+		startdate =
+		#{startdate},
+		datenumber = #{datenumber},
+		enddate = #{enddate:DATE},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp =
+		#{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		annualyear=#{annualyear}
+		where vacationid =#{vacationid}
+	</update>
+
+	<delete id="delVacation" parameterType="String">
+		delete t_h_vacation
+		where
+		vacationid = #{id}
+	</delete>
+
+	<select id="getVacationById" parameterType="String" resultType="com.mk.employee.entity.Vacation">
+		select vacationid,
+		employeeid,
+		reason,
+		vacationtype,
+		startdate,
+		datenumber,
+		enddate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		annualyear
+		from
+		t_h_vacation
+		where
+		vacationid=#{id}
+	</select>
+
+
+	<!-- 家属状况 -->
+	<sql id="searchFamilyWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countFamily" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_family
+		<include refid="searchFamilyWhere" />
+	</select>
+
+	<select id="searchFamily" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Family">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select familyid,
+		employeeid,
+		workunit,
+		name,
+		job,
+		mobile,
+		contactrelationship
+		from h_r_family
+		<include refid="searchFamilyWhere" />
+		order by contactrelationship
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertFamily" parameterType="com.mk.employee.entity.Family">
+		insert into h_r_family
+		(familyid, employeeid, workunit, name, job, mobile,
+		contactrelationship)
+		values
+		(#{familyid},
+		#{employeeid},
+		#{workunit},
+		#{name},
+		#{job:VARCHAR},
+		#{mobile},
+		#{contactrelationship})
+	</insert>
+
+
+	<update id="updateFamily" parameterType="com.mk.employee.entity.Family">
+		update h_r_family
+		set
+		familyid = #{familyid},
+		employeeid = #{employeeid},
+		workunit =
+		#{workunit},
+		name = #{name},
+		job = #{job:VARCHAR},
+		mobile = #{mobile},
+		contactrelationship = #{contactrelationship}
+		where familyid =
+		#{familyid}
+	</update>
+
+
+	<delete id="delFamilyById" parameterType="String">
+		delete h_r_family
+		where
+		familyid=#{familyid}
+	</delete>
+
+	<delete id="delFamilyByEmployeeId" parameterType="String">
+		delete
+		h_r_family
+		where employeeid=#{employeeid}
+	</delete>
+
+	<select id="getFamilyById" parameterType="String" resultType="com.mk.employee.entity.Family">
+		select familyid,
+		employeeid,
+		workunit,
+		name,
+		job,
+		mobile,
+		contactrelationship
+		from h_r_family
+		where familyid=#{familyid}
+	</select>
+
+
+	<!-- 员工公司亲属表 -->
+	<sql id="searchHrRelativesWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countHrRelatives" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_relatives
+		<include refid="searchHrRelativesWhere" />
+	</select>
+
+	<select id="searchHrRelatives" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.HrRelatives">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select relativesguid, employeeid, companyname, deptname, postname,
+		employeename,contactrelationship from h_r_relatives
+		<include refid="searchHrRelativesWhere" />
+		order by employeename
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertHrRelatives" parameterType="com.mk.employee.entity.HrRelatives">
+		insert into
+		h_r_relatives
+		(relativesguid,
+		employeeid,
+		companyname,
+		deptname,
+		postname,
+		employeename,
+		contactrelationship)
+		values
+		(#{relativesguid},
+		#{employeeid},
+		#{companyname},
+		#{deptname},
+		#{postname},
+		#{employeename},
+		#{contactrelationship:INTEGER})
+	</insert>
+
+	<update id="updateHrRelatives" parameterType="com.mk.employee.entity.HrRelatives">
+		update
+		h_r_relatives
+		set relativesguid = #{relativesguid},
+		employeeid =
+		#{employeeid},
+		companyname = #{companyname},
+		deptname = #{deptname},
+		postname =
+		#{postname},
+		employeename = #{employeename},
+		contactrelationship=#{contactrelationship:INTEGER}
+		where relativesguid
+		= #{relativesguid}
+	</update>
+
+	<select id="getHrRelativesById" parameterType="String" resultType="com.mk.employee.entity.HrRelatives">
+		select relativesguid,
+		employeeid,
+		companyname,
+		deptname,
+		postname,
+		employeename,
+		contactrelationship
+		from h_r_relatives
+		where
+		relativesguid = #{relativesguid}
+	</select>
+
+	<delete id="delHrRelativesById" parameterType="String">
+		delete
+		h_r_relatives
+		where relativesguid=#{relativesguid}
+	</delete>
+
+	<delete id="delHrRelativesByEmployeeId" parameterType="String">
+		delete
+		h_r_relatives
+		where employeeid=#{employeeid}
+	</delete>
+
+
+	<!-- 推荐信息 -->
+	<sql id="searchHrRecommendWhere">
+		<where>
+			1=1
+			<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+				AND employeeid = #{parameters.employeeid}
+			</if>
+
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+		</where>
+	</sql>
+
+	<select id="countHrRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_r_recommend
+		<include refid="searchHrRecommendWhere" />
+	</select>
+
+	<select id="searchHrRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.HrRecommend">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select recommendguid,
+		employeeid,
+		name,
+		sex,
+		mobile,
+		situation,
+		workage,
+		email,
+		recommendpostname,
+		moditimestamp
+		from h_r_recommend
+		<include refid="searchHrRecommendWhere" />
+		order by name
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertHrRecommend" parameterType="com.mk.employee.entity.HrRecommend">
+		insert into
+		h_r_recommend
+		(recommendguid, employeeid, name, sex, mobile,
+		situation,workage,email,recommendpostname,moditimestamp)
+		values
+		(#{recommendguid},#{employeeid},#{name},#{sex},#{mobile},
+		#{situation:VARCHAR},#{workage:INTEGER},#{email:VARCHAR},#{recommendpostname:VARCHAR},#{moditimestamp})
+	</insert>
+
+	<delete id="delHrRecommendById" parameterType="String">
+		delete
+		h_r_recommend
+		where recommendguid=#{recommendguid}
+	</delete>
+
+	<delete id="delHrRecommendByEmployeeId" parameterType="String">
+		delete
+		h_r_recommend
+		where employeeid=#{employeeid}
+	</delete>
+
+
+
+	<!-- 全部岗位 -->
+	<sql id="searchPostTreewhere">
+		where state = 1
+		and companyid ='00001'
+		<if test="parameters.name!=null and parameters.name!=''">
+			and postname like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+	</sql>
+
+	<select id="countPostTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(distinct postname) from h_o_post
+		<include refid="searchPostTreewhere" />
+	</select>
+
+	<select id="searchPostTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="String">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		select distinct postname from h_o_post
+		<include refid="searchPostTreewhere" />
+	<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+
+	<select id="getPostByName" parameterType="String" resultType="com.mk.department.entity.Post">
+		select postid,
+		companyid,
+		deptid,
+		jobid,
+		postname,
+		interfacecode,
+		postduty,
+		state,
+		postcode,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		h_o_post where postname = #{postname}
+	</select>
+
+
+	<!-- 取得未发短信和邮件的入职时推荐的人和证明人 -->
+	<select id="getHrRecommendByInduction" parameterType="String" resultType="com.mk.employee.entity.HrRecommend">
+		select recommendguid,
+		employeeid,
+		name,
+		sex,
+		mobile,
+		situation,
+		workage,
+		email,
+		recommendpostname,
+		moditimestamp
+		from h_r_recommend
+		where
+		recommendguid not in (select operateguid from j_bussiness where
+		tablename='h_r_recommend')
+		and employeeid in (select employeeid from
+		J_MyCandidates where CandidatesType=7 and employeeid is not null)
+		<![CDATA[AND moditimestamp <=to_date(#{nowdate},'yyyy-MM-dd hh24:mi:ss')]]>
+	</select>
+
+	<select id="getWorkexperienceByInduction" parameterType="String" resultType="com.mk.employee.entity.Workexperience">
+		select workexperienceid,
+		employeeid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		email,
+		reporterphone,
+		reporter,
+		moditimestamp
+		from
+		h_r_workexperience
+		where workexperienceid not in (select operateguid
+		from
+		j_bussiness where tablename='h_r_workexperience')
+		and employeeid in
+		(select employeeid from J_MyCandidates where CandidatesType=7 and
+		employeeid is not null)
+		<![CDATA[AND moditimestamp <=to_date(#{nowdate},'yyyy-MM-dd hh24:mi:ss')]]>
+	</select>
+
+	<!-- oa招聘计划工号取部门 -->
+	<select id="getEmployeeByJobnum" parameterType="String" resultType="com.mk.employee.entity.Position">
+		select postionguid,
+		employeeid,
+		companyid,
+		deptid,
+		postid,
+		jobid,
+		quotaid,
+		rankid,
+		isstaff,
+		startdate,
+		enddate,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_e_position
+		where employeeid in(select employeeid
+		from
+		h_e_employee where jobnumber=#{jobnum} )
+		and isstaff=1
+		and state=1
+		<![CDATA[AND startdate<=sysdate]]>
+		<![CDATA[AND (enddate>sysdate OR enddate is null)]]>
+	</select>
+
+
+
+	<select id="getWSEmployeeList" parameterType="String" resultType="com.mk.webservice.entity.WSEmployee">
+		select H_E_Employee.JobNumber,
+		H_E_Employee.Name,
+		H_E_Position.Deptid,
+		H_O_Department.Deptname,
+		H_O_Department.interfacecode AS deptcode,
+		H_O_Department.Pdeptid,
+		(select A.Deptname
+		from H_O_Department A
+		where
+		A.Deptid = H_O_Department.Pdeptid) AS PdeptidNAME,
+		H_E_Position.Postid,
+		H_O_Post.Postname,
+		H_O_Post.interfacecode AS
+		postcode,
+		H_E_Position.RankID,
+		(SELECT H_O_Rank.Levelname
+		FROM H_O_Rank
+		WHERE
+		H_O_Rank.Rankid = H_E_Position.RankID) AS RankIDNAME,
+		H_E_Position.QuotaID,
+		(SELECT H_O_BudgetType.Budgettypename
+		FROM
+		H_O_Quota, H_O_BudgetType
+		WHERE H_O_Quota.Budgettype =
+		H_O_BudgetType.Budgettypeid
+		AND H_O_Quota.Quotaid =
+		H_E_Position.QuotaID) AS QuotaIDNAME,
+		H_E_Employee.Cardnumber,
+		H_E_Employee.Birthday,
+		H_E_Employee.Sex,
+		(select T_OptionList.name
+		from
+		T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid =
+		T_OptionType.Optiontypeguid
+		AND T_OptionType.Code = 'SEX'
+		and
+		T_OptionList.Code = H_E_Employee.Sex) as sexname,
+		H_E_Employee.JoinWorkDate,
+		H_E_Employee.JoinDate,
+		TMP.eduorg,
+		TMP.Culture,
+		(select T_OptionList.name
+		from T_OptionList, T_OptionType
+		where T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'CULTURE'
+		and T_OptionList.Code =
+		TMP.Culture) as
+		culturename,
+		TMP.professional,
+		H_R_Certification.Authname,
+		(select
+		T_OptionList.name
+		from T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'AUTHNAME'
+		and T_OptionList.Code =
+		H_R_Certification.Authname) as auth
+		from H_E_Employee,
+		H_E_Position,
+		H_O_Department,
+		H_O_Post,
+		H_R_Certification,
+		(select
+		H_R_EDUEXPERIENCE.Employeeid,
+		MAX(H_R_EDUEXPERIENCE.CULTURE) AS
+		CULTURE,
+		MAX(H_R_EDUEXPERIENCE.PROFESSIONAL) AS PROFESSIONAL,
+		MAX(H_R_EDUEXPERIENCE.eduorg) AS eduorg
+		FROM H_R_EDUEXPERIENCE,
+		H_E_Employee
+		WHERE
+		H_R_EDUEXPERIENCE.EMPLOYEEID =
+		H_E_Employee.Employeeid
+		GROUP BY H_R_EDUEXPERIENCE.Employeeid) TMP
+		where H_E_Employee.Employeeid = H_E_Position.Employeeid
+		and
+		H_E_Employee.Employeeid = TMP.Employeeid(+)
+		and H_E_Employee.Employeeid
+		= H_R_Certification.Employeeid(+)
+		and H_E_Position.Deptid =
+		H_O_Department.Deptid(+)
+		and H_E_Position.Postid = H_O_Post.Postid(+)
+		and H_E_Employee.WorkState in (0, 1)
+		and
+		H_E_Position.isstaff=1
+
+		<if test="jobnumber!=null and jobnumber!=''">
+			and H_E_Employee.jobnumber=#{jobnumber}
+		</if>
+		
+		<![CDATA[AND H_E_Position.startdate<=sysdate]]>
+		<![CDATA[AND (H_E_Position.enddate>sysdate OR H_E_Position.enddate is null)]]>
+	</select>
+
+
+	<select id="getWSEmployeeListByPostId" parameterType="String" resultType="com.mk.webservice.entity.WSEmployee">
+		select H_E_Employee.JobNumber,
+		H_E_Employee.Name,
+		H_E_Position.Deptid,
+		H_O_Department.Deptname,
+		H_O_Department.Pdeptid,
+		(select A.Deptname
+		from
+		H_O_Department A
+		where A.Deptid = H_O_Department.Pdeptid) AS
+		PdeptidNAME,
+		H_O_Department.interfacecode AS deptcode,
+		H_E_Position.Postid,
+		H_O_Post.Postname,
+		H_O_Post.interfacecode AS
+		postcode,
+		H_E_Position.RankID,
+		(SELECT H_O_Rank.Levelname
+		FROM H_O_Rank
+		WHERE
+		H_O_Rank.Rankid = H_E_Position.RankID) AS RankIDNAME,
+		H_E_Position.QuotaID,
+		(SELECT H_O_BudgetType.Budgettypename
+		FROM
+		H_O_Quota, H_O_BudgetType
+		WHERE H_O_Quota.Budgettype =
+		H_O_BudgetType.Budgettypeid
+		AND H_O_Quota.Quotaid =
+		H_E_Position.QuotaID) AS QuotaIDNAME,
+		H_E_Employee.Cardnumber,
+		H_E_Employee.Birthday,
+		H_E_Employee.Sex,
+		(select T_OptionList.name
+		from
+		T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid =
+		T_OptionType.Optiontypeguid
+		AND T_OptionType.Code = 'SEX'
+		and
+		T_OptionList.Code = H_E_Employee.Sex) as sexname,
+		H_E_Employee.JoinWorkDate,
+		H_E_Employee.JoinDate,
+		TMP.eduorg,
+		TMP.Culture,
+		(select T_OptionList.name
+		from T_OptionList, T_OptionType
+		where T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'CULTURE'
+		and T_OptionList.Code =
+		TMP.Culture) as
+		culturename,
+		TMP.professional,
+		H_R_Certification.Authname,
+		(select
+		T_OptionList.name
+		from T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'AUTHNAME'
+		and T_OptionList.Code =
+		H_R_Certification.Authname) as auth
+		from H_E_Employee,
+		H_E_Position,
+		H_O_Department,
+		H_O_Post,
+		H_R_Certification,
+		(select
+		H_R_EDUEXPERIENCE.Employeeid,
+		MAX(H_R_EDUEXPERIENCE.CULTURE) AS
+		CULTURE,
+		MAX(H_R_EDUEXPERIENCE.PROFESSIONAL) AS PROFESSIONAL,
+		MAX(H_R_EDUEXPERIENCE.eduorg) AS eduorg
+		FROM H_R_EDUEXPERIENCE,
+		H_E_Employee
+		WHERE
+		H_R_EDUEXPERIENCE.EMPLOYEEID =
+		H_E_Employee.Employeeid
+		GROUP BY H_R_EDUEXPERIENCE.Employeeid) TMP
+		where H_E_Employee.Employeeid = H_E_Position.Employeeid
+		and
+		H_E_Employee.Employeeid = TMP.Employeeid(+)
+		and H_E_Employee.Employeeid
+		= H_R_Certification.Employeeid(+)
+		and H_E_Position.Deptid =
+		H_O_Department.Deptid(+)
+		and H_E_Position.Postid = H_O_Post.Postid(+)
+		and H_E_Employee.WorkState in (0, 1)
+		and
+		H_E_Position.isstaff=1
+
+		<if test="postid!=null and postid!=''">
+			and H_O_Post.InterfaceCode=#{postid}
+		</if>
+		
+		<![CDATA[AND H_E_Position.startdate<=sysdate]]>
+		<![CDATA[AND (H_E_Position.enddate>sysdate OR H_E_Position.enddate is null)]]>
+	</select>
+
+
+	<select id="getWSEmployeeListByDepartment" parameterType="String" resultType="com.mk.webservice.entity.WSEmployee">
+		select H_E_Employee.JobNumber,
+		H_E_Employee.Name,
+		H_E_Position.Deptid,
+		H_O_Department.Deptname,
+		H_O_Department.Pdeptid,
+		(select A.Deptname
+		from
+		H_O_Department A
+		where A.Deptid = H_O_Department.Pdeptid) AS
+		PdeptidNAME,
+		H_O_Department.interfacecode AS deptcode,
+		H_E_Position.Postid,
+		H_O_Post.Postname,
+		H_O_Post.interfacecode AS
+		postcode,
+		H_E_Position.RankID,
+		(SELECT H_O_Rank.Levelname
+		FROM H_O_Rank
+		WHERE
+		H_O_Rank.Rankid = H_E_Position.RankID) AS RankIDNAME,
+		H_E_Position.QuotaID,
+		(SELECT H_O_BudgetType.Budgettypename
+		FROM
+		H_O_Quota, H_O_BudgetType
+		WHERE H_O_Quota.Budgettype =
+		H_O_BudgetType.Budgettypeid
+		AND H_O_Quota.Quotaid =
+		H_E_Position.QuotaID) AS QuotaIDNAME,
+		H_E_Employee.Cardnumber,
+		H_E_Employee.Birthday,
+		H_E_Employee.Sex,
+		(select T_OptionList.name
+		from
+		T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid =
+		T_OptionType.Optiontypeguid
+		AND T_OptionType.Code = 'SEX'
+		and
+		T_OptionList.Code = H_E_Employee.Sex) as sexname,
+		H_E_Employee.JoinWorkDate,
+		H_E_Employee.JoinDate,
+		TMP.eduorg,
+		TMP.Culture,
+		(select T_OptionList.name
+		from T_OptionList, T_OptionType
+		where T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'CULTURE'
+		and T_OptionList.Code =
+		TMP.Culture) as
+		culturename,
+		TMP.professional,
+		H_R_Certification.Authname,
+		(select
+		T_OptionList.name
+		from T_OptionList, T_OptionType
+		where
+		T_OptionList.OptionTypeGuid = T_OptionType.Optiontypeguid
+		AND
+		T_OptionType.Code = 'AUTHNAME'
+		and T_OptionList.Code =
+		H_R_Certification.Authname) as auth
+		from H_E_Employee,
+		H_E_Position,
+		H_O_Department,
+		H_O_Post,
+		H_R_Certification,
+		(select
+		H_R_EDUEXPERIENCE.Employeeid,
+		MAX(H_R_EDUEXPERIENCE.CULTURE) AS
+		CULTURE,
+		MAX(H_R_EDUEXPERIENCE.PROFESSIONAL) AS PROFESSIONAL,
+		MAX(H_R_EDUEXPERIENCE.eduorg) AS eduorg
+		FROM H_R_EDUEXPERIENCE,
+		H_E_Employee
+		WHERE
+		H_R_EDUEXPERIENCE.EMPLOYEEID =
+		H_E_Employee.Employeeid
+		GROUP BY H_R_EDUEXPERIENCE.Employeeid) TMP
+		where H_E_Employee.Employeeid = H_E_Position.Employeeid
+		and
+		H_E_Employee.Employeeid = TMP.Employeeid(+)
+		and H_E_Employee.Employeeid
+		= H_R_Certification.Employeeid(+)
+		and H_E_Position.Deptid =
+		H_O_Department.Deptid(+)
+		and H_E_Position.Postid = H_O_Post.Postid(+)
+		and H_E_Employee.WorkState in (0, 1)
+		and
+		H_E_Position.isstaff=1
+
+		and (H_O_Department.Deptid=#{deptid}
+		or H_O_Department.Pdeptid=#{deptid})
+		
+		
+		<![CDATA[AND H_E_Position.startdate<=sysdate]]>
+		<![CDATA[AND (H_E_Position.enddate>sysdate OR H_E_Position.enddate is null)]]>
+	</select>
+
+
+
+	<!-- 员工年休假 -->
+	<sql id="searchAnnualWhere">
+		where
+		a.employeeid=b.employeeid
+		<if test="parameters.employeeid!=null and parameters.employeeid!=''">
+			AND a.employeeid=#{parameters.employeeid}
+		</if>
+		
+		<if test="parameters.annualyear!=null and parameters.annualyear!=''">
+			AND a.annualyear=#{parameters.annualyear}
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND b.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		and b.employeeid in(
+		select employeeid from H_E_POSITION
+		where isstaff=1
+		<if test="parameters.companyid!=null and parameters.companyid!=''">
+			and companyid=#{parameters.companyid}
+		</if>
+		<if test="parameters.companyid==null or parameters.companyid==''">
+			<if test="parameters.admin==false">
+				and companyid in (
+				select companyid from
+				t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+		</if>
+		<if test="parameters.deptid!=null and parameters.deptid!=''">
+			and deptid=#{parameters.deptid}
+		</if>
+		<if test="parameters.postid!=null and parameters.postid!=''">
+			and postid=#{parameters.postid}
+		</if>
+		)
+	</sql>
+
+	<select id="countAnnual" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from T_H_Annual a,h_e_employee b
+		<include refid="searchAnnualWhere" />
+	</select>
+
+	<select id="searchAnnual" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.employee.entity.Annual">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_
+			FROM (
+		</if>
+		select a.annualguid, a.employeeid, a.annualyear, a.offnumday,a.modiuser,a.moditimestamp from t_h_annual a,h_e_employee b
+		<include refid="searchAnnualWhere" />
+		order by a.annualyear desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertAnnual" parameterType="com.mk.employee.entity.Annual">
+		insert into t_h_annual
+		(annualguid, employeeid, annualyear, offnumday,modiuser,moditimestamp)
+		values
+		(#{annualguid}, #{employeeid}, #{annualyear}, #{offnumday},#{modiuser},#{moditimestamp})
+	</insert>
+
+	<update id="updateAnnual" parameterType="com.mk.employee.entity.Annual">
+		update t_h_annual
+		set annualguid = #{annualguid},
+		employeeid = #{employeeid},
+		annualyear = #{annualyear},
+		offnumday = #{offnumday},
+		modiuser=#{modiuser},
+		moditimestamp=#{moditimestamp}
+		where annualguid = #{annualguid}
+	</update>
+
+	<delete id="delAnnualById" parameterType="String">
+		delete t_h_annual where annualguid = #{id}
+	</delete>
+	
+	<delete id="delAnnualByEmployeeId" parameterType="String">
+		delete t_h_annual where employeeid = #{employeeid}
+	</delete>
+
+	<select id="getAnnualById" parameterType="String" resultType="com.mk.employee.entity.Annual">
+		select annualguid, employeeid, annualyear, offnumday, modiuser, moditimestamp from t_h_annual
+		where annualguid = #{id}
+	</select>
+	
+	<select id="getAnnualByEmployeeIdAndYear" parameterType="String" resultType="com.mk.employee.entity.Annual">
+		select annualguid, employeeid, annualyear, offnumday, modiuser, moditimestamp from t_h_annual
+		where employeeid = #{employeeid}
+		and annualyear=#{year}
+		<if test="annualguid!=null and annualguid!=''">
+			and annualguid!=#{annualguid}
+		</if>
+	</select>
+	
+	<select id="countdaysByEmployeeIdForAnnual" resultType="Double">
+		select decode(sum(t.datenumber),null,0,sum(t.datenumber)) as alreadynumberday from T_H_Vacation t 
+		where t.employeeid=#{employeeid}
+		and t.annualyear=#{year}
+		and t.vacationtype=3
+	</select>
+
+</mapper>

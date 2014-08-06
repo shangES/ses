@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.report.dao.ReportDao">
+
+
+	<!--PCD_0101 传媒花名册 -->
+	<resultMap type="com.mk.report.entity.PCD0101" id="PCD0101">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="DEPTNAME_1" property="DEPTNAME_1" />
+		<result column="DEPTNAME_2" property="DEPTNAME_2" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="JZXX" property="JZXX" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="WORKSTATE" property="WORKSTATE" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="EMPLOYTYPE" property="EMPLOYTYPE" />
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="LEVELNAME" property="LEVELNAME" />
+		<result column="CULTURE" property="CULTURE" />
+		<result column="JOBNAME" property="JOBNAME" />
+		<result column="BIRTHDAY" property="BIRTHDAY" />
+		<result column="CARDNUMBER" property="CARDNUMBER" />
+		<result column="SEX" property="SEX" />
+		<result column="JOINWORKDATE" property="JOINWORKDATE" />
+		<result column="JOINGROUPDATE" property="JOINGROUPDATE" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="HOMEPLACE" property="HOMEPLACE" />
+		<result column="MOBILE" property="MOBILE" />
+		<result column="EMAIL" property="EMAIL" />
+		<result column="SHORTPHONE" property="SHORTPHONE" />
+		<result column="CERTIFICATION" property="CERTIFICATION" />
+		<result column="EDU_PROFESSIONAL" property="EDU_PROFESSIONAL" />
+		<result column="EDU_EDUORG" property="EDU_EDUORG" />
+		<result column="CONTRACT_CONTRACTTYPE" property="CONTRACT_CONTRACTTYPE" />
+		<result column="CONTRACT_STARTDATE" property="CONTRACT_STARTDATE" />
+		<result column="CONTRACT_ENDDATE" property="CONTRACT_ENDDATE" />
+		<result column="OFFICIALDATE" property="OFFICIALDATE" />
+		<result column="SOCIAL" property="SOCIAL" />
+	</resultMap>
+	<select id="searchPCD0101" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0101(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.isstaff:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0101 })}
+	</select>
+	
+	<!--PCD_0102 集团花名册 -->
+	<resultMap type="com.mk.report.entity.PCD0102" id="PCD0102">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="WORKSTATE" property="WORKSTATE" />
+		<result column="EMPLOYTYPE" property="EMPLOYTYPE" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="JZXX" property="JZXX" />
+		<result column="LEVELNAME" property="LEVELNAME" />
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="SEX" property="SEX" />
+		<result column="MARRIED" property="MARRIED" />
+		<result column="NATIVEPLACE" property="NATIVEPLACE" />
+		<result column="CARDNUMBER" property="CARDNUMBER" />
+		<result column="BIRTHDAY" property="BIRTHDAY" />
+		<result column="JOINGROUPDATE" property="JOINGROUPDATE" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="JOINWORKDATE" property="JOINWORKDATE" />
+		<result column="OFFICIALDATE" property="OFFICIALDATE" />
+		<result column="MOBILE" property="MOBILE" />
+		<result column="OFFICEPHONE" property="OFFICEPHONE" />
+		<result column="EMAIL" property="EMAIL" />
+		<result column="HOMEPLACE" property="HOMEPLACE" />
+		<result column="EDU_EDUORG" property="EDU_EDUORG" />
+		<result column="EDU_ENDDATE" property="EDU_ENDDATE" />
+		<result column="EDU_PROFESSIONAL" property="EDU_PROFESSIONAL" />
+		<result column="CULTURE" property="CULTURE" />
+		<result column="CERTIFICATION" property="CERTIFICATION" />
+		<result column="CONTRACT_CONTRACTTYPE" property="CONTRACT_CONTRACTTYPE" />
+		<result column="CONTRACT_SIGNDATE" property="CONTRACT_SIGNDATE" />
+		<result column="CONTRACT_STARTDATE" property="CONTRACT_STARTDATE" />
+		<result column="CONTRACT_ENDDATE" property="CONTRACT_ENDDATE" />
+	</resultMap>
+	<select id="searchPCD0102" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0102(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.isstaff:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0102 })}
+	</select>
+	
+	<!--PCD_0103 新入职人员报表 -->
+	<resultMap type="com.mk.report.entity.PCD0103" id="PCD0103">
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="LEVELNAME" property="LEVELNAME" />
+		<result column="NAME" property="NAME" />
+		<result column="SEX" property="SEX" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="CONTRACT_ENDDATE" property="CONTRACT_ENDDATE" />
+	</resultMap>
+	<select id="searchPCD0103" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0103(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.isstaff:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0103 })}
+	</select>
+
+	<!--PCD_0104 离职人员报表 -->
+	<resultMap type="com.mk.report.entity.PCD0104" id="PCD0104">
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="RESIGNATIONREASON" property="RESIGNATIONREASON" />
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="SEX" property="SEX" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="LEVELNAME" property="LEVELNAME" />
+		<result column="RESIGNATIONDATE" property="RESIGNATIONDATE" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+	</resultMap>
+	<select id="searchPCD0104" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0104(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0104 })}
+	</select>
+	
+	
+	<!--PCD_0105 异动人员报表 -->
+	<resultMap type="com.mk.report.entity.PCD0105" id="PCD0105">
+		<result column="COMPANYNAME_FROM" property="COMPANYNAME_FROM" />
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="SEX" property="SEX" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="DEPTNAME_FROM" property="DEPTNAME_FROM" />
+		<result column="POSTNAME_FROM" property="POSTNAME_FROM" />
+		<result column="LEVELNAME_FROM" property="LEVELNAME_FROM" />
+		<result column="COMPANYNAME_TO" property="COMPANYNAME_TO" />
+		<result column="DEPTNAME_TO" property="DEPTNAME_TO" />
+		<result column="POSTNAME_TO" property="POSTNAME_TO" />
+		<result column="LEVELNAME_TO" property="LEVELNAME_TO" />
+		<result column="STARTDATE" property="STARTDATE" />
+	</resultMap>
+	<select id="searchPCD0105" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0105(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0105 })}
+	</select>
+
+
+	<!--PCD_0107 员工生日报表 -->
+	<resultMap type="com.mk.report.entity.PCD0107" id="PCD0107">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="BIRTHDAY" property="BIRTHDAY" />
+		<result column="MONTHNAME" property="MONTHNAME" />
+	</resultMap>
+	<select id="searchPCD0107" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0107(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0107 })}
+	</select>
+	
+	<!--PCD_0111 工龄报表 -->
+	<resultMap type="com.mk.report.entity.PCD0111" id="PCD0111">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="NAME" property="NAME" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="JOINGROUPDATE" property="JOINGROUPDATE" />
+		<result column="GROUPWORKAGE" property="GROUPWORKAGE" />
+		<result column="JOINWORKDATE" property="JOINWORKDATE" />
+		<result column="WORKAGE" property="WORKAGE" />
+	</resultMap>
+	<select id="searchPCD0111" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0111(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0111 })}
+	</select>
+	
+	
+	<!--PCD_0113 待转正员工报表 -->
+	<resultMap type="com.mk.report.entity.PCD0113" id="PCD0113">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="CLASSIFICATION" property="CLASSIFICATION" />
+		<result column="JOBNUMBER" property="JOBNUMBER" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="NAME" property="NAME" />
+		<result column="SEX" property="SEX" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="JOINDATE" property="JOINDATE" />
+		<result column="STUDYMONTH" property="STUDYMONTH" />
+		<result column="OFFICIALDATEPLAN" property="OFFICIALDATEPLAN" />
+	</resultMap>
+	<select id="searchPCD0113" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT.PCD_0113(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.sex:VARCHAR},
+		#{parameters.culture:VARCHAR},
+		#{parameters.politics:VARCHAR},
+		#{parameters.classification:VARCHAR},
+		#{parameters.employtype:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0113 })}
+	</select>
+	
+	<!--PCD_0201 员工类别统计表(分性别员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0201" id="PCD0201">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="SEX_1" property="SEX_1" />
+		<result column="SEX_2" property="SEX_2" />
+	</resultMap>
+	
+	<select id="searchPCD0201" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0201(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0201 })}
+	</select>
+	
+	<!--PCD_0202 员工类别统计表(分学历员工数量统计表)-->
+	<resultMap type="com.mk.report.entity.PCD0202" id="PCD0202">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="CULTURE_1" property="CULTURE_1" />
+		<result column="CULTURE_2" property="CULTURE_2" />
+		<result column="CULTURE_3" property="CULTURE_3" />
+		<result column="CULTURE_4" property="CULTURE_4" />
+		<result column="CULTURE_5" property="CULTURE_5" />
+		<result column="CULTURE_6" property="CULTURE_6" />
+		<result column="CULTURE_7" property="CULTURE_7" />
+		<result column="CULTURE_8" property="CULTURE_8" />
+		<result column="CULTURE_9" property="CULTURE_9" />
+		<result column="CULTURE_10" property="CULTURE_10" />
+		<result column="CULTURE_11" property="CULTURE_11" />
+		<result column="CULTURE_12" property="CULTURE_12" />
+	</resultMap>
+	<select id="searchPCD0202" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0202(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0202 })}
+	</select>
+	
+	<!--PCD_0203 员工类别统计表(分年龄段员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0203" id="PCD0203">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="AGE_1" property="AGE_1" />
+		<result column="AGE_2" property="AGE_2" />
+		<result column="AGE_3" property="AGE_3" />
+		<result column="AGE_4" property="AGE_4" />
+		<result column="AGE_5" property="AGE_5" />
+		<result column="AGE_6" property="AGE_6" />
+		<result column="AGE_7" property="AGE_7" />
+		<result column="AGE_8" property="AGE_8" />
+		<result column="AGE_9" property="AGE_9" />
+	</resultMap>
+	<select id="searchPCD0203" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0203(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0203 })}
+	</select>
+
+	<!--PCD_0204 员工类别统计表(分工龄段员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0204" id="PCD0204">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="WORKAGE_1" property="WORKAGE_1" />
+		<result column="WORKAGE_2" property="WORKAGE_2" />
+		<result column="WORKAGE_3" property="WORKAGE_3" />
+	</resultMap>
+	<select id="searchPCD0204" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0204(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0204 })}
+	</select>
+	
+	<!--PCD_0205 员工类别统计表(分政治面貌员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0205" id="PCD0205">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="POLITICS_1" property="POLITICS_1" />
+		<result column="POLITICS_2" property="POLITICS_2" />
+		<result column="POLITICS_3" property="POLITICS_3" />
+		<result column="POLITICS_4" property="POLITICS_4" />
+		<result column="POLITICS_5" property="POLITICS_5" />
+		<result column="POLITICS_6" property="POLITICS_6" />
+		<result column="POLITICS_7" property="POLITICS_7" />
+		<result column="POLITICS_8" property="POLITICS_8" />
+		<result column="POLITICS_9" property="POLITICS_9" />
+		<result column="POLITICS_10" property="POLITICS_10" />
+		<result column="POLITICS_11" property="POLITICS_11" />
+		<result column="POLITICS_12" property="POLITICS_12" />
+	</resultMap>
+	<select id="searchPCD0205" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0205(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0205 })}
+	</select>
+	
+	<!--PCD_0206 员工类别统计表(分职称认证员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0206" id="PCD0206">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_DEPTID" property="EMPLOYEE_DEPTID" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="AUTHNAME_1" property="AUTHNAME_1" />
+		<result column="AUTHNAME_2" property="AUTHNAME_2" />
+		<result column="AUTHNAME_3" property="AUTHNAME_3" />
+		<result column="AUTHNAME_4" property="AUTHNAME_4" />
+		<result column="AUTHNAME_5" property="AUTHNAME_5" />
+		<result column="AUTHNAME_6" property="AUTHNAME_6" />
+		<result column="AUTHNAME_7" property="AUTHNAME_7" />
+		<result column="AUTHNAME_8" property="AUTHNAME_8" />
+		<result column="AUTHNAME_9" property="AUTHNAME_9" />
+		<result column="AUTHNAME_10" property="AUTHNAME_10" />
+		<result column="AUTHNAME_11" property="AUTHNAME_11" />
+		<result column="AUTHNAME_12" property="AUTHNAME_12" />
+		<result column="AUTHNAME_13" property="AUTHNAME_13" />
+		<result column="AUTHNAME_14" property="AUTHNAME_14" />
+		<result column="AUTHNAME_15" property="AUTHNAME_15" />
+		<result column="AUTHNAME_16" property="AUTHNAME_16" />
+		<result column="AUTHNAME_17" property="AUTHNAME_17" />
+		<result column="AUTHNAME_18" property="AUTHNAME_18" />
+		<result column="AUTHNAME_19" property="AUTHNAME_19" />
+		<result column="AUTHNAME_20" property="AUTHNAME_20" />
+		<result column="AUTHNAME_21" property="AUTHNAME_21" />
+		<result column="AUTHNAME_22" property="AUTHNAME_22" />
+		<result column="AUTHNAME_23" property="AUTHNAME_23" />
+		<result column="AUTHNAME_24" property="AUTHNAME_24" />
+		<result column="AUTHNAME_25" property="AUTHNAME_25" />
+		<result column="AUTHNAME_26" property="AUTHNAME_26" />
+		<result column="AUTHNAME_27" property="AUTHNAME_27" />
+		<result column="AUTHNAME_28" property="AUTHNAME_28" />
+		<result column="AUTHNAME_29" property="AUTHNAME_29" />
+		<result column="AUTHNAME_30" property="AUTHNAME_30" />
+		<result column="AUTHNAME_31" property="AUTHNAME_31" />
+		<result column="AUTHNAME_32" property="AUTHNAME_32" />
+		<result column="AUTHNAME_33" property="AUTHNAME_33" />
+		<result column="AUTHNAME_34" property="AUTHNAME_34" />
+	</resultMap>
+	<select id="searchPCD0206" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0206(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0206 })}
+	</select>
+	
+	<!--PCD_0207 员工类别统计表(分职务员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0207" id="PCD0207">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="JOB_1" property="JOB_1" />
+		<result column="JOB_2" property="JOB_2" />
+		<result column="JOB_3" property="JOB_3" />
+		<result column="JOB_4" property="JOB_4" />
+	</resultMap>
+	<select id="searchPCD0207" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0207(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0207 })}
+	</select>
+	
+	<!--PCD_0208 员工类别统计表(分性别及婚姻状况员工数量统计表) -->
+	<resultMap type="com.mk.report.entity.PCD0208" id="PCD0208">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="EMPLOYEE_COUNT" property="EMPLOYEE_COUNT" />
+		<result column="COLUMN_1" property="COLUMN_1" />
+		<result column="COLUMN_2" property="COLUMN_2" />
+		<result column="COLUMN_3" property="COLUMN_3" />
+		<result column="COLUMN_4" property="COLUMN_4" />
+		<result column="COLUMN_5" property="COLUMN_5" />
+		<result column="COLUMN_6" property="COLUMN_6" />
+		<result column="COLUMN_7" property="COLUMN_7" />
+		<result column="COLUMN_8" property="COLUMN_8" />
+		<result column="COLUMN_9" property="COLUMN_9" />
+		<result column="COLUMN_10" property="COLUMN_10" />
+		<result column="COLUMN_11" property="COLUMN_11" />
+		<result column="COLUMN_12" property="COLUMN_12" />
+		<result column="COLUMN_13" property="COLUMN_13" />
+		<result column="COLUMN_14" property="COLUMN_14" />
+		<result column="COLUMN_15" property="COLUMN_15" />
+		<result column="COLUMN_16" property="COLUMN_16" />
+	</resultMap>
+	<select id="searchPCD0208" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT2.PCD_0208(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0208 })}
+	</select>
+	
+	
+	<!--PCD_0300 招聘计划统计表 -->
+	<resultMap type="com.mk.report.entity.PCD0300" id="PCD0300">
+		<result column="CODE" property="CODE" />
+		<result column="NAME" property="NAME" />
+		<result column="SUMNUMBER1" property="SUMNUMBER1" />
+		<result column="SUMNUMBER2" property="SUMNUMBER2" />
+		<result column="SUMNUMBER3" property="SUMNUMBER3" />
+		<result column="THISMONTH_1" property="THISMONTH_1" />
+		<result column="THISMONTH_2" property="THISMONTH_2" />
+		<result column="THISMONTH_3" property="THISMONTH_3" />
+		<result column="SUMNUMBER_0" property="SUMNUMBER_0" />
+		<result column="SUMNUMBER_1" property="SUMNUMBER_1" />
+		<result column="SUMNUMBER_2" property="SUMNUMBER_2" />
+		<result column="SUMNUMBER_3" property="SUMNUMBER_3" />
+		<result column="SUMNUMBER_4" property="SUMNUMBER_4" />
+		<result column="SUMNUMBER_5" property="SUMNUMBER_5" />
+		<result column="SUMNUMBER_6" property="SUMNUMBER_6" />
+		<result column="SUMNUMBER_7" property="SUMNUMBER_7" />
+		<result column="SUMNUMBER_8" property="SUMNUMBER_8" />
+		<result column="SUMNUMBER_9" property="SUMNUMBER_9" />
+		<result column="SUMNUMBER_10" property="SUMNUMBER_10" />
+		<result column="SUMNUMBER_11" property="SUMNUMBER_11" />
+	</resultMap>
+	
+	<select id="searchPCD0300" parameterType="com.mk.todo.entity.TodoPam" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0300(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0300 })}
+	</select>
+	
+	
+	
+	
+	
+	<!--PCD_0301 总体编制情况表 -->
+	<resultMap type="com.mk.report.entity.PCD0301" id="PCD0301">
+		<result column="ASSESSHIERARCHYNAME" property="ASSESSHIERARCHYNAME" />
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTCODE" property="DEPTCODE" />
+		<result column="POSTID" property="POSTID" />
+		<result column="POSTCODE" property="POSTCODE" />
+		<result column="BUDGETNUMBER" property="BUDGETNUMBER" />
+		<result column="DEPTNAME_1" property="DEPTNAME_1" />
+		<result column="DEPTNAME_2" property="DEPTNAME_2" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="EMPLOYEENUMBER" property="EMPLOYEENUMBER" />
+		<result column="QBNUMBER" property="QBNUMBER" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="POSTNUM" property="POSTNUM" />
+	</resultMap>
+	
+	<select id="searchPCD0301" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0301(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0301 })}
+	</select>
+	
+	<!--PCD_0302 增编统计表 -->
+	<resultMap type="com.mk.report.entity.PCD0302" id="PCD0302">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME" property="DEPTNAME" />
+		<result column="POSTID" property="POSTID" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="QUOTAID" property="QUOTAID" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="BUDGETTYPENAME" property="BUDGETTYPENAME" />
+		<result column="OPERATENUM" property="OPERATENUM" />
+		<result column="OPERATESTATE" property="OPERATESTATE" />
+		<result column="MODITIMESTAMP" property="MODITIMESTAMP" />
+		<result column="MODIUSER" property="MODIUSER" />
+	</resultMap>
+	
+	<select id="searchPCD0302" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0302(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0302 })}
+	</select>
+	
+	
+	<!--PCD_0303 招聘计划表 -->
+	<resultMap type="com.mk.report.entity.PCD0303" id="PCD0303">
+		<result column="DEPTID" property="DEPTID" />
+		<result column="DEPTNAME_1" property="DEPTNAME_1" />
+		<result column="DEPTNAME_2" property="DEPTNAME_2" />
+		<result column="POSTID" property="POSTID" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="QUOTAID" property="QUOTAID" />
+		<result column="BUDGETTYPE" property="BUDGETTYPE" />
+		<result column="BUDGETTYPENAME" property="BUDGETTYPENAME" />
+		<result column="RANKID" property="RANKID" />
+		<result column="RANKNAME" property="RANKNAME" />
+		<result column="POSTNUM" property="POSTNUM" />
+		<result column="HILLOCKDATE" property="HILLOCKDATE" />
+		<result column="RECRUITPROGRAMSTATE" property="RECRUITPROGRAMSTATE" />
+	</resultMap>
+	
+	<select id="searchPCD0303" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0303(
+		#{parameters.userguid:VARCHAR},
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0303 })}
+	</select>
+	
+	
+	<!--PCD_0304渠道统计表 -->
+	<resultMap type="com.mk.report.entity.PCD0304" id="PCD0304">
+		<result column="CANDIDATESTYPE" property="CANDIDATESTYPE" />
+		<result column="CANDIDATESTYPENAME" property="CANDIDATESTYPENAME" />
+		<result column="PERSONNUM_1" property="PERSONNUM_1" />
+		<result column="PERSONNUM_5" property="PERSONNUM_5" />
+		<result column="PERSONNUM_15" property="PERSONNUM_15" />
+	</resultMap>
+	
+	<select id="searchPCD0304" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0304(
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0304 })}
+	</select>
+	
+	<!--PCD_0305 招聘专员推进情况汇总表 -->
+	<resultMap type="com.mk.report.entity.PCD0305" id="PCD0305">
+		<result column="USERNAME" property="USERNAME" />
+		<result column="MODITIMESTAMP" property="MODITIMESTAMP" />
+		<result column="PERSONNUM_2" property="PERSONNUM_2" />
+		<result column="PERSONNUM_5" property="PERSONNUM_5" />
+		<result column="PERSONNUM_7" property="PERSONNUM_7" />
+		<result column="PERSONNUM_15" property="PERSONNUM_15" />
+	</resultMap>
+	
+	<select id="searchPCD0305" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0305(
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0305 })}
+	</select>
+	
+	
+	
+	<!--PCD_0306 PCD_0306 岗位推进情况表 -->
+	<resultMap type="com.mk.report.entity.PCD0306" id="PCD0306">
+		<result column="CANDIDATESTYPE" property="CANDIDATESTYPE" />
+		<result column="DEPTNAME_1" property="DEPTNAME_1" />
+		<result column="DEPTNAME_2" property="DEPTNAME_2" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="RECOMMENDNUM" property="RECOMMENDNUM" />
+		<result column="PERSONNUM_15" property="PERSONNUM_15" />
+	</resultMap>
+	
+	<select id="searchPCD0306" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0306(
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0306 })}
+	</select>
+	
+	
+	
+	<!--PCD_0306 PCD_0307 面试官面试情况表 -->
+	<resultMap type="com.mk.report.entity.PCD0307" id="PCD0307">
+		<result column="MAININTERVIEWERGUID" property="MAININTERVIEWERGUID" />
+		<result column="RECOMMENDPOSTGUID" property="RECOMMENDPOSTGUID" />
+		<result column="D1" property="D1" />
+		<result column="D2" property="D2" />
+		<result column="PASSNUMBER" property="PASSNUMBER" />
+		<result column="NUMBERS" property="NUMBERS" />
+		<result column="PASSPCT" property="PASSPCT" />
+	</resultMap>
+	
+	<select id="searchPCD0307" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0307(
+		#{parameters.startdate:VARCHAR},
+		#{parameters.enddate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0307 })}
+	</select>
+	
+	<!--PCD_0308 总体编制情况表 -->
+	<resultMap type="com.mk.report.entity.PCD0308" id="PCD0308">
+		<result column="COMPANYNAME" property="COMPANYNAME" />
+		<result column="ASSESSHIERARCHYNAME" property="ASSESSHIERARCHYNAME" />
+		<result column="DEPTNAME_1" property="DEPTNAME_1" />
+		<result column="DEPTNAME_2" property="DEPTNAME_2" />
+		<result column="POSTNAME" property="POSTNAME" />
+		<result column="BZ_1" property="BZ_1" />
+		<result column="SY_1" property="SY_1" />
+		<result column="QB_1" property="QB_1" />
+		<result column="BZ_2" property="BZ_2" />
+		<result column="SY_2" property="SY_2" />
+		<result column="QB_2" property="QB_2" />
+		<result column="name" property="name" />
+		<result column="companyid" property="companyid" />
+		<result column="deptid" property="deptid" />
+		<result column="deptcode" property="deptcode" />
+		<result column="postid" property="postid" />
+		<result column="postcode" property="postcode" />
+		<result column="quotaid" property="quotaid" />
+	</resultMap>
+	
+	<select id="searchPCD0308" parameterType="com.mk.framework.grid.GridServerHandler" statementType="CALLABLE">
+		{call PKG_REPORT3.PCD_0308(
+		#{parameters.companyid:VARCHAR},
+		#{parameters.deptid:VARCHAR},
+		#{parameters.workstate:VARCHAR},
+		#{data,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR, resultMap=PCD0308})}
+	</select>
+	
+</mapper>

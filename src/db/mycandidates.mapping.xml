@@ -1,0 +1,1833 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.mycandidates.dao.MyCandidatesDao">
+
+
+	<!--我的应聘(简历筛选) -->
+	<sql id="searchMycandidatesByFilterWhere">
+		<if test="parameters.keyword==null or parameters.keyword==''">
+			where 1=1
+		</if>
+
+		<if test="parameters.candidatesstate!=null and parameters.candidatesstate!=''">
+			and a.candidatesstate in (${parameters.candidatesstate})
+		</if>
+
+		<if test="parameters.posttype!=null and parameters.posttype!='' and parameters.posttype==2">
+			and a.posttype=#{parameters.posttype}
+		</if>
+
+		<if test="parameters.posttype==null or parameters.posttype=='' or parameters.posttype==1">
+			and (a.posttype is null or a.posttype=1)
+		</if>
+
+		<if test="parameters.myvalid!=null and parameters.myvalid!='' and parameters.myvalid==0">
+			and a.candidatesstate in(-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+		</if>
+
+		<if test="parameters.myvalid!=null and parameters.myvalid!='' and parameters.myvalid==1">
+			and a.candidatesstate in(-2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+		</if>
+
+		<if test="parameters.candidatestype!=null and parameters.candidatestype!=''">
+			and a.candidatestype in (${parameters.candidatestype})
+		</if>
+
+		<if test="parameters.joindate_s!=null and parameters.joindate_s!=''">
+			<![CDATA[AND a.candidatestime >=to_date(#{parameters.joindate_s},'yyyy-MM-dd')]]>
+		</if>
+		<if test="parameters.joindate_e!=null and parameters.joindate_e!=''">
+			<![CDATA[AND a.candidatestime <=to_date(#{parameters.joindate_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.workplace!=null and parameters.workplace!=''">
+			and a.recruitpostname like CONCAT('%',CONCAT(#{parameters.workplace},'%'))
+		</if>
+
+		<!-- <if test="parameters.keyword!=null and parameters.keyword!=''"> AND (WebUserGuid in( select WebUserGuid from J_ResumeEamil where J_ResumeEamil.WebUserGuid=j_mycandidates.WebUserGuid and J_ResumeEamil.Content 
+			like CONCAT('%',CONCAT(#{parameters.keyword},'%')) ) or RecruitPostName like CONCAT('%',CONCAT(#{parameters.keyword},'%')) or WebUserGuid in( select WebUserGuid from J_ResumeFile where J_ResumeFile.WebUserGuid=j_mycandidates.WebUserGuid 
+			and J_ResumeFile.Content like CONCAT('%',CONCAT(#{parameters.keyword},'%')) )) </if> -->
+
+		<if
+			test="(parameters.name!=null and parameters.name!='') or (parameters.culture!=null and parameters.culture!='') or (parameters.workage!=null and parameters.workage!='') or (parameters.sex!=null and parameters.sex!='') or (parameters.birthday_s!=null and parameters.birthday_s!='') or (parameters.birthday_e!=null and parameters.birthday_e!='') or (parameters.homeplace!=null and parameters.homeplace!='') or (parameters.nativeplace!=null and parameters.nativeplace!='')">
+			and a.webuserguid in(
+			select webuserguid from j_resume
+			where
+			1=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				and name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+
+			<if test="parameters.homeplace!=null and parameters.homeplace!=''">
+				and homeplace like CONCAT('%',CONCAT(#{parameters.homeplace},'%'))
+			</if>
+
+			<if test="parameters.nativeplace!=null and parameters.nativeplace!=''">
+				and nativeplace like CONCAT('%',CONCAT(#{parameters.nativeplace},'%'))
+			</if>
+
+			<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+				<![CDATA[AND birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+				<![CDATA[AND birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.sex!=null and parameters.sex!=''">
+				AND sex = #{parameters.sex}
+			</if>
+
+			<if test="parameters.culture!=null and parameters.culture!=''">
+				and culture in (${parameters.culture})
+			</if>
+
+			<if test="parameters.workage!=null and parameters.workage!=''">
+				and workage in (${parameters.workage})
+			</if>
+			)
+		</if>
+	</sql>
+
+
+	<sql id="searchFilterWhere">
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			, (select distinct J_WebUser.Webuserguid
+			from J_WebUser, J_ResumeEamil
+			where J_WebUser.Webuserguid = J_ResumeEamil.Webuserguid
+			and (<![CDATA[ dbms_lob.instr(J_ResumeEamil.Content, #{parameters.keyword}, 1, 1) > 0 ]]>
+			or J_ResumeEamil.Subject like CONCAT('%', CONCAT(#{parameters.keyword}, '%')))
+			) b
+			where a.webuserguid = b.Webuserguid
+		</if>
+	</sql>
+	<!-- or a.recruitpostname like CONCAT('%',CONCAT(#{parameters.keyword},'%')) -->
+
+
+	<select id="countMycandidatesByFilter" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1)
+		from j_mycandidates a
+		<include refid="searchFilterWhere" />
+		<include refid="searchMycandidatesByFilterWhere" />
+	</select>
+
+	<select id="searchMycandidatesByFilter" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from j_mycandidates a
+		<include refid="searchFilterWhere" />
+		<include refid="searchMycandidatesByFilterWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<!--我的应聘(部门简历) -->
+	<sql id="searchMyCandidatesByDeptWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+
+		<if test="parameters.candidatesstate!=null and parameters.candidatesstate!=''">
+			and a.candidatesstate in (${parameters.candidatesstate})
+		</if>
+
+		<if test="parameters.posttype!=null and parameters.posttype!='' and parameters.posttype==2">
+			and a.posttype=#{parameters.posttype}
+		</if>
+
+		<if test="parameters.candidatesstate==null or parameters.candidatesstate==''">
+			and a.candidatesstate in(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+		</if>
+
+		<if test="parameters.candidatestype!=null and parameters.candidatestype!=''">
+			and a.candidatestype in (${parameters.candidatestype})
+		</if>
+
+		<if test="parameters.joindate_s!=null and parameters.joindate_s!=''">
+			<![CDATA[AND a.candidatestime >=to_date(#{parameters.joindate_s},'yyyy-MM-dd')]]>
+		</if>
+		<if test="parameters.joindate_e!=null and parameters.joindate_e!=''">
+			<![CDATA[AND a.candidatestime <=to_date(#{parameters.joindate_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.workplace!=null and parameters.workplace!=''">
+			and a.recruitpostname like CONCAT('%',CONCAT(#{parameters.workplace},'%'))
+		</if>
+
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			AND (a.webuserguid in(
+			select WebUserGuid from J_ResumeEamil where J_ResumeEamil.WebUserGuid=a.WebUserGuid
+			and J_ResumeEamil.Content like
+			CONCAT('%',CONCAT(#{parameters.keyword},'%'))
+			) or
+			a.recruitpostname like CONCAT('%',CONCAT(#{parameters.keyword},'%')))
+		</if>
+
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and (a.mycandidatesguid in (select mycandidatesguid from
+				J_AuditionRecord where maininterviewerguid=#{parameters.userguid} and state=1 and b.state in(1,2))
+				or
+				(b.userguid=#{parameters.userguid} and (b.state in(1,2) or (b.state=0 and a.candidatesstate!=2)) ) )
+			</if>
+		</if>
+
+		<if
+			test="(parameters.name!=null and parameters.name!='') or (parameters.culture!=null and parameters.culture!='') or (parameters.workage!=null and parameters.workage!='') or (parameters.sex!=null and parameters.sex!='') or (parameters.birthday_s!=null and parameters.birthday_s!='') or (parameters.birthday_e!=null and parameters.birthday_e!='') or (parameters.homeplace!=null and parameters.homeplace!='') ">
+			and a.webuserguid in(
+			select webuserguid from j_resume
+			where
+			1=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				and name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+
+			<if test="parameters.homeplace!=null and parameters.homeplace!=''">
+				and homeplace like CONCAT('%',CONCAT(#{parameters.homeplace},'%'))
+			</if>
+
+			<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+				<![CDATA[AND birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+				<![CDATA[AND birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.sex!=null and parameters.sex!=''">
+				AND sex = #{parameters.sex}
+			</if>
+
+			<if test="parameters.culture!=null and parameters.culture!=''">
+				and culture in (${parameters.culture})
+			</if>
+
+			<if test="parameters.workage!=null and parameters.workage!=''">
+				and workage in (${parameters.workage})
+			</if>
+			)
+		</if>
+	</sql>
+
+	<select id="searchMyCandidatesByDept" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select b.recommendguid,
+		a.mycandidatesguid,
+
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.posttype,
+		a.employeeid
+		from j_mycandidates a, J_Recommend b
+		<include refid="searchMyCandidatesByDeptWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countMyCandidatesByDept" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a, J_Recommend b
+		<include refid="searchMyCandidatesByDeptWhere" />
+	</select>
+
+
+
+	<!--我的应聘(面試安排) -->
+	<sql id="searchMycandidatesByAuditionWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and a.candidatesstate in(4,6,9)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend a, T_H_UserDept b where b.userguid = #{parameters.userguid} and a.recommenddeptid=b.deptguid)
+			</if>
+		</if>
+	</sql>
+
+	<select id="searchMycandidatesByAudition" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select b.recommendguid,
+		a.mycandidatesguid,
+
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from j_mycandidates a, J_Recommend b
+		<include refid="searchMycandidatesByAuditionWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countMycandidatesByAudition" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a, J_Recommend b
+		<include refid="searchMycandidatesByAuditionWhere" />
+	</select>
+
+
+
+
+	<!--我的应聘(部门筛选) -->
+	<sql id="searchMyCandidatesAndResumeByDeptWhere">
+		where
+		a.webuserguid=b.webuserguid
+
+		<if test="parameters.candidatesstate==null or parameters.candidatesstate==''">
+			and a.candidatesstate in(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+		</if>
+
+		<if test="parameters.candidatesstate!=null and parameters.candidatesstate!=''">
+			and a.candidatesstate in (${parameters.candidatesstate})
+		</if>
+
+		<if test="parameters.candidatestype!=null and parameters.candidatestype!=''">
+			and a.candidatestype in (${parameters.candidatestype})
+		</if>
+
+		<if test="parameters.candidatestype==null or parameters.candidatestype==''">
+			and a.candidatestype in (1,2,3,4,5)
+		</if>
+
+		<if test="parameters.joindate_s!=null and parameters.joindate_s!=''">
+			<![CDATA[AND a.candidatestime >=to_date(#{parameters.joindate_s},'yyyy-MM-dd')]]>
+		</if>
+		<if test="parameters.joindate_e!=null and parameters.joindate_e!=''">
+			<![CDATA[AND a.candidatestime <=to_date(#{parameters.joindate_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.workplace!=null and parameters.workplace!=''">
+			and a.recruitpostname like CONCAT('%',CONCAT(#{parameters.workplace},'%'))
+		</if>
+
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			AND (a.webuserguid in(
+			select WebUserGuid from J_ResumeEamil where J_ResumeEamil.WebUserGuid=a.WebUserGuid
+			and J_ResumeEamil.Content like
+			CONCAT('%',CONCAT(#{parameters.keyword},'%'))
+			) or
+			a.recruitpostname like CONCAT('%',CONCAT(#{parameters.keyword},'%')))
+		</if>
+
+		<if test="parameters.admin==false">
+			${parameters.sqlWhere}
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			and b.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		<if test="parameters.homeplace!=null and parameters.homeplace!=''">
+			and b.homeplace like CONCAT('%',CONCAT(#{parameters.homeplace},'%'))
+		</if>
+
+		<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+			<![CDATA[AND b.birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+			<![CDATA[AND b.birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.sex!=null and parameters.sex!=''">
+			AND b.sex = #{parameters.sex}
+		</if>
+
+		<if test="parameters.culture!=null and parameters.culture!=''">
+			and b.culture in (${parameters.culture})
+		</if>
+
+		<if test="parameters.workage!=null and parameters.workage!=''">
+			and b.workage in (${parameters.workage})
+		</if>
+	</sql>
+
+	<select id="countMyCandidatesAndResumeByDept" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a,J_Resume b
+		<include refid="searchMyCandidatesAndResumeByDeptWhere" />
+	</select>
+
+	<select id="searchMyCandidatesAndResumeByDept" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype,
+		b.mark,
+		b.keyword,
+		b.name,
+		b.sex,
+		b.birthday,
+		b.mobile,
+		b.email,
+		b.homeplace,
+		b.workage,
+		b.culture,
+		b.photo,
+		b.modtime,
+		b.rmk,
+		b.createtime,
+		b.recommenduserguid,
+		b.valuation,
+		b.occupation,
+		b.salary,
+		b.situation,
+		b.industry
+		from
+		j_mycandidates a,J_Resume b
+		<include refid="searchMyCandidatesAndResumeByDeptWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+
+	<!--我的应聘(修改面试官) -->
+	<sql id="searchMycandidatesByMainInterviewerWhere">
+		where
+		1=1
+		and candidatesstate in(5)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND mycandidatesguid in (select mycandidatesguid from J_AuditionRecord where maininterviewerguid = #{parameters.userguid} and state=1)
+			</if>
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			and webuserguid in(select webuserguid from j_resume
+			where name like CONCAT('%',CONCAT(#{parameters.name},'%')))
+		</if>
+	</sql>
+
+	<select id="searchMycandidatesByMainInterviewer" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype
+		from
+		j_mycandidates
+		<include refid="searchMycandidatesByMainInterviewerWhere" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countMycandidatesByMainInterviewer" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates
+		<include refid="searchMycandidatesByMainInterviewerWhere" />
+	</select>
+
+
+
+
+
+
+
+	<!--我的应聘(待发布的面试情况) -->
+	<sql id="searchMycandidatesByResultWhere">
+		where
+		1=1
+		and candidatesstate in(6,7,8,9)
+		and mycandidatesguid in (select a.mycandidatesguid from j_auditionrecord a,j_auditionresult b where a.auditionrecordguid=b.auditionrecordguid and
+		b.isrelease=2 and a.state=1)
+	</sql>
+
+	<select id="searchMycandidatesByResult" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype
+		from
+		j_mycandidates
+		<include refid="searchMycandidatesByResultWhere" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countMycandidatesByResult" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates
+		<include refid="searchMycandidatesByResultWhere" />
+	</select>
+
+	<!--我的应聘(简历管理) -->
+	<sql id="searchMyCandidatesAndResumeWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		<!--  and b.state in(1,2)-->
+		
+		 and  (b.state in(1,2) or(b.state=0 and a.candidatesstate=1))
+		
+		<if test="parameters.candidatesstate==null or parameters.candidatesstate==''">
+			and a.candidatesstate in(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+		</if>
+
+		<if test="parameters.posttype!=null and parameters.posttype!='' and parameters.posttype==2">
+			and a.posttype=#{parameters.posttype}
+		</if>
+
+		<if test="parameters.candidatesstate!=null and parameters.candidatesstate!=''">
+			and a.candidatesstate in (${parameters.candidatesstate})
+		</if>
+
+		<if test="parameters.candidatestype!=null and parameters.candidatestype!=''">
+			and a.candidatestype in (${parameters.candidatestype})
+		</if>
+
+		<if test="parameters.joindate_s!=null and parameters.joindate_s!=''">
+			<![CDATA[AND a.candidatestime >=to_date(#{parameters.joindate_s},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.joindate_e!=null and parameters.joindate_e!=''">
+			<![CDATA[AND a.candidatestime <=to_date(#{parameters.joindate_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.workplace!=null and parameters.workplace!=''">
+			and a.recruitpostname like CONCAT('%',CONCAT(#{parameters.workplace},'%'))
+		</if>
+
+		<if test="parameters.keyword!=null and parameters.keyword!=''">
+			AND (a.webuserguid in(
+			select WebUserGuid from J_ResumeEamil where J_ResumeEamil.WebUserGuid=a.WebUserGuid
+			and J_ResumeEamil.Content like
+			CONCAT('%',CONCAT(#{parameters.keyword},'%'))
+			) or
+			a.recruitpostname like CONCAT('%',CONCAT(#{parameters.keyword},'%')))
+		</if>
+
+
+		<if test="parameters.userguid!=null and parameters.userguid!='' and parameters.username!=null and parameters.username!=''">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where x.recommenddeptid=y.deptguid and (y.userguid = #{parameters.userguid} or
+				x.modiuser=#{parameters.username}))
+			</if>
+		</if>
+
+		<if
+			test="(parameters.name!=null and parameters.name!='') or (parameters.culture!=null and parameters.culture!='') or (parameters.workage!=null and parameters.workage!='') or (parameters.sex!=null and parameters.sex!='') or (parameters.birthday_s!=null and parameters.birthday_s!='') or (parameters.birthday_e!=null and parameters.birthday_e!='') or (parameters.homeplace!=null and parameters.homeplace!='') ">
+			and a.webuserguid in(
+			select webuserguid from j_resume
+			where
+			1=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				and name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+
+			<if test="parameters.homeplace!=null and parameters.homeplace!=''">
+				and homeplace like CONCAT('%',CONCAT(#{parameters.homeplace},'%'))
+			</if>
+
+			<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+				<![CDATA[AND birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+				<![CDATA[AND birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+			</if>
+
+			<if test="parameters.sex!=null and parameters.sex!=''">
+				AND sex = #{parameters.sex}
+			</if>
+
+			<if test="parameters.culture!=null and parameters.culture!=''">
+				and culture in (${parameters.culture})
+			</if>
+
+			<if test="parameters.workage!=null and parameters.workage!=''">
+				and workage in (${parameters.workage})
+			</if>
+			)
+		</if>
+
+		<if test="parameters.recruitpostguid!=null and parameters.recruitpostguid!=''">
+			and recruitpostguid=#{parameters.recruitpostguid}
+		</if>
+
+		<if test="parameters.stoday!=null and parameters.stoday!=''">
+			AND candidatestime <![CDATA[ >= ]]>to_date(#{parameters.stoday},'YYYY-MM-DD
+			HH:MI:SS')-1
+		</if>
+
+		<if test="parameters.etoday!=null and parameters.etoday!=''">
+			AND candidatestime <![CDATA[ <= ]]>to_date(#{parameters.etoday},'YYYY-MM-DD
+			hh24:mi:ss')-1
+		</if>
+
+	</sql>
+
+
+	<select id="searchMyCandidatesAndResume" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select b.recommendguid,
+		a.mycandidatesguid,
+
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from j_mycandidates a, J_Recommend b
+		<include refid="searchMyCandidatesAndResumeWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countMyCandidatesAndResume" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a, J_Recommend b
+		<include refid="searchMyCandidatesAndResumeWhere" />
+	</select>
+
+	<delete id="delMyCandidatesById" parameterType="String">
+		delete j_mycandidates
+		where mycandidatesguid = #{id}
+	</delete>
+
+	<delete id="delMyCandidatesByUserId" parameterType="String">
+		delete j_mycandidates
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<update id="updateMyCandidates" parameterType="com.mk.mycandidates.entity.MyCandidates">
+		update j_mycandidates
+		set mycandidatesguid =#{mycandidatesguid},
+		recruitpostguid =#{recruitpostguid:VARCHAR},
+		webuserguid =#{webuserguid},
+		candidatesstate=#{candidatesstate:INTEGER},
+		candidatestype=#{candidatestype:INTEGER},
+		progress =#{progress},
+		candidatestime =#{candidatestime},
+		matchuser =#{matchuser:VARCHAR},
+		matchtime=#{matchtime:DATE},
+		matchmemo =#{matchmemo:VARCHAR},
+		holduser =#{holduser:VARCHAR},
+		holdtime=#{holdtime:DATE},
+		holdmemo =#{holdmemo:VARCHAR},
+		recruitpostname=#{recruitpostname:VARCHAR},
+		resumeeamilguid=#{resumeeamilguid:VARCHAR},
+		moditimestamp=#{moditimestamp},
+		readtype=#{readtype},
+		employeeid=#{employeeid:VARCHAR},
+		posttype=#{posttype:INTEGER},
+		recruitprogramoperateguid=#{recruitprogramoperateguid:VARCHAR}
+		where
+		mycandidatesguid =#{mycandidatesguid}
+	</update>
+
+	<insert id="insertMyCandidates" parameterType="com.mk.mycandidates.entity.MyCandidates">
+		insert into j_mycandidates
+		(mycandidatesguid,
+		recruitpostguid,
+		webuserguid,
+		candidatesstate,
+		candidatestype,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype,
+		recruitprogramoperateguid)
+		values
+		(#{mycandidatesguid},
+		#{recruitpostguid:VARCHAR},
+		#{webuserguid},
+		#{candidatesstate},
+		#{candidatestype:INTEGER},
+		#{progress},
+		#{candidatestime},
+		#{matchuser:VARCHAR},
+		#{matchtime:DATE},
+		#{matchmemo:VARCHAR},
+		#{holduser:VARCHAR},
+		#{holdtime:DATE},
+		#{holdmemo:VARCHAR},
+		#{recruitpostname:VARCHAR},
+		#{resumeeamilguid:VARCHAR},
+		#{moditimestamp},
+		#{readtype},
+		#{employeeid:VARCHAR},
+		#{posttype:INTEGER},
+		#{recruitprogramoperateguid:VARCHAR})
+	</insert>
+
+	<select id="getMyCandidatesById" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select mycandidatesguid,
+		recruitpostguid,
+		webuserguid,
+		candidatesstate,
+		candidatestype,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype,
+		recruitprogramoperateguid
+		from j_mycandidates
+		where
+		mycandidatesguid=#{id}
+	</select>
+
+	<select id="getMyCandidatesByIdAndRecommendGuid" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from j_mycandidates a, J_Recommend b
+		where a.mycandidatesguid=b.mycandidatesguid(+)
+		and b.state
+		in(1,2)
+		and
+		a.mycandidatesguid=#{mycandidatesguid}
+		<if test="recommendguid!=null and recommendguid!='' ">
+			and b.recommendguid=#{recommendguid}
+		</if>
+	</select>
+
+
+	<select id="getMyCandidatesByUserGuid" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype,
+		b.mark,
+		b.keyword,
+		b.name,
+		b.sex,
+		b.birthday,
+		b.mobile,
+		b.email,
+		b.homeplace,
+		b.workage,
+		b.culture,
+		b.photo,
+		b.modtime,
+		b.rmk
+		from
+		j_mycandidates a,
+		j_resume b
+		where
+		b.webuserguid=#{webuserguid}
+		and
+		b.webuserguid=a.webuserguid(+)
+		<!--  <if test="state!=null and state!='' and state==2">
+			<![CDATA[AND a.candidatesstate in(2,4,5,6,7,10,11,12,14,15,17)]]>
+		</if>-->
+		<if test="state!=null and state!=''">
+			<![CDATA[AND a.candidatesstate in(4,5,6,7,10,11,12,14,15,17)]]>
+		</if>
+	</select>
+
+	<select id="getMyCandidatesByWebUserGuid" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where
+		a.webuserguid=#{webuserguid}
+		<![CDATA[AND a.candidatesstate >=2]]>
+	</select>
+
+	<select id="getMyCandidatesByRecruitPostGuid" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where
+		a.recruitpostguid=#{recruitpostguid}
+	</select>
+
+	<select id="getMyCandidatesByWebUserGuidAndState" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where
+		a.webuserguid=#{webuserguid}
+		and
+		a.candidatesstate =#{candidatesstate}
+	</select>
+
+
+	<!--我的应聘(面试结果) -->
+	<sql id="searchMyCandidatesByStateWhere">
+		where
+		1=1
+		and candidatesstate in(5)
+		and mycandidatesguid in (select mycandidatesguid from J_AuditionRecord where
+		state=1 <![CDATA[AND sysdate >auditiondate ]]>
+		)
+
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and
+				mycandidatesguid in (select mycandidatesguid from J_AuditionRecord where
+				maininterviewerguid=#{parameters.userguid} and state=1)
+			</if>
+		</if>
+	</sql>
+
+
+	<select id="countMyCandidatesByState" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates
+		<include refid="searchMyCandidatesByStateWhere" />
+	</select>
+
+
+	<select id="searchMyCandidatesByState" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype
+		from
+		j_mycandidates
+		<include refid="searchMyCandidatesByStateWhere" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<!-- 首页信息提示框 -->
+	<select id="countMsgByState" resultType="com.mk.framework.chart.ChartModel">
+		select t_optionlist.code as id,
+		t_optionlist.name as name,
+		nvl(t.value, 0) as value
+		from t_optionlist,
+		(select count(1) as value, candidatesState
+		from
+		j_mycandidates
+		group by candidatesState ) t
+		where
+		t_optionlist.code = t.candidatesState(+)
+		AND t_optionlist.optiontypeguid = 'J_MyCandidates_CandidatesState'
+		<![CDATA[ and t_optionlist.code >=2]]>
+		order by t_optionlist.dorder
+	</select>
+
+	<!-- 人员面试信息 -->
+	<sql id="searchCandidatesPersonWhere">
+		where
+		a.webuserguid=b.webuserguid
+		and a.mycandidatesguid=c.mycandidatesguid
+		and c.state=1
+		and a.candidatesstate in(5)
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND b.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		<if test="parameters.today==1">
+			AND c.auditiondate <![CDATA[ >= ]]>to_date(#{parameters.stoday},'YYYY-MM-DD
+			HH:MI:SS')
+			AND c.auditiondate <![CDATA[ <= ]]>to_date(#{parameters.etoday},'YYYY-MM-DD
+			hh24:mi:ss')
+		</if>
+	</sql>
+
+	<select id="countCandidatesPerson" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates a,j_resume b,J_AuditionRecord c
+		<include refid="searchCandidatesPersonWhere" />
+	</select>
+
+	<select id="searchCandidatesPerson" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.webuserguid,
+		a.candidatesstate,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.candidatestype,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype,
+		b.mark,
+		b.keyword,
+		b.name,
+		b.sex,
+		b.birthday,
+		b.mobile,
+		b.email,
+		b.homeplace,
+		b.workage,
+		b.culture,
+		b.photo,
+		b.modtime,
+		b.rmk,
+		c.auditiondate,
+		c.auditionaddress,
+		c.maininterviewerguid
+		from
+		j_mycandidates a,
+		j_resume b,
+		J_AuditionRecord c
+		<include refid="searchCandidatesPersonWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+
+	<!-- 邀请他人反馈面试结果 （简历管理下） 统计 -->
+	<sql id="searchMycandidatesByMainInterviewerListWhere">
+		where
+		1=1
+		and candidatesstate in(5)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where y.userguid = #{parameters.userguid} and x.recommenddeptid=y.deptguid)
+			</if>
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			and webuserguid in(select webuserguid from j_resume
+			where 1=1 and name like CONCAT('%',CONCAT(#{parameters.name},'%')))
+		</if>
+	</sql>
+
+
+	<select id="countMycandidatesByMainInterviewerList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_mycandidates
+		<include refid="searchMycandidatesByMainInterviewerListWhere" />
+	</select>
+
+
+	<!-- 邀请他人反馈面试结果 （简历管理下）搜索 -->
+	<select id="searchMycandidatesByMainInterviewerList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidates">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype
+		from
+		j_mycandidates
+		<include refid="searchMycandidatesByMainInterviewerListWhere" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+
+
+	<!-- 推荐信息 20140313 11:15分钟改的多加岗位名称字段-->
+	<sql id="searchRecommendWhere">
+		where 1=1
+		<if test="parameters.mycandidatesguid!=null and parameters.mycandidatesguid!=''">
+			AND mycandidatesguid=#{parameters.mycandidatesguid}
+		</if>
+	</sql>
+
+	<select id="countRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_recommend
+		<include refid="searchRecommendWhere" />
+	</select>
+
+	<select id="searchRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.Recommend">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select recommendguid,
+		mycandidatesguid,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		state,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		<include refid="searchRecommendWhere" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<update id="updateRecommend" parameterType="com.mk.mycandidates.entity.Recommend">
+		update j_recommend
+		set recommendguid = #{recommendguid},
+		mycandidatesguid = #{mycandidatesguid},
+		state=#{state},
+		recommendcompanyid =
+		#{recommendcompanyid},
+		recommenddeptid = #{recommenddeptid},
+		recommendpostguid = #{recommendpostguid:VARCHAR},
+		recommendpostname=#{recommendpostname:VARCHAR},
+		userguid = #{userguid:VARCHAR},
+		auditiontime = #{auditiontime:DATE},
+		modiuser =#{modiuser:VARCHAR},
+		moditimestamp =
+		#{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where recommendguid = #{recommendguid}
+	</update>
+
+	<insert id="insertRecommend" parameterType="com.mk.mycandidates.entity.Recommend">
+		insert into j_recommend
+		(recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{recommendguid},
+		#{mycandidatesguid},
+		#{state},
+		#{recommendcompanyid},
+		#{recommenddeptid},
+		#{recommendpostguid:VARCHAR},
+		#{recommendpostname:VARCHAR},
+		#{userguid:VARCHAR},
+		#{auditiontime:DATE},
+		#{modiuser:VARCHAR},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<select id="getRecommendById" resultType="com.mk.mycandidates.entity.Recommend">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		j_recommend
+		where recommendguid=#{recommendguid}
+	</select>
+
+	<select id="getRecommendByCandidatesGuid" resultType="com.mk.mycandidates.entity.Recommend">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		where mycandidatesguid=#{mycandidatesguid}
+		order by moditimestamp desc
+	</select>
+
+
+	<select id="getRecommendByCandidatesGuidAndState" resultType="com.mk.mycandidates.entity.Recommend">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		where mycandidatesguid=#{mycandidatesguid}
+		and state in (1,2)
+	</select>
+
+	<select id="getRecommendByToRecommender" resultType="com.mk.mycandidates.entity.Recommend">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		where
+		state in (1,2)
+		and
+		recommendguid not in (select operateguid from j_bussiness where tablename='J_Recommend')
+		and mycandidatesguid in (select mycandidatesguid from j_mycandidates where candidatesstate=2)
+		<![CDATA[AND moditimestamp <=sysdate]]>
+	</select>
+
+	<delete id="delRecommendByCandidatesGuidAndState" parameterType="String">
+		delete j_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+		and state in (1,2)
+	</delete>
+
+	<delete id="delRecommendById" parameterType="String">
+		delete j_recommend
+		where recommendguid = #{recommendguid}
+	</delete>
+
+	<delete id="delRecommendByCandidatesGuid" parameterType="String">
+		delete j_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+
+	<!--根据应聘ID统计推荐次数 -->
+	<select id="countRecommendByMyCandidatesGuid" parameterType="String" resultType="Integer">
+		select count(1) from j_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+	<!--根据应聘ID统计转推荐次数 -->
+	<select id="countZRecommendByMyCandidatesGuid" parameterType="String" resultType="Integer">
+		select count(1) from j_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+		and state=2
+	</select>
+
+	<!--根据应聘ID统计认定次数 -->
+	<select id="countHoldByMyCandidatesGuid" parameterType="String" resultType="Integer">
+		select count(1) from j_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+		and auditiontime is not null
+	</select>
+
+
+	<!--根据应聘ID统计认定次数 -->
+	<select id="countAuditionrecordByMyCandidatesGuid" parameterType="String" resultType="Integer">
+		select count(1) from j_auditionrecord
+		where mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+
+	<!-- 简历推荐到期后的数据 -->
+	<select id="getInvalidMyCandidatesByState" resultType="com.mk.mycandidates.entity.Recommend" parameterType="String">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		where
+		state in(1,2)
+		and
+		mycandidatesguid in (select mycandidatesguid from j_mycandidates where candidatesstate=2)
+		<![CDATA[AND moditimestamp <=to_date(#{_datas},'yyyy-MM-dd hh24:mi:ss')]]>
+	</select>
+
+
+	<!--根据webuserguid统计投递次数 -->
+	<select id="countSend" parameterType="String" resultType="Integer">
+		select count(1) from j_mycandidates t
+		where t.webuserguid = #{webuserguid}
+	</select>
+
+	<!-- 投递历史 -->
+	<select id="getHistoryMyCandidatesByWebUserGuid" parameterType="String" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select mycandidatesguid,
+		recruitpostguid,
+		webuserguid,
+		candidatesstate,
+		candidatestype,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid
+		from j_mycandidates
+		where
+		webuserguid=#{webuserguid}
+		and mycandidatesguid not
+		in
+		(#{mycandidatesguid})
+		order by moditimestamp desc
+	</select>
+
+
+
+	<!--操作历史 -->
+	<insert id="insertMyCandidatesHistory" parameterType="com.mk.mycandidates.entity.MyCandidatesHistory">
+		insert into j_mycandidateshistory
+		(mycandidateshistoryguid,
+		mycandidatesguid,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{mycandidateshistoryguid},
+		#{mycandidatesguid},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateMyCandidatesHistory" parameterType="com.mk.mycandidates.entity.MyCandidatesHistory">
+		update j_mycandidateshistory
+		set mycandidateshistoryguid = #{mycandidateshistoryguid}
+		mycandidatesguid = #{mycandidatesguid},
+		modiuser =
+		#{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where mycandidateshistoryguid = #{mycandidateshistoryguid}
+	</update>
+
+	<select id="getMyCandidatesHistoryById" resultType="com.mk.mycandidates.entity.MyCandidatesHistory">
+		select mycandidateshistoryguid,
+		mycandidatesguid,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_mycandidateshistory
+		where mycandidateshistoryguid
+		=#{mycandidateshistoryguid}
+	</select>
+
+	<select id="getMyCandidatesHistoryByMyCandidatesGuid" resultType="com.mk.mycandidates.entity.MyCandidatesHistory">
+		select mycandidateshistoryguid,
+		mycandidatesguid,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_mycandidateshistory
+		where mycandidatesguid
+		=#{mycandidatesguid}
+	</select>
+
+	<delete id="delMyCandidatesHistoryById" parameterType="String">
+		delete j_mycandidateshistory
+		where mycandidateshistoryguid = #{mycandidateshistoryguid}
+	</delete>
+
+	<delete id="delyCandidatesHistoryByMyCandidatesGuid" parameterType="String">
+		delete j_mycandidateshistory
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+	<!-- 我的应聘操作历史搜索 -->
+	<sql id="searchMyCandidatesHistoryByMyCandidatesGuid">
+		where 1=1
+		<if test="parameters.mycandidatesguid!=null and parameters.mycandidatesguid!=''">
+			AND mycandidatesguid=#{parameters.mycandidatesguid}
+		</if>
+	</sql>
+
+	<select id="countMyCandidatesHistoryByMyCandidatesGuid" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from J_mycandidateshistory
+		<include refid="searchMyCandidatesHistoryByMyCandidatesGuid" />
+	</select>
+
+	<select id="searchMyCandidatesHistoryByMyCandidatesGuid" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.mycandidates.entity.MyCandidatesHistory">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidateshistoryguid,
+		mycandidatesguid,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_mycandidateshistory
+		<include refid="searchMyCandidatesHistoryByMyCandidatesGuid" />
+		order by moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<!-- 短信发送情况 -->
+	<insert id="insertBussiness" parameterType="com.mk.mycandidates.entity.Bussiness">
+		insert into j_bussiness
+		(bussinessguid, operateguid, tablename)
+		values
+		(#{bussinessguid}, #{operateguid}, #{tablename})
+	</insert>
+
+	<!-- 检查一星期内是否有投过相同职位简历 -->
+	<select id="checkResume" parameterType="com.mk.mycandidates.entity.MyCandidates" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype,
+		employeeid,
+		posttype
+		from
+		j_mycandidates
+		where webuserguid = #{webuserguid}
+		<if test="recruitpostname!=null and recruitpostname!=''">
+			and recruitpostname= #{recruitpostname}
+		</if>
+		and candidatestime+7<![CDATA[ >= ]]>
+		to_date(#{tempdate},'YYYY-MM-DD')
+	</select>
+
+	<!-- 外网部门简历链接到OA -->
+	<sql id="getMyDptCandidatesByUserGuidWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and a.candidatesstate in(2,5)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and (a.mycandidatesguid in (select mycandidatesguid from J_AuditionRecord where maininterviewerguid=#{parameters.userguid} and state=1 )
+				or
+				(b.userguid=#{parameters.userguid}))
+			</if>
+		</if>
+	</sql>
+
+	<select id="getMyDptCandidatesByUserGuid" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from j_mycandidates a, J_Recommend b
+		<include refid="getMyDptCandidatesByUserGuidWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+
+	<!--应聘信息操作表 -->
+	<insert id="insertCandidatesOperate" parameterType="com.mk.mycandidates.entity.CandidatesOperate">
+		insert into j_candidatesoperate
+		(candidatesoperateguid, mycandidatesguid, userguid)
+		values
+		(#{candidatesoperateguid}, #{mycandidatesguid}, #{userguid})
+	</insert>
+
+	<select id="getCandidatesOperateByCandidatesGuid" resultType="com.mk.mycandidates.entity.CandidatesOperate">
+		select candidatesoperateguid, mycandidatesguid, userguid from j_candidatesoperate
+		where mycandidatesguid=#{mycandidatesguid}
+	</select>
+
+	<select id="getCandidatesOperateByUserGuid" resultType="com.mk.mycandidates.entity.CandidatesOperate">
+		select candidatesoperateguid, mycandidatesguid, userguid from j_candidatesoperate
+		where userguid=#{userguid}
+	</select>
+	
+	<select id="getCandidatesOperateByCandidatesGuidAndUserGuid" resultType="com.mk.mycandidates.entity.CandidatesOperate">
+		select candidatesoperateguid, mycandidatesguid, userguid from j_candidatesoperate
+		where userguid=#{userguid}
+		and mycandidatesguid=#{mycandidatesguid}
+	</select>
+	
+	
+	
+	
+	<!--201311月26日做的在面试过程中其他的应聘为锁定 -->
+	<select id="getMyCandidatesByAudition" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where
+		<![CDATA[a.candidatesstate in(2,4,5,6,7,10,11,12,14,15,17)]]>
+	</select>
+	
+	
+	<select id="getCandidatesByUserGuid" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where a.webuserguid=#{webuserguid}
+		and a.candidatesstate=1
+		<![CDATA[AND a.mycandidatesguid <>#{mycandidatesguid}]]>
+	</select>
+	
+	<select id="getMyCandidatesByLock" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where a.candidatesstate=-2
+	</select>
+	
+	<select id="getCandidatesByAudition" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.candidatestype,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		a.employeeid,
+		a.posttype
+		from
+		j_mycandidates a
+		where a.webuserguid=#{webuserguid}
+		<![CDATA[AND a.candidatesstate in(2,4,5,6,7,10,11,12,14,15,17)]]>
+	</select>
+	
+	<delete id="delCandidatesOperateByCandidatesGuid" parameterType="String">
+		delete j_candidatesoperate
+		where mycandidatesguid = #{candidatesguid}
+	</delete>
+	
+	
+	<select id="getRecommendByCandidatesGuidAndTime" resultType="com.mk.mycandidates.entity.Recommend">
+		select recommendguid,
+		mycandidatesguid,
+		state,
+		recommendcompanyid,
+		recommenddeptid,
+		recommendpostguid,
+		recommendpostname,
+		userguid,
+		auditiontime,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_recommend
+		where mycandidatesguid=#{mycandidatesguid}
+		and state in (1,2)
+		<![CDATA[AND moditimestamp >=to_date(#{times},'yyyy-MM-dd hh24:mi:ss')]]>
+		order by moditimestamp desc
+	</select>
+</mapper>
+	

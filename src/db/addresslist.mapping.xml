@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.addresslist.dao.AddressListDao">
+
+	<sql id="searchAddressWhere">
+		where 1=1
+
+		<if test="parameters.deptcode!=null and parameters.deptcode!='' and parameters.deptcode!='null' ">
+			AND deptcode LIKE CONCAT(#{parameters.deptcode},'%')
+		</if>
+
+		<if test="parameters.companycode!=null and parameters.companycode!='' and parameters.companycode!='null' ">
+			AND companycode LIKE CONCAT(#{parameters.companycode},'%')
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!='' and parameters.name!='null'">
+			AND name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		<if test="parameters.jobnumber!=null and parameters.jobnumber!='' and parameters.jobnumber!='null' ">
+			AND jobnumber like CONCAT('%',CONCAT(#{parameters.jobnumber},'%'))
+		</if>
+		<if test="parameters.innerphone!=null and parameters.innerphone!='' and parameters.innerphone!='null' ">
+			AND innerphone like CONCAT('%',CONCAT(#{parameters.innerphone},'%'))
+		</if>
+
+		<if test="parameters.userguid!=null and parameters.userguid!='' and parameters.userguid!='null'">
+			AND (exists (select companyid from T_H_UserAddressCompany where userguid = #{parameters.userguid} and companyid is null)
+			or companyid
+			in (select companyid from T_H_UserAddressCompany where
+			userguid = #{parameters.userguid})
+			)
+		</if>
+
+
+
+	</sql>
+
+	<select id="countAddressList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from h_a_addresslist
+		<include refid="searchAddressWhere" />
+	</select>
+
+	<select id="searchAddressList" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.addresslist.entity.AddressList">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		<include refid="searchAddressWhere" />
+		order by companycode,deptcode,postcode,dorder
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+
+	</select>
+
+	<insert id="insertAddressList" parameterType="com.mk.addresslist.entity.AddressList">
+		insert into h_a_addresslist
+		(addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values
+		(#{addresslistguid},
+		#{employeeid:VARCHAR},
+		#{employeecode:VARCHAR},
+		#{companyid},
+		#{companycode},
+		#{deptid},
+		#{deptcode},
+		#{postid:VARCHAR},
+		#{postcode:VARCHAR},
+		#{dorder:VARCHAR},
+		#{jobnumber:VARCHAR},
+		#{name},
+		#{sex},
+		#{innerphone:VARCHAR},
+		#{extphone:VARCHAR},
+		#{mobilephone:VARCHAR},
+		#{mobilephone2:VARCHAR},
+		#{email:VARCHAR},
+		#{officeaddress:VARCHAR},
+		#{refreshtimestamp},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+
+	<update id="updateAddressList" parameterType="com.mk.addresslist.entity.AddressList">
+		update h_a_addresslist
+		set employeeid = #{employeeid:VARCHAR},
+		employeecode = #{employeecode:VARCHAR},
+		companyid = #{companyid},
+		companycode =
+		#{companycode},
+		deptid = #{deptid},
+		deptcode = #{deptcode},
+		postid = #{postid:VARCHAR},
+		postcode = #{postcode:VARCHAR},
+		dorder = #{dorder:VARCHAR},
+		jobnumber = #{jobnumber:VARCHAR},
+		name = #{name},
+		sex = #{sex},
+		innerphone =
+		#{innerphone:VARCHAR},
+		extphone = #{extphone:VARCHAR},
+		mobilephone = #{mobilephone:VARCHAR},
+		mobilephone2=#{mobilephone2:VARCHAR},
+		email = #{email:VARCHAR},
+		officeaddress = #{officeaddress:VARCHAR},
+		refreshtimestamp = #{refreshtimestamp},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where addresslistguid=#{addresslistguid}
+	</update>
+
+
+	<delete id="delAddressListById" parameterType="String">
+		delete h_a_addresslist
+		where addresslistguid=#{addresslistguid}
+	</delete>
+
+
+	<select id="getAddressListById" parameterType="String" resultType="com.mk.addresslist.entity.AddressList">
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		where addresslistguid=#{addresslistguid}
+	</select>
+	
+	<select id="getAddressListByEmployeeId" parameterType="String" resultType="com.mk.addresslist.entity.AddressList">
+		select addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from h_a_addresslist
+		where employeeid=#{employeeid}
+		order by employeecode,deptcode,postcode,dorder
+	</select>
+
+	<delete id="delAddressListByEmployeeId">
+		delete h_a_addresslist
+		where employeeid is not null
+	</delete>
+
+	<insert id="insertAddressListByEmployee">
+		insert into h_a_addresslist
+		(addresslistguid,
+		employeeid,
+		employeecode,
+		companyid,
+		companycode,
+		deptid,
+		deptcode,
+		postid,
+		postcode,
+		dorder,
+		jobnumber,
+		name,
+		sex,
+		innerphone,
+		extphone,
+		mobilephone,
+		mobilephone2,
+		email,
+		officeaddress,
+		refreshtimestamp,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		select sys_guid(),
+		a.employeeid,
+		null,
+		b.companyid,
+		h_o_company.companycode,
+		b.deptid,
+		h_o_department.deptcode,
+		b.postid,
+		h_o_post.postcode,
+		a.dorder,
+		a.jobnumber,
+		a.name,
+		a.sex,
+		a.shortphone,
+		a.officephone,
+		decode(a.secrecy,2,'***',a.addressmobile)as addressmobile,
+		decode(a.secrecy,2,'***',a.mobile2)as mobile2,
+		a.email,
+		a.officeaddress,
+		sysdate,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from
+		h_e_employee a, h_e_position b,h_o_company,h_o_department,h_o_post
+		where a.employeeid = b.employeeid
+		and b.companyid = h_o_company.companyid(+)
+		and h_o_company.state=1
+		and b.deptid =
+		h_o_department.deptid(+)
+		and b.postid =
+		h_o_post.postid(+)
+		<![CDATA[and a.workstate in(0,1)]]>
+		<![CDATA[and b.isstaff in(0,1)]]>
+		<![CDATA[and b.startdate <= sysdate ]]>
+		<![CDATA[and (b.enddate > sysdate or b.enddate is null)]]>
+	</insert>
+
+
+</mapper>

@@ -1,0 +1,1209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.resume.dao.ResumeDao">
+
+
+	<!-- 简历信息 -->
+	<sql id="searchResumeWhere">
+		where 1=1
+		<if test="parameters.culture!=null and parameters.culture!=''">
+			and culture=#{parameters.culture}
+		</if>
+
+		<if test="parameters.workage!=null and parameters.workage!=''">
+			and workage=#{parameters.workage}
+		</if>
+
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+		</if>
+
+		<if test="parameters.mark!=null and parameters.mark!='' and parameters.mark==1">
+			and mark=#{parameters.mark}
+		</if>
+
+		<if test="parameters.mobile!=null and parameters.mobile!='' ">
+			and mobile=#{parameters.mobile}
+		</if>
+
+		<if test="parameters.email!=null and parameters.email!='' ">
+			and email=#{parameters.email}
+		</if>
+
+		<if test="parameters.assesslevel!=null  and parameters.assesslevel!=''">
+			and webuserguid in(select webuserguid from j_resumeassess where assesslevel=#{parameters.assesslevel})
+		</if>
+
+		<if test="parameters.assesshierarchy!=null and parameters.assesshierarchy!=''">
+			and webuserguid in(select webuserguid from j_resumeassess where assesshierarchy=#{parameters.assesshierarchy})
+		</if>
+
+		<if test="parameters.resumetype!=null and parameters.resumetype!=''">
+			and webuserguid in(select webuserguid from j_mycandidates where candidatestype=#{parameters.resumetype})
+		</if>
+
+		<if test="parameters.birthday_s!=null and parameters.birthday_s!=''">
+				<![CDATA[AND birthday >=to_date(#{parameters.birthday_s},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.birthday_e!=null and parameters.birthday_e!=''">
+				<![CDATA[AND birthday <=to_date(#{parameters.birthday_e},'yyyy-MM-dd')]]>
+		</if>
+
+		<if test="parameters.sex!=null and parameters.sex!=''">
+			AND sex = #{parameters.sex}
+		</if>
+
+		<if test="parameters.homeplace!=null and parameters.homeplace!=''">
+			and homeplace = #{parameters.homeplace}
+		</if>
+	</sql>
+
+	<select id="countResume" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_resume
+		<include refid="searchResumeWhere" />
+	</select>
+
+	<select id="searchResume" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.resume.entity.Resume">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select webuserguid,
+		mark,
+		keyword,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		modtime,
+		rmk,
+		createtime,
+		recommenduserguid,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from j_resume
+		<include refid="searchResumeWhere" />
+		order by modtime
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertResume" parameterType="com.mk.resume.entity.Resume">
+		insert into j_resume
+		(webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace)
+		values
+		(#{webuserguid},
+		#{keyword:VARCHAR},
+		#{mark:VARCHAR},
+		#{name:VARCHAR},
+		#{sex:INTEGER},
+		#{birthday:DATE},
+		#{mobile::VARCHAR},
+		#{email},
+		#{homeplace:VARCHAR},
+		#{workage:INTEGER},
+		#{culture::INTEGER},
+		#{photo:VARCHAR},
+		#{recommenduserguid:VARCHAR},
+		#{createtime},
+		#{modtime},
+		#{rmk:VARCHAR},
+		#{valuation:VARCHAR},
+		#{occupation:VARCHAR},
+		#{salary:VARCHAR},
+		#{situation:VARCHAR},
+		#{industry:VARCHAR},
+		#{nativeplace:VARCHAR})
+	</insert>
+
+
+	<update id="updateResume" parameterType="com.mk.resume.entity.Resume">
+		update j_resume
+		set webuserguid = #{webuserguid},
+		keyword=#{keyword:VARCHAR},
+		mark=#{mark:VARCHAR},
+		name = #{name:VARCHAR},
+		sex = #{sex:INTEGER},
+		birthday =
+		#{birthday:DATE},
+		mobile = #{mobile:VARCHAR},
+		email = #{email},
+		homeplace = #{homeplace:VARCHAR},
+		workage = #{workage:INTEGER},
+		culture = #{culture:INTEGER},
+		photo = #{photo:VARCHAR},
+		recommenduserguid =
+		#{recommenduserguid:VARCHAR},
+		createtime = #{createtime},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR},
+		valuation = #{valuation:VARCHAR},
+		occupation = #{occupation:VARCHAR},
+		salary = #{salary:VARCHAR},
+		situation = #{situation:VARCHAR},
+		industry = #{industry:VARCHAR},
+		nativeplace=#{nativeplace:VARCHAR}
+		where webuserguid = #{webuserguid}
+	</update>
+
+	<delete id="delResumeById" parameterType="String">
+		delete j_resume
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getResumeById" parameterType="String" resultType="com.mk.resume.entity.Resume">
+		select webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from
+		j_resume
+		where
+		webuserguid =
+		#{webuserguid}
+	</select>
+
+	<select id="getResumeByWebuserId" parameterType="String" resultType="com.mk.resume.entity.Resume">
+		select webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from
+		j_resume
+		where
+		webuserguid =
+		#{webuserguid}
+	</select>
+
+	<select id="getResumeByName" parameterType="String" resultType="com.mk.resume.entity.Resume">
+		select webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from
+		j_resume
+		where
+		name =
+		#{name}
+	</select>
+
+	<select id="getResumeByEmail" parameterType="String" resultType="com.mk.resume.entity.Resume">
+		select webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from
+		j_resume
+		where
+		email=#{email}
+	</select>
+
+	<delete id="delResumeByEmail" parameterType="String">
+		delete j_resume
+		where email=#{email}
+	</delete>
+
+	<!--简历信息树 -->
+
+	<sql id="searchResumeTreeWhere">
+		<where>
+			<if test="parameters.name!=null and parameters.name!=''">
+				name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+		</where>
+	</sql>
+
+	<select id="countResumeTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="Integer">
+		select count(1) from j_resume
+		<include refid="searchResumeTreeWhere" />
+	</select>
+
+	<select id="searchResumeTree" parameterType="com.mk.framework.tree.TreePageGrid" resultType="com.mk.resume.entity.Resume">
+		SELECT ROWALL.*,ROWNUM FROM
+		(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		select webuserguid,
+		keyword,
+		mark,
+		name,
+		sex,
+		birthday,
+		mobile,
+		email,
+		homeplace,
+		workage,
+		culture,
+		photo,
+		recommenduserguid,
+		createtime,
+		modtime,
+		rmk,
+		valuation,
+		occupation,
+		salary,
+		situation,
+		industry,
+		nativeplace
+		from
+		j_resume
+		<include refid="searchResumeTreeWhere" />
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{page.end}) ROWALL
+			WHERE NUM_ >#{page.start}
+		]]>
+	</select>
+
+
+	<!--工作经历 -->
+	<insert id="insertWorkExperience" parameterType="com.mk.resume.entity.WorkExperience">
+		insert into j_workexperience
+		(workexperienceguid,
+		webuserguid,
+		workunit,
+		posation,
+		references,
+		referencesphone,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk)
+		values
+		(#{workexperienceguid},
+		#{webuserguid},
+		#{workunit},
+		#{posation},
+		#{references:VARCHAR},
+		#{referencesphone:VARCHAR},
+		#{startdate},
+		#{enddate:DATE},
+		#{jobdescription},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateWorkExperience" parameterType="com.mk.resume.entity.WorkExperience">
+		update j_workexperience
+		set workexperienceguid = #{workexperienceguid},
+		webuserguid = #{webuserguid},
+		workunit = #{workunit},
+		posation =
+		#{posation},
+		references=#{references:VARCHAR},
+		referencesphone=#{referencesphone:VARCHAR},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		jobdescription = #{jobdescription},
+		modtime = #{modtime},
+		rmk =
+		#{rmk:VARCHAR}
+		where workexperienceguid = #{workexperienceguid}
+	</update>
+
+	<delete id="delWorkExperienceById" parameterType="String">
+		delete j_workexperience
+		where workexperienceguid=#{workexperienceguid}
+	</delete>
+
+	<delete id="delWorkExperienceByWebuserId" parameterType="String">
+		delete j_workexperience
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getWorkExperienceById" parameterType="String" resultType="com.mk.resume.entity.WorkExperience">
+		select workexperienceguid,
+		webuserguid,
+		workunit,
+		posation,
+		references,
+		referencesphone,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk
+		from j_workexperience
+		where workexperienceguid=#{workexperienceguid}
+	</select>
+
+	<select id="getAllWorkExperienceByWebuserId" parameterType="String" resultType="com.mk.resume.entity.WorkExperience">
+		select workexperienceguid,
+		webuserguid,
+		workunit,
+		posation,
+		references,
+		referencesphone,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk
+		from
+		j_workexperience
+		where webuserguid = #{webuserguid}
+		order by startdate desc
+	</select>
+
+
+	<!--项目经历 -->
+	<insert id="insertProjectExperience" parameterType="com.mk.resume.entity.ProjectExperience">
+		insert into j_projectexperience
+		(projectexperienceguid,
+		webuserguid,
+		itemname,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk)
+		values
+		(#{projectexperienceguid},
+		#{webuserguid},
+		#{itemname},
+		#{startdate},
+		#{enddate:DATE},
+		#{jobdescription},
+		#{modtime},
+		#{rmk:VARCHAR})
+
+	</insert>
+
+	<update id="updateProjectExperience" parameterType="com.mk.resume.entity.ProjectExperience">
+		update j_projectexperience
+		set projectexperienceguid = #{projectexperienceguid},
+		webuserguid = #{webuserguid},
+		itemname = #{itemname},
+		startdate
+		=
+		#{startdate},
+		enddate = #{enddate:DATE},
+		jobdescription = #{jobdescription},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where projectexperienceguid = #{projectexperienceguid}
+	</update>
+
+	<delete id="delProjectExperienceById" parameterType="String">
+		delete j_projectexperience
+		where projectexperienceguid=#{projectexperienceguid}
+	</delete>
+
+	<delete id="delProjectExperienceByWebuserId" parameterType="String">
+		delete j_projectexperience
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getProjectExperienceById" parameterType="String" resultType="com.mk.resume.entity.ProjectExperience">
+		select projectexperienceguid,
+		webuserguid,
+		itemname,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk
+		from j_projectexperience
+		where projectexperienceguid=#{projectexperienceguid}
+	</select>
+
+	<select id="getAllProjectExperienceByWebuserId" parameterType="String" resultType="com.mk.resume.entity.ProjectExperience">
+		select projectexperienceguid,
+		webuserguid,
+		itemname,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk
+		from
+		j_projectexperience
+		where webuserguid = #{webuserguid}
+		order by startdate desc
+	</select>
+
+
+	<!--教育经历 -->
+	<insert id="insertEducationExperience" parameterType="com.mk.resume.entity.EducationExperience">
+		insert into j_educationexperience
+		(educationexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		culture,
+		school,
+		specialty,
+		majordescription,
+		modtime,
+		rmk)
+		values
+		(#{educationexperienceguid},
+		#{webuserguid},
+		#{startdate},
+		#{enddate:DATE},
+		#{culture},
+		#{school},
+		#{specialty:VARCHAR},
+		#{majordescription:VARCHAR},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateEducationExperience" parameterType="com.mk.resume.entity.EducationExperience">
+		update j_educationexperience
+		set educationexperienceguid = #{educationexperienceguid},
+		webuserguid = #{webuserguid},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		culture = #{culture},
+		school = #{school},
+		specialty = #{specialty:VARCHAR},
+		majordescription = #{majordescription:VARCHAR},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where
+		educationexperienceguid = #{educationexperienceguid}
+	</update>
+
+	<delete id="delEducationExperienceById" parameterType="String">
+		delete j_educationexperience
+		where educationexperienceguid = #{educationexperienceguid}
+	</delete>
+
+	<delete id="delEducationExperienceByWebuserId" parameterType="String">
+		delete j_educationexperience
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getEducationExperienceById" parameterType="String" resultType="com.mk.resume.entity.EducationExperience">
+		select educationexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		culture,
+		school,
+		specialty,
+		majordescription,
+		modtime,
+		rmk
+		from
+		j_educationexperience
+		where educationexperienceguid = #{educationexperienceguid}
+	</select>
+
+	<select id="getAllEducationExperienceByWebuserId" parameterType="String" resultType="com.mk.resume.entity.EducationExperience">
+		select educationexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		culture,
+		school,
+		specialty,
+		majordescription,
+		modtime,
+		rmk
+		from j_educationexperience
+		where webuserguid = #{webuserguid}
+		order by startdate desc
+	</select>
+
+	<!--培训经历 -->
+	<insert id="insertTrainingExperience" parameterType="com.mk.resume.entity.TrainingExperience">
+		insert into j_trainingexperience
+		(trainingexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		traininginstitutions,
+		certificate,
+		trainingcontent,
+		modtime,
+		rmk)
+		values
+		(#{trainingexperienceguid},
+		#{webuserguid},
+		#{startdate},
+		#{enddate:DATE},
+		#{traininginstitutions},
+		#{certificate},
+		#{trainingcontent},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateTrainingExperience" parameterType="com.mk.resume.entity.TrainingExperience">
+		update j_trainingexperience
+		set trainingexperienceguid = #{trainingexperienceguid},
+		webuserguid = #{webuserguid},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		traininginstitutions = #{traininginstitutions},
+		certificate = #{certificate},
+		trainingcontent = #{trainingcontent},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where
+		trainingexperienceguid = #{trainingexperienceguid}
+	</update>
+
+	<delete id="delTrainingExperienceById" parameterType="String">
+		delete j_trainingexperience
+		where trainingexperienceguid = #{trainingexperienceguid}
+	</delete>
+
+	<delete id="delTrainingExperienceByWebuserId" parameterType="String">
+		delete j_trainingexperience
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getTrainingExperienceById" parameterType="String" resultType="com.mk.resume.entity.TrainingExperience">
+		select trainingexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		traininginstitutions,
+		certificate,
+		trainingcontent,
+		modtime,
+		rmk
+		from j_trainingexperience
+		where trainingexperienceguid = #{trainingexperienceguid}
+	</select>
+
+	<select id="getAllTrainingExperienceByWebuserId" parameterType="String" resultType="com.mk.resume.entity.TrainingExperience">
+		select trainingexperienceguid,
+		webuserguid,
+		startdate,
+		enddate,
+		traininginstitutions,
+		certificate,
+		trainingcontent,
+		modtime,
+		rmk
+		from j_trainingexperience
+		where webuserguid = #{webuserguid}
+		order by startdate desc
+	</select>
+
+
+	<!--附件上传 -->
+	<insert id="insertResumeFile" parameterType="com.mk.resume.entity.ResumeFile">
+		insert into j_resumefile
+		(resumefileguid,
+		webuserguid,
+		resumefilename,
+		resumefilepath,
+		resumefilesize,
+		modtime)
+		values
+		(#{resumefileguid},
+		#{webuserguid},
+		#{resumefilename},
+		#{resumefilepath},
+		#{resumefilesize:INTEGER},
+		#{modtime})
+	</insert>
+
+
+	<update id="updateResumeFile" parameterType="com.mk.resume.entity.ResumeFile">
+		update j_resumefile
+		set resumefileguid = #{resumefileguid},
+		webuserguid = #{webuserguid},
+		resumefilename = #{resumefilename},
+		resumefilepath =
+		#{resumefilepath},
+		resumefilesize = #{resumefilesize:INTEGER},
+		modtime = #{modtime}
+		where resumefileguid = #{resumefileguid}
+	</update>
+
+
+
+	<delete id="delResumeFileById" parameterType="String">
+		delete j_resumefile
+		where resumefileguid = #{resumefileguid}
+	</delete>
+
+	<delete id="delResumeFileByWebuserId" parameterType="String">
+		delete j_resumefile
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<select id="getResumeFileById" parameterType="String" resultType="com.mk.resume.entity.ResumeFile">
+		select resumefileguid,
+		webuserguid,
+		resumefilename,
+		resumefilepath,
+		resumefilesize,
+		modtime
+		from j_resumefile
+		where resumefileguid =#{resumefileguid}
+	</select>
+
+	<select id="getAllResumeFileByWebuserId" parameterType="String" resultType="com.mk.resume.entity.ResumeFile">
+		select resumefileguid,
+		webuserguid,
+		resumefilename,
+		resumefilepath,
+		resumefilesize,
+		modtime
+		from j_resumefile
+		where
+		webuserguid= #{webuserguid}
+		order by modtime
+	</select>
+
+
+	<!--电子邮箱 -->
+	<sql id="searchResumeEamilWhere">
+		where 1=1
+		<if test="parameters.readtype!=null and parameters.readtype!='' and parameters.readtype==0 ">
+			and readtype=#{parameters.readtype}
+		</if>
+		<if test="parameters.personal!=null and parameters.personal!=''">
+			AND personal like CONCAT('%',CONCAT(#{parameters.personal},'%'))
+		</if>
+		<if test="parameters.email!=null and parameters.email!=''">
+			AND email like CONCAT('%',CONCAT(#{parameters.email},'%'))
+		</if>
+
+		<if test="parameters.modtime_s!=null and parameters.modtime_s!=''">
+			<![CDATA[AND modtime >=to_date(#{parameters.modtime_s},'YYYY-MM-DD HH:MI:SS')]]>
+		</if>
+
+		<if test="parameters.modtime_e!=null and parameters.modtime_e!=''">
+			<![CDATA[AND modtime <=to_date(#{parameters.modtime_e},'yyyy-MM-dd hh24:mi:ss')]]>
+		</if>
+	</sql>
+
+	<select id="countResumeEamil" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_resumeeamil
+		<include refid="searchResumeEamilWhere" />
+	</select>
+
+	<select id="searchResumeEamil" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.resume.entity.ResumeEamil">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select resumeeamilguid,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		modtime,
+		readtype,
+		interfacecode,
+		rmk
+		from j_resumeeamil
+		<include refid="searchResumeEamilWhere" />
+		order by modtime desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertResumeEamil" parameterType="com.mk.resume.entity.ResumeEamil">
+		insert into j_resumeeamil
+		(resumeeamilguid,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		content,
+		modtime,
+		rmk,
+		readtype,
+		interfacecode)
+		values
+		(#{resumeeamilguid},
+		#{webuserguid},
+		#{personal:VARCHAR},
+		#{email},
+		#{subject},
+		#{content},
+		#{modtime},
+		#{rmk:VARCHAR},
+		#{readtype},
+		#{interfacecode})
+	</insert>
+
+
+	<update id="updateResumeEamil" parameterType="com.mk.resume.entity.ResumeEamil">
+		update j_resumeeamil
+		set resumeeamilguid = #{resumeeamilguid},
+		interfacecode=#{interfacecode},
+		webuserguid = #{webuserguid},
+		personal =
+		#{personal:VARCHAR},
+		email = #{email},
+		subject =
+		#{subject},
+		content = #{content},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR},
+		readtype = #{readtype}
+		where
+		resumeeamilguid = #{resumeeamilguid}
+	</update>
+
+	<delete id="delResumeEamilById" parameterType="String">
+		delete j_resumeeamil
+		where resumeeamilguid = #{resumeeamilguid}
+	</delete>
+
+	<select id="getResumeEamilById" parameterType="String" resultType="com.mk.resume.entity.ResumeEamil">
+		select resumeeamilguid,
+		interfacecode,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		content,
+		readtype,
+		modtime,
+		rmk
+		from
+		j_resumeeamil
+		where
+		resumeeamilguid =
+		#{resumeeamilguid}
+	</select>
+
+	<select id="getResumeEamilByInterFaceCode" parameterType="String" resultType="com.mk.resume.entity.ResumeEamil">
+		select resumeeamilguid,
+		interfacecode,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		content,
+		readtype,
+		modtime,
+		rmk
+		from
+		j_resumeeamil
+		where
+		interfacecode =
+		#{interfacecode}
+	</select>
+
+	<select id="getResumeEamilByWebUserId" parameterType="String" resultType="com.mk.resume.entity.ResumeEamil">
+		select resumeeamilguid,
+		interfacecode,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		content,
+		readtype,
+		modtime,
+		rmk
+		from
+		j_resumeeamil
+		where
+		webuserguid =#{webuserguid}
+	</select>
+
+	<select id="getResumeEamilByEmail" parameterType="String" resultType="com.mk.resume.entity.ResumeEamil">
+		select resumeeamilguid,
+		interfacecode,
+		webuserguid,
+		personal,
+		email,
+		subject,
+		content,
+		readtype,
+		modtime,
+		rmk
+		from j_resumeeamil
+		where
+		email =
+		#{email}
+		<if test="id!=null and id!=''">
+			and resumeeamilguid!=#{id}
+		</if>
+	</select>
+
+	<!-- 邮箱简历附件 -->
+	<insert id="insertResumeEamilFile" parameterType="com.mk.resume.entity.ResumeEamilFile">
+		insert into j_resumeeamilfile
+		(resumeeamilfileguid,
+		resumeeamilguid,
+		filename,
+		filepath,
+		modtime,
+		rmk)
+		values
+		(#{resumeeamilfileguid},
+		#{resumeeamilguid},
+		#{filename},
+		#{filepath},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateResumeEamilFile" parameterType="com.mk.resume.entity.ResumeEamilFile">
+		update j_resumeeamilfile
+		set resumeeamilfileguid = #{resumeeamilfileguid},
+		resumeeamilguid = #{resumeeamilguid},
+		filename = #filename},
+		filepath =
+		#filepath},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where resumeeamilfileguid = #{resumeeamilfileguid}
+	</update>
+
+	<delete id="delResumeEamilFileByResumeeamilId" parameterType="String">
+		delete j_resumeeamilfile
+		where resumeeamilguid = #{resumeeamilguid}
+	</delete>
+
+	<select id="getResumeEamilFileById" parameterType="String" resultType="com.mk.resume.entity.ResumeEamilFile">
+		select resumeeamilfileguid,
+		resumeeamilguid,
+		filename,
+		filepath,
+		modtime,
+		rmk
+		from j_resumeeamilfile
+		where
+		resumeeamilfileguid=#{resumeeamilfileguid}
+	</select>
+
+
+	<select id="getResumeEamilFileByResumeeamilId" parameterType="String" resultType="com.mk.resume.entity.ResumeEamilFile">
+		select resumeeamilfileguid,
+		resumeeamilguid,
+		filename,
+		filepath,
+		modtime,
+		rmk
+		from j_resumeeamilfile
+		where
+		resumeeamilguid=#{resumeeamilguid}
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 评价信息 -->
+	<sql id="searchResumeAssessWhere">
+		where
+		webuserguid=#{parameters.webuserguid}
+	</sql>
+
+	<select id="searchResumeAssess" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.resume.entity.ResumeAssess">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select assessguid,
+		webuserguid,
+		assesslevel,
+		assesshierarchy,
+		assessresult,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_resumeassess
+		<include refid="searchResumeAssessWhere" />
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countResumeAssess" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_resumeassess
+		<include refid="searchResumeAssessWhere" />
+	</select>
+
+	<insert id="insertResumeAssess" parameterType="com.mk.resume.entity.ResumeAssess">
+		insert into j_resumeassess
+		(assessguid,
+		webuserguid,
+		assesslevel,
+		assessresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy)
+		values
+		(#{assessguid},
+		#{webuserguid},
+		#{assesslevel},
+		#{assessresult},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{assesshierarchy})
+	</insert>
+
+	<update id="updateResumeAssess" parameterType="com.mk.resume.entity.ResumeAssess">
+		update j_resumeassess
+		set assessguid =#{assessguid},
+		webuserguid =#{webuserguid},
+		assesslevel =#{assesslevel},
+		assessresult =#{assessresult},
+		modiuser
+		=#{modiuser},
+		moditimestamp =#{moditimestamp},
+		modimemo =#{modimemo:VARCHAR},
+		assesshierarchy=#{assesshierarchy}
+		where assessguid =#{assessguid}
+	</update>
+
+	<delete id="delResumeAssessByWebuserId" parameterType="String">
+		delete j_resumeassess
+		where webuserguid = #{id}
+	</delete>
+
+	<delete id="delResumeAssessById" parameterType="String">
+		delete j_resumeassess
+		where assessguid = #{id}
+	</delete>
+
+	<select id="getResumeAssessById" resultType="com.mk.resume.entity.ResumeAssess">
+		select assessguid,
+		webuserguid,
+		assesslevel,
+		assessresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from j_resumeassess
+		where
+		assessguid=#{id}
+	</select>
+
+	<select id="getResumeAssessByWebUserId" resultType="com.mk.resume.entity.ResumeAssess">
+		select assessguid,
+		webuserguid,
+		assesslevel,
+		assessresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		assesshierarchy
+		from j_resumeassess
+		where
+		webuserguid=#{webuserguid}
+		order by moditimestamp desc
+	</select>
+
+	<!-- 统计评价次数 -->
+	<select id="countResumeAssessByWebuserGuid" parameterType="String" resultType="Integer">
+		select count(1) from j_resumeassess
+		where webuserguid=#{webuserguid}
+	</select>
+
+
+	<!-- 亲属表 -->
+	<delete id="delRelativesByWebUserId" parameterType="String">
+		delete j_relatives
+		where webuserguid = #{webuserguid}
+	</delete>
+
+	<insert id="insertRelatives" parameterType="com.mk.resume.entity.Relatives">
+		insert into j_relatives
+		(relativesguid, webuserguid, companyname, deptname, postname, employeename)
+		values
+		(#{relativesguid}, #{webuserguid},
+		#{companyname}, #{deptname}, #{postname}, #{employeename})
+	</insert>
+
+	<select id="getRelativesByWebUserId" resultType="com.mk.resume.entity.Relatives">
+		select relativesguid,
+		webuserguid,
+		companyname,
+		deptname,
+		postname,
+		employeename
+		from j_relatives
+		where webuserguid=#{webuserguid}
+	</select>
+
+
+
+
+	<!-- 内部推荐信息 -->
+	<sql id="searchRecommendWhere">
+		where
+		1=1
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and userguid=#{parameters.userguid}
+			</if>
+		</if>
+	</sql>
+
+	<select id="searchRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.resume.entity.InteriorRecommend">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid, userguid, webuserguid, moditimestamp from j_interiorrecommend
+		<include refid="searchRecommendWhere" />
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countRecommend" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_interiorrecommend
+		<include refid="searchRecommendWhere" />
+	</select>
+	
+	
+	<delete id="delInteriorRecommendById" parameterType="String">
+		delete j_interiorrecommend
+		where mycandidatesguid=#{mycandidatesguid}
+	</delete>
+
+	<insert id="insertInteriorRecommend" parameterType="com.mk.resume.entity.InteriorRecommend">
+		insert into j_interiorrecommend
+		(mycandidatesguid, userguid, webuserguid, moditimestamp)
+		values
+		(#{mycandidatesguid}, #{userguid}, #{webuserguid},
+		#{moditimestamp})
+	</insert>
+
+	<select id="getInteriorRecommendByUserGuid" resultType="com.mk.resume.entity.InteriorRecommend">
+		select mycandidatesguid, userguid, webuserguid, moditimestamp
+		from j_interiorrecommend
+		where userguid=#{userguid}
+	</select>
+
+	<select id="getInteriorRecommendById" resultType="com.mk.resume.entity.InteriorRecommend">
+		select mycandidatesguid, userguid, webuserguid, moditimestamp
+		from j_interiorrecommend
+		where mycandidatesguid=#{mycandidatesguid}
+	</select>
+</mapper>
+	

@@ -1,0 +1,238 @@
+@charset "utf-8";
+/* Creat by mypenn@gmail.com */
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
+body,button,input,select,textarea{font: 12px/1.5 "Microsoft YaHei",tahoma,arial,宋体;}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+address,cite,dfn,em,var{font-style:normal;}
+code,kbd,pre,samp{font-family:courier new,courier,monospace;}
+small{font-size:12px;}
+ul,ol{list-style:none;}
+a{text-decoration:none;}
+a:hover{text-decoration:underline;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+legend{color:#000;}
+fieldset,img{border:0;}
+button,input,select,textarea{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+
+/**/
+body{
+	background:#FFF;
+	color:#333;
+	min-width:1000px;
+	overflow:auto;
+}
+#Header{
+	width:100%;
+	height:75px;
+	line-height:75px;
+	overflow:hidden;
+	background:#246cc0 url('images/top-right.jpg') no-repeat top right;
+	padding-bottom:5px; 
+}
+#Wrapper{
+	width:100%;
+	height:auto;
+	overflow:hidden;
+	padding:10px 0px 5px;
+}
+#Sider{
+	position:relative;
+	float:left;
+	width:200px;
+	height:auto;
+	overflow:hidden;
+	padding-left:10px;
+}
+#Content{
+	position:relative;
+	overflow:hidden;
+	zoom:1;
+	padding:0px 5px;
+}
+
+
+
+/**/
+#Header h1{
+	float:left;
+	padding-left:12px;
+	font-size:24px;
+	text-shadow:#007fdd 2px 2px 0;
+}
+#Header .header-main{
+	float:left;
+	width:auto;
+	overflow:hidden;
+	min-width:350px;
+	width:350px;
+	_overflow:visible;
+	padding-left:10px;
+	height:75px;
+	line-height:75px;
+	
+	background:url('../images/WASU_logo.png') 10px center no-repeat;
+	_background:url('../images/WASU_logo.gif') 10px center no-repeat;
+}
+#Header .header-bar{
+	float:right;
+	text-align:right;
+}
+
+.chout{ width:505px;  height:32px; background:url(images/linkch4.gif) no-repeat;_padding-top:5px;}
+
+
+
+
+
+
+
+
+
+
+div.bottom {
+	width:100%;
+	margin: 0px auto;
+	 float: left;
+    background: none repeat scroll 0 0 #3C3C3C;
+    height: 31px;
+}
+div.bottom div {
+    color: #8B8B8B;
+    font-size: 12px;
+    height: 31px;
+    line-height: 31px;
+    margin: auto;
+    text-align: left;
+    padding:0px 10px;
+}
+div.bottom div img {
+    float: left;
+}
+div.bottom div h1 {
+	padding-left:95px;
+	background:url('../images/bottomlogo.jpg') no-repeat;
+    float: left;
+    font-size: 14px;
+    height: 31px;
+    letter-spacing: 1px;
+    line-height: 31px;
+    margin: 0;
+    color:#fff;
+}
+
+div.bottom div h3 {
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    height: 31px;
+    letter-spacing: 1px;
+    line-height: 31px;
+    margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/
+#Menu{
+	width:200px;
+	height:auto;
+	overflow:hidden;
+	margin:0px auto;
+}
+#Menu .fixt{
+	width:100%;
+	height:16px;
+	overflow:hidden;
+	background:url(../images/menu_bg1.gif) no-repeat 0 0;
+}
+#Menu .fixb{
+	width:100%;
+	height:16px;
+	overflow:hidden;
+	background:url(../images/menu_bg1.gif) no-repeat 0 bottom;
+}
+
+
+
+
+
+
+
+/****二级菜单****/
+div.sdmenu {
+	padding:0 10px 8px;
+	background:url(../images/menu_bg2.gif) repeat-y 0 0;
+}
+
+div.sdmenu div {
+	overflow: hidden;
+	
+}
+
+div.sdmenu div.collapsed {
+	height: 32px;
+	border-bottom:1px solid #e1e1e1;
+}
+
+div.sdmenu div span {
+	display: block;
+	height:32px;
+	line-height:32px;
+	padding-left:25px;
+	cursor: pointer;
+	background: url(images/expanded.gif) no-repeat 10px center;
+	border-bottom:1px solid #e1e1e1;
+}
+
+div.sdmenu div.collapsed span {
+	background-image: url(images/collapsed.gif);
+}
+
+
+
+div.sdmenu div a {
+	overflow:hidden;
+	height:32px;
+	line-height:30px;
+	border-bottom:1px solid #e1e1e1;
+	display: block;
+}
+div.sdmenu div .childer {
+	padding-left:35px;
+}
+
+div.sdmenu div a.current {
+	background: #ffffff;
+} 
+	
+div.sdmenu div a:hover {
+	background: #f0f0f0 url(images/linkarrow.gif) no-repeat right center;
+}
+
+
+
+
+
+
+
+
+/********功能选择*********/
+#selectable ul{list-style-type: none; margin: 0px; padding: 0;height:100%;}
+#selectable li{margin:0px 3px;padding: 1px 5px; float: left; border:0px;text-align: center;cursor:pointer;}
+#selectable li p{height:18px;width: 60px; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}

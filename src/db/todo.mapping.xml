@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.todo.dao.TodoDao">
+
+
+	<!-- 将要过生日的员工 -->
+	<select id="getEmployeeBirthdayTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.employee.entity.Employee">
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.rankid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.state,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		ceil((7-((trunc(a.birthday,'yyyy')-trunc(sysdate,'yyyy')+sysdate+7)-a.birthday))) as msg,
+
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_e_employee
+		a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<where>
+			a.employeeid=b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and b.isstaff=1
+			<![CDATA[
+			and a.birthday >=trunc(a.birthday,'yyyy')-trunc(sysdate,'yyyy')+sysdate
+			and a.birthday <= trunc(a.birthday,'yyyy')-trunc(sysdate,'yyyy')+sysdate+7
+			]]>
+
+			<if test="parameters.admin==false">
+				and b.companyid in (
+				select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+			
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >sysdate OR b.enddate is null)]]>
+
+		</where>
+		order by h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode, a.dorder
+	</select>
+
+
+
+
+	<!-- 异动待生效的员工 -->
+	<select id="getEmployeePosationTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.employee.entity.Employee">
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.rankid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.state,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_e_employee a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<where>
+			a.employeeid=b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and b.isstaff=-1
+			<if test="parameters.admin==false">
+				and b.companyid in (
+				select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >sysdate OR b.enddate is null)]]>
+		</where>
+		order by h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode, a.dorder
+	</select>
+
+
+
+
+	<!-- 合同将要到期的员工 -->
+	<select id="getEmployeeContractTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.employee.entity.Employee">
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.rankid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.state,
+		b.isstaff,
+
+		c.enddate,
+		ceil(c.enddate-sysdate) as msg,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_e_employee a,h_e_position
+		b, h_o_contract
+		c,h_o_company,h_o_department,h_o_post
+		<where>
+			a.employeeid=b.employeeid
+			and b.employeeid = c.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and b.isstaff=1
+			and
+			a.workstate in(0,1)
+			and
+			c.state=1
+			and c.enddate is not null
+			<![CDATA[
+			and c.enddate-sysdate<=30
+			]]>
+
+			<if test="parameters.admin==false">
+				and b.companyid in (
+				select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >sysdate OR b.enddate is null)]]>
+		</where>
+		order by h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode, a.dorder
+	</select>
+
+
+
+
+	<!-- 待安排的面试 -->
+	<sql id="getInterviewTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and a.candidatesstate in(4,6,9)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where y.userguid = #{parameters.userguid} and x.recommenddeptid=y.deptguid)
+			</if>
+		</if>
+	</sql>
+
+	<select id="getInterviewTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		b.recommendguid
+		from
+		j_mycandidates a,J_Recommend b
+		<include refid="getInterviewTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+
+	<!-- 待安排的体检 -->
+	<sql id="getExaminationTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		<![CDATA[AND a.candidatestype <>6]]>
+		and a.candidatesstate in(7,13,16,17)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where y.userguid = #{parameters.userguid} and x.recommenddeptid=y.deptguid )
+			</if>
+		</if>
+	</sql>
+
+	<select id="getExaminationTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype,
+		b.recommendguid
+		from
+		j_mycandidates a,J_Recommend b
+		<include refid="getExaminationTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+	<!-- 待确定入职的员工 -->
+	<select id="getEntryTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.person.entity.Person">
+		select mycandidatesguid,
+		companyid,
+		deptid,
+		postid,
+		quotaid,
+		rankid,
+		joindate,
+		regisuserguid,
+		regisaddress,
+		officeaddress,
+		employtype,
+		social,
+		jobnumber,
+		email,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		contactname,
+		contactphone,
+		contactrelationship,
+		joinworkdate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_person
+		order by moditimestamp desc
+	</select>
+
+	<!-- 面试人员列表信息 -->
+	<sql id="getAuditionTodoWhere">
+		where
+		1=1
+		and candidatesstate in(5)
+		and
+		mycandidatesguid in(select mycandidatesguid from J_AuditionRecord where state=1
+		<![CDATA[
+		and auditiondate-sysdate<=3
+		]]>)
+	</sql>
+
+	<select id="getAuditionTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select mycandidatesguid,
+		recruitpostguid,
+		candidatesstate,
+		webuserguid,
+		progress,
+		candidatestime,
+		matchuser,
+		matchtime,
+		matchmemo,
+		holduser,
+		holdtime,
+		holdmemo,
+		candidatestype,
+		recruitpostname,
+		resumeeamilguid,
+		moditimestamp,
+		readtype
+		from
+		j_mycandidates
+		<include refid="getAuditionTodoWhere" />
+		order by moditimestamp desc
+	</select>
+
+
+	<!-- 面试结果信息 -->
+	<select id="getAuditionRecordTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select a.mycandidatesguid,
+		a.recruitpostguid,
+		a.resumeguid,
+		a.candidatesstate,
+		a.userguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.recommendpostguid,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.auditiontime,
+		a.resumeeamilguid,
+		b.resumetype,
+		b.mark,
+		b.keyword,
+		b.name,
+		b.sex,
+		b.birthday,
+		b.mobile,
+		b.email,
+		b.homeplace,
+		b.workage,
+		b.culture,
+		b.photo,
+		b.modtime,
+		b.rmk,
+		d.resulttype
+		from j_mycandidates a,
+		j_resume b,j_auditionrecord c,
+		j_auditionresult d
+		where a.resumeguid=b.resumeguid
+		and
+		a.mycandidatesguid=c.mycandidatesguid
+		and c.auditionrecordguid=d.auditionrecordguid
+		and a.userguid=#{parameters.userguid}
+		orer by d.moditimestamp desc
+	</select>
+
+
+
+
+	<!-- 待转正的员工 -->
+	<select id="getEmployeeZhuZhengTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.employee.entity.Employee">
+		select
+		b.postionguid,
+		b.companyid,
+		b.jobid,
+		b.rankid,
+		b.deptid,
+		b.postid,
+		b.quotaid,
+		b.state,
+		b.isstaff,
+		b.startdate,
+		b.enddate,
+
+		a.employeeid,
+		a.name,
+		a.sex,
+		a.birthday,
+		a.cardnumber,
+		a.culture,
+		a.nation,
+		a.mobile,
+		a.addressmobile,
+		a.residenceplace,
+		a.homephone,
+		a.homeplace,
+		a.bloodtype,
+		a.domicilplace,
+		a.nativeplace,
+		a.politics,
+		a.married,
+		a.privateemail,
+		a.photo,
+		a.joinworkdate,
+		a.joingroupdate,
+		a.workstate,
+		a.jobnumber,
+		a.secrecy,
+		a.dorder,
+		a.classification,
+		a.employtype,
+		a.checknumber,
+		a.joindate,
+		a.officephone,
+		a.email,
+		a.shortphone,
+		a.officeaddress,
+		a.studymonth,
+		a.officialdateplan,
+		ceil(a.officialdateplan-sysdate) as msg,
+
+		a.officialdate,
+		a.officialmemo,
+		a.resignationdate,
+		a.resignationreason,
+		a.interfacecode,
+		a.contactphone,
+		a.contactrelationship,
+		a.contactname,
+		a.memo,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo
+		from h_e_employee
+		a,h_e_position
+		b,h_o_company,h_o_department,h_o_post
+		<where>
+			a.employeeid=b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and b.isstaff = 1
+			and a.workstate=0
+			and a.officialdateplan
+			is not null
+			<![CDATA[
+			and a.officialdateplan - sysdate <= 30
+			]]>
+
+			<if test="parameters.admin==false">
+				and b.companyid in (
+				select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+				)
+			</if>
+			<![CDATA[AND b.startdate <=sysdate]]>
+			<![CDATA[AND (b.enddate >sysdate OR b.enddate is null)]]>
+		</where>
+		order by h_o_company.companycode,h_o_department.deptcode,h_o_post.postcode, a.dorder
+	</select>
+
+	<!--待認定簡歷 -->
+	<sql id="getAffirmMyCandidatesTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and a.candidatesstate in(2)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and b.userguid=#{parameters.userguid}
+			</if>
+		</if>
+	</sql>
+
+	<select id="getAffirmMyCandidatesTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype
+		from j_mycandidates a, J_Recommend b
+		<include refid="getAffirmMyCandidatesTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+	<!-- 面試結果反饋 -->
+	<sql id="getAffirmAuditionResultsTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and a.candidatesstate in(5)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				and a.mycandidatesguid in (select mycandidatesguid from J_AuditionRecord where maininterviewerguid=#{parameters.userguid} and state=1 )
+			</if>
+		</if>
+	</sql>
+
+
+	<select id="getAffirmAuditionResultsTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype
+		from j_mycandidates a, J_Recommend b
+		<include refid="getAffirmAuditionResultsTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+
+	<!--待入职的应聘者 -->
+	<sql id="getEntryOkTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and candidatesstate in(12)
+		and b.state in(1,2)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where y.userguid = #{parameters.userguid} and x.recommenddeptid=y.deptguid)
+			</if>
+		</if>
+	</sql>
+
+
+	<select id="getEntryOkTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype
+		from j_mycandidates a, J_Recommend b
+		<include refid="getEntryOkTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+
+
+	<!--待发布的面试结果 -->
+	<sql id="getReleasesTodoWhere">
+		where a.mycandidatesguid = b.mycandidatesguid(+)
+		and candidatesstate in(7)
+		and b.state in(1,2)
+		and a.mycandidatesguid in (select a.mycandidatesguid from j_auditionrecord a,j_auditionresult b where
+		a.auditionrecordguid=b.auditionrecordguid and b.isrelease=2 and a.state=1)
+		<if test="parameters.userguid!=null and parameters.userguid!='' ">
+			<if test="parameters.admin==false">
+				AND a.mycandidatesguid in (select mycandidatesguid from J_Recommend x, T_H_UserDept y where y.userguid = #{parameters.userguid} and x.recommenddeptid=y.deptguid)
+			</if>
+		</if>
+	</sql>
+
+
+	<select id="getReleasesTodo" parameterType="com.mk.todo.entity.TodoPam" resultType="com.mk.mycandidates.entity.MyCandidates">
+		select b.recommendguid,
+		a.mycandidatesguid,
+		a.recruitpostguid,
+		a.candidatesstate,
+		a.webuserguid,
+		a.progress,
+		a.candidatestime,
+		a.matchuser,
+		a.matchtime,
+		a.matchmemo,
+		a.holduser,
+		a.holdtime,
+		a.holdmemo,
+		a.candidatestype,
+		a.recruitpostname,
+		a.resumeeamilguid,
+		a.moditimestamp,
+		a.readtype
+		from j_mycandidates a, J_Recommend b
+		<include refid="getReleasesTodoWhere" />
+		order by a.moditimestamp desc
+	</select>
+
+
+	<select id="getRecruitProgramAuditTodo" resultType="com.mk.recruitprogram.entity.RecruitProgramAudit">
+		select recruitprogramauditguid,
+		interfacecode,
+		companyname,
+		deptname,
+		postname,
+		rankname,
+		state,
+		postnum,
+		startdate,
+		enddate,
+		auditresult,
+		remainnum
+		from j_recruitprogramaudit
+  	<![CDATA[
+  	where remainnum > 0 
+  	]]>
+		order by startdate desc
+	</select>
+	
+	
+	
+ 	<select id="getRecruitProgram" resultType="com.mk.recruitprogram.entity.RecruitProgram">
+	select recruitprogramguid,
+       interfacecode,
+       quotaid,
+       recruitprogramcode,
+       companyid,
+       deptid,
+       postid,
+       rankid,
+       applydate,
+       hillockdate,
+       postnum,
+       state,
+       processinstanceid,
+       memo,
+       modiuser,
+       moditimestamp,
+       modimemo
+ 	   from j_recruitprogram
+  		where interfacecode is not null
+		order by ApplyDate desc
+	</select>
+
+
+	<!--来源渠道提示框 -->
+	<select id="loadCountMyCandidatesTypeChart" resultType="com.mk.framework.chart.ChartModel">
+		select t_optionlist.code as id,
+		t_optionlist.name as name,
+		nvl(t.value, 0) as value
+		from t_optionlist,
+		(select count(1) as value,
+		candidatestype
+		from
+		j_mycandidates
+		group by candidatestype ) t
+		where t_optionlist.code = t.candidatestype(+)
+		AND t_optionlist.optiontypeguid = 'J_Resume.RESUMETYPE'
+		order by t_optionlist.dorder
+	</select>
+
+	<select id="loadmyBZQKChartBody" resultType="com.mk.framework.chart.ChartModel">
+		select t_optionlist.code as id,
+		t_optionlist.name as name,
+		nvl(t.value, 0) as value
+		from t_optionlist,
+		(select H_O_Department.Assesshierarchy,
+		sum(H_O_Quota.Budgetnumber) as value
+		from H_O_Department, H_O_Post, H_O_Quota
+		where H_O_Department.Deptid = H_O_Post.Deptid
+		and H_O_Post.Postid = H_O_Quota.Postid
+		and H_O_Department.Assesshierarchy is
+		not null
+		group by H_O_Department.Assesshierarchy) t
+		where t_optionlist.code = t.Assesshierarchy(+)
+		AND t_optionlist.optiontypeguid = 'ASSESSHIERARCHY'
+		order by t_optionlist.dorder
+	</select>
+
+	<select id="loadmyZBQKChartBody" resultType="com.mk.framework.chart.ChartModel">
+		select t_optionlist.code as id,
+		t_optionlist.name as name,
+		nvl(t.value, 0) as value
+		from t_optionlist,
+		(select H_O_Department.Assesshierarchy,
+		count(h_e_position.quotaid) as value
+		from h_e_position,
+		H_O_Department
+		where h_e_position.deptid = H_O_Department.Deptid
+		and h_e_position.isstaff = 1
+		<![CDATA[
+		AND h_e_position.startdate <= sysdate
+		AND (h_e_position.enddate > sysdate OR
+		h_e_position.enddate is null)
+		]]>
+
+		and H_O_Department.Assesshierarchy is not null
+		group by H_O_Department.Assesshierarchy) t
+		where t_optionlist.code = t.Assesshierarchy(+)
+		AND t_optionlist.optiontypeguid = 'ASSESSHIERARCHY'
+		order by
+		t_optionlist.dorder
+	</select>
+
+
+
+
+	<select id="countAllMyCandidates" parameterType="com.mk.todo.entity.TodoPam" resultType="Integer">
+		select count(1) from j_mycandidates
+	</select>
+
+
+	<select id="countMyCandidatesByToday" parameterType="com.mk.todo.entity.TodoPam" resultType="Integer">
+		select count(1) from j_mycandidates where candidatestime=trunc(sysdate)
+	</select>
+
+	<select id="getMinTime" resultType="java.sql.Date">
+		select min(candidatestime) from j_mycandidates
+	</select>
+
+	<select id="countMyCandidatesByRecommend" resultType="Integer">
+		select count(1) from J_Recommend t where t.state in (0,1) and trunc(t.moditimestamp)=trunc(sysdate)
+	</select>
+
+	<select id="countRecommends" resultType="Integer">
+		select count(1) from J_Recommend t where t.state in (0,1)
+	</select>
+
+	<select id="loadmyRecuritprogramChartBody" resultType="com.mk.framework.chart.ChartModel">
+		select t_optionlist.code as id,
+		t_optionlist.name as name,
+		nvl(t.value, 0) as value
+		from t_optionlist,
+		(
+		select H_O_Department.Assesshierarchy,
+		sum(J_RecruitProgram.Postnum) as value
+		from H_O_Department,J_RecruitProgram
+		where H_O_Department.Deptid = J_RecruitProgram.Deptid
+		and H_O_Department.Assesshierarchy is not null
+		group by H_O_Department.Assesshierarchy
+		) t
+		where t_optionlist.code = t.Assesshierarchy(+)
+		AND t_optionlist.optiontypeguid = 'ASSESSHIERARCHY'
+		order by t_optionlist.dorder
+	</select>
+
+
+</mapper>

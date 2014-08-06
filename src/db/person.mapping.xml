@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.person.dao.PersonDao">
+
+	<!-- 待入职人才管理 -->
+	<sql id="searchPersonWhere">
+		where 1=1
+		<if test="parameters.mycandidatesguid!=null and parameters.mycandidatesguid!=''">
+			AND mycandidatesguid=#{parameters.mycandidatesguid}
+		</if>
+		<if test="parameters.name!=null and parameters.name!=''">
+			AND name=#{parameters.name}
+		</if>
+		<if test="parameters.culture!=null and parameters.culture!=''">
+			AND culture=#{parameters.culture}
+		</if>
+	</sql>
+
+
+	<select id="countPerson" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_person
+		<include refid="searchPersonWhere" />
+	</select>
+
+
+	<select id="searchPerson" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.person.entity.Person">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select mycandidatesguid,
+		companyid,
+		deptid,
+		postid,
+		quotaid,
+		rankid,
+		joindate,
+		regisuserguid,
+		regisaddress,
+		officeaddress,
+		employtype,
+		social,
+		jobnumber,
+		email,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		contactname,
+		contactphone,
+		contactrelationship,
+		joinworkdate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from j_person
+		<include refid="searchPersonWhere" />
+		order by joindate
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+
+	<insert id="insertPerson" parameterType="com.mk.person.entity.Person">
+		insert into j_person
+		(mycandidatesguid,
+		companyid,
+		deptid,
+		quotaid,
+		rankid,
+		postid,
+		joindate,
+		regisuserguid,
+		regisaddress,
+		officeaddress,
+		employtype,
+		social,
+		jobnumber,
+		email,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		contactname,
+		contactphone,
+		contactrelationship,
+		joinworkdate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies)
+		values
+		(#{mycandidatesguid},
+		#{companyid},
+		#{deptid},
+		#{quotaid},
+		#{rankid:VARCHAR},
+		#{postid},
+		#{joindate},
+		#{regisuserguid:VARCHAR},
+		#{regisaddress:VARCHAR},
+		#{officeaddress:VARCHAR},
+		#{employtype:INTEGER},
+		#{social:VARCHAR},
+		#{jobnumber:VARCHAR},
+		#{email:VARCHAR},
+		#{name},
+		#{sex},
+		#{birthday},
+		#{cardnumber},
+		#{culture:INTEGER},
+		#{nation:INTEGER},
+		#{mobile:VARCHAR},
+		#{addressmobile:VARCHAR},
+		#{residenceplace:VARCHAR},
+		#{homephone:VARCHAR},
+		#{homeplace:VARCHAR},
+		#{bloodtype:INTEGER},
+		#{domicilplace:VARCHAR},
+		#{nativeplace:VARCHAR},
+		#{politics:INTEGER},
+		#{married:INTEGER},
+		#{privateemail:VARCHAR},
+		#{photo:VARCHAR},
+		#{contactname:VARCHAR},
+		#{contactphone:VARCHAR},
+		#{contactrelationship:INTEGER},
+		#{joinworkdate:DATE},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{height:VARCHAR},
+		#{societydate:DATE},
+		#{legaladdress:VARCHAR},
+		#{payment:INTEGER},
+		#{starttime:DATE},
+		#{endtime:DATE},
+		#{skills:VARCHAR},
+		#{hobbies:VARCHAR})
+	</insert>
+
+
+	<update id="updatePerson" parameterType="com.mk.person.entity.Person">
+		update j_person
+		set mycandidatesguid = #{mycandidatesguid},
+		companyid = #{companyid},
+		deptid = #{deptid},
+		quotaid=#{quotaid},
+		rankid=#{rankid:VARCHAR},
+		postid=#{postid},
+		joindate=#{joindate},
+		employtype=#{employtype:INTEGER},
+		social=#{social:VARCHAR},
+		jobnumber = #{jobnumber:VARCHAR},
+		email = #{email:VARCHAR},
+		name = #{name},
+		sex = #{sex},
+		birthday =
+		#{birthday},
+		cardnumber = #{cardnumber},
+		culture =
+		#{culture:INTEGER},
+		nation =
+		#{nation:INTEGER},
+		mobile = #{mobile:VARCHAR},
+		addressmobile = #{addressmobile:VARCHAR},
+		residenceplace =
+		#{residenceplace:VARCHAR},
+		homephone = #{homephone:VARCHAR},
+		homeplace
+		= #{homeplace:VARCHAR},
+		bloodtype = #{bloodtype:INTEGER},
+		domicilplace = #{domicilplace:VARCHAR},
+		nativeplace =
+		#{nativeplace:VARCHAR},
+		politics =
+		#{politics:INTEGER},
+		married = #{married:INTEGER},
+		privateemail =
+		#{privateemail:VARCHAR},
+		photo = #{photo:VARCHAR},
+		contactname = #{contactname:VARCHAR},
+		contactphone =
+		#{contactphone:VARCHAR},
+		contactrelationship = #{contactrelationship:INTEGER},
+		joinworkdate =
+		#{joinworkdate:DATE},
+		memo = #{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		height=#{height:VARCHAR},
+		societydate=#{societydate:DATE},
+		legaladdress=#{legaladdress:VARCHAR},
+		payment=#{payment:INTEGER},
+		starttime=#{starttime:DATE},
+		endtime=#{endtime:DATE},
+		skills=#{skills:VARCHAR},
+		hobbies=#{hobbies:VARCHAR}
+		where mycandidatesguid = #{mycandidatesguid}
+	</update>
+
+
+	<select id="getPersonById" parameterType="String" resultType="com.mk.person.entity.Person">
+		select mycandidatesguid,
+		companyid,
+		deptid,
+		postid,
+		quotaid,
+		rankid,
+		joindate,
+		regisuserguid,
+		regisaddress,
+		officeaddress,
+		employtype,
+		social,
+		jobnumber,
+		email,
+		name,
+		sex,
+		birthday,
+		cardnumber,
+		culture,
+		nation,
+		mobile,
+		addressmobile,
+		residenceplace,
+		homephone,
+		homeplace,
+		bloodtype,
+		domicilplace,
+		nativeplace,
+		politics,
+		married,
+		privateemail,
+		photo,
+		contactname,
+		contactphone,
+		contactrelationship,
+		joinworkdate,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		height,
+		societydate,
+		legaladdress,
+		payment,
+		starttime,
+		endtime,
+		skills,
+		hobbies
+		from j_person
+		where
+		mycandidatesguid=#{id}
+	</select>
+
+	
+	<delete id="delPersonById" parameterType="String">
+		delete j_person
+		where mycandidatesguid = #{id}
+	</delete>
+
+	<!-- 工作经历 -->
+	<insert id="insertTmpWorkExperience" parameterType="com.mk.person.entity.TmpWorkExperience">
+		insert into j_tmp_workexperience
+		(workexperienceid, mycandidatesguid, workunit, startdate, enddate, job, description,reporter,email,reporterphone,resignationreason,money)
+		values
+		(#{workexperienceid}, 
+		#{mycandidatesguid}, 
+		#{workunit}, 
+		#{startdate}, 
+		#{enddate:DATE}, 
+		#{job:VARCHAR}, 
+		#{description:VARCHAR},
+		#{reporter:VARCHAR},
+		#{email:VARCHAR},
+		#{reporterphone:VARCHAR},
+		#{resignationreason:INTEGER},
+		#{money:VARCHAR}
+		)
+	</insert>
+
+	<update id="updateTmpWorkExperience" parameterType="com.mk.person.entity.TmpWorkExperience">
+		update j_tmp_workexperience
+		set workexperienceid = #{workexperienceid},
+		mycandidatesguid = #{mycandidatesguid},
+		workunit = #{workunit},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		job = #{job:VARCHAR},
+		description = #{description:VARCHAR},
+		reporter = #{reporter:VARCHAR},
+		email=#{email:VARCHAR},
+		reporterphone = #{reporterphone:VARCHAR},
+		resignationreason =#{resignationreason:INTEGER},
+		money = #{money:VARCHAR}
+		where workexperienceid = #{workexperienceid}
+	</update>
+
+	<delete id="delTmpWorkExperienceById" parameterType="String">
+		delete j_tmp_workexperience
+		where workexperienceid = #{workexperienceid}
+	</delete>
+	<delete id="delTmpWorkExperienceByMycandidatesguId" parameterType="String">
+		delete j_tmp_workexperience
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+	<select id="getAllTmpWorkExperienceById" parameterType="String" resultType="com.mk.person.entity.TmpWorkExperience">
+		select workexperienceid,
+		mycandidatesguid,
+		workunit,
+		startdate,
+		enddate,
+		job,
+		description,
+		reporter,
+		email,
+		reporterphone,
+		resignationreason,
+		money
+		from j_tmp_workexperience
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+	<!-- 教育经历 -->
+	<select id="getAllTmpEduExperienceListById" parameterType="String" resultType="com.mk.person.entity.TmpEduExperience">
+		select eduexperienceid,
+		mycandidatesguid,
+		eduorg,
+		learningtype,
+		startdate,
+		enddate,
+		professional,
+		degree,
+		description,
+		culture
+		from
+		j_tmp_eduexperience
+		where mycandidatesguid = #{mycandidatesguid}
+	</select>
+	<insert id="insertTmpEduExperience" parameterType="com.mk.person.entity.TmpEduExperience">
+		insert into j_tmp_eduexperience
+		(eduexperienceid,
+		mycandidatesguid,
+		eduorg,
+		learningtype,
+		startdate,
+		enddate,
+		professional,
+		degree,
+		description,
+		culture)
+		values
+		(#{eduexperienceid},
+		#{mycandidatesguid},
+		#{eduorg},
+		#{learningtype:INTEGER},
+		#{startdate:DATE},
+		#{enddate:DATE},
+		#{professional:VARCHAR},
+		#{degree:VARCHAR},
+		#{description:VARCHAR},
+		#{culture})
+	</insert>
+
+	<update id="updateTmpEduExperience" parameterType="com.mk.person.entity.TmpEduExperience">
+		update j_tmp_eduexperience
+		set eduexperienceid = #{eduexperienceid},
+		mycandidatesguid = #{mycandidatesguid},
+		eduorg = #{eduorg},
+		learningtype =
+		#{learningtype:INTEGER},
+		startdate = #{startdate:DATE},
+		enddate=#{enddate:DATE},
+		professional = #{professional:VARCHAR},
+		degree = #{degree:VARCHAR},
+		description = #{description:VARCHAR},
+		culture=#{culture}
+		where
+		eduexperienceid = #{eduexperienceid}
+	</update>
+
+	<delete id="delTmpEduExperienceById" parameterType="String">
+		delete j_tmp_eduexperience
+		where eduexperienceid = #{eduexperienceid}
+	</delete>
+	<delete id="delTmpEduExperienceByMycandidatesguId" parameterType="String">
+		delete j_tmp_eduexperience
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+	
+	
+	<!-- 培训经历 -->
+	<insert id="insertTmpTrain" parameterType="com.mk.person.entity.TmpTrain">
+		insert into j_tmp_train
+		(trainid,
+		mycandidatesguid,
+		traindate,
+		trainlength,
+		trainorg,
+		content,
+		result)
+		values
+		(#{trainid},
+		#{mycandidatesguid},
+		#{traindate},
+		#{trainlength:INTEGER},
+		#{trainorg:VARCHAR},
+		#{content:VARCHAR},
+		#{result:VARCHAR})
+	</insert>
+
+	<update id="updateTmpTrain" parameterType="com.mk.person.entity.TmpTrain">
+		update j_tmp_train
+		set trainid = #{trainid},
+		mycandidatesguid = #{mycandidatesguid},
+		traindate = #{traindate},
+		trainlength = #{trainlength},
+		trainorg =
+		#{trainorg},
+		content = #{content},
+		result = #{result}
+		where trainid = #{trainid}
+	</update>
+
+	<select id="getTmpTrainListByMycandidateGuid" parameterType="String" resultType="com.mk.person.entity.TmpTrain">
+		select trainid,
+		mycandidatesguid,
+		traindate,
+		trainlength,
+		trainorg,
+		content,
+		result
+		from j_tmp_train
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+	<delete id="delTmpTrainByTrainId" parameterType="String">
+		delete j_tmp_train
+		where trainid = #{trainid}
+	</delete>
+
+	<delete id="delTmpTrainByMycandidatesguId" parameterType="String">
+		delete j_tmp_train
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+
+	<!-- 家庭状况 -->
+	<insert id="insertTmpFamily" parameterType="com.mk.person.entity.TmpFamily">
+		insert into j_tmp_family
+		(familyid, mycandidatesguid, workunit, name, job, mobile, contactrelationship)
+		values
+		(#{familyid},
+		#{mycandidatesguid},
+		#{workunit},
+		#{name},
+		#{job:VARCHAR},
+		#{mobile},
+		#{contactrelationship})
+	</insert>
+	
+	<update id="updateTmpFamily" parameterType="com.mk.person.entity.TmpFamily">
+		update j_tmp_family
+		set familyid = #{familyid},
+		mycandidatesguid = #{mycandidatesguid},
+		workunit = #{workunit},
+		name = #{name},
+		job = #{job:VARCHAR},
+		mobile =
+		#{mobile},
+		contactrelationship = #{contactrelationship}
+		where familyid = #{familyid}
+	</update>
+	
+	<delete id="delTmpFamilyById" parameterType="String">
+		delete j_tmp_family
+		where familyid= #{familyid}
+	</delete>
+	
+	<delete id="delTmpFamilyByMycandidatesguId" parameterType="String">
+		delete j_tmp_family
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+	
+	<select id="getTmpFamilyListByMycandidateGuid" parameterType="String" resultType="com.mk.person.entity.TmpFamily">
+		select familyid,
+		mycandidatesguid,
+		workunit,
+		name,
+		job,
+		mobile,
+		contactrelationship
+		from j_tmp_family
+		where
+		mycandidatesguid= #{mycandidatesguid}
+	</select>
+
+	<!-- 人才公司亲属表 -->
+	<insert id="insertTmpRelatives" parameterType="com.mk.person.entity.TmpRelatives">
+		insert into j_tmp_relatives
+		(relativesguid,
+		mycandidatesguid,
+		companyname,
+		deptname,
+		postname,
+		employeename)
+		values
+		(#{relativesguid},
+		#{mycandidatesguid},
+		#{companyname},
+		#{deptname},
+		#{postname},
+		#{employeename})
+	</insert>
+	
+	<update id="updateTmpRelatives" parameterType="com.mk.person.entity.TmpRelatives">
+		update j_tmp_relatives
+		set relativesguid = #{relativesguid},
+		mycandidatesguid = #{mycandidatesguid},
+		companyname = #{companyname},
+		deptname =
+		#{deptname},
+		postname = #{postname},
+		employeename = #{employeename}
+		where relativesguid = #{relativesguid}
+	</update>
+	
+	<delete id="delTmpRelativesById" parameterType="String">
+		delete j_tmp_relatives
+		where relativesguid= #{relativesguid}
+	</delete>
+
+	<delete id="delTmpRelativesByMycandidatesguId" parameterType="String">
+		delete j_tmp_relatives
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+	
+	<select id="getTmpRelativesListByMycandidateGuid" parameterType="String" resultType="com.mk.person.entity.TmpRelatives">
+		select relativesguid,
+		mycandidatesguid,
+		companyname,
+		deptname,
+		postname,
+		employeename
+		from j_tmp_relatives
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+	<!-- 体检记录 加了filepath字段-->
+	<sql id="searchExaminationRecordWhere">
+		where 1=1
+		<if test="parameters.examinationrecordguid!=null and parameters.examinationrecordguid!=''">
+			AND examinationrecordguid=#{parameters.examinationrecordguid}
+		</if>
+
+		<if test="parameters.mycandidatesguid!=null and parameters.mycandidatesguid!=''">
+			AND mycandidatesguid=#{parameters.mycandidatesguid}
+		</if>
+	</sql>
+	<select id="countExaminationRecord" resultType="Integer">
+		select count(1) from j_examinationrecord
+	</select>
+
+	<select id="searchExaminationRecord" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.person.entity.ExaminationRecord">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select examinationrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from
+		j_examinationrecord
+		<include refid="searchExaminationRecordWhere" />
+		order by moditimestamp
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertExaminationRecord" parameterType="com.mk.person.entity.ExaminationRecord">
+		insert into j_examinationrecord
+		(examinationrecordguid,
+		mycandidatesguid,
+		state,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		thirdpartnerguid,
+		recommendguid,
+		filepath,
+		examinationtype)
+		values
+		(#{examinationrecordguid},
+		#{mycandidatesguid},
+		#{state},
+		#{webuserguid:VARCHAR},
+		#{examinationdate:DATE},
+		#{examinationaddress:VARCHAR},
+		#{examinationstate:INTEGER},
+		#{examinationresult:VARCHAR},
+		#{modiuser:VARCHAR},
+		#{moditimestamp:DATE},
+		#{modimemo:VARCHAR},
+		#{thirdpartnerguid:VARCHAR},
+		#{recommendguid},
+		#{filepath:VARCHAR},
+		#{examinationtype:INTEGER})
+	</insert>
+
+	<update id="updateExaminationRecord" parameterType="com.mk.person.entity.ExaminationRecord">
+		update j_examinationrecord
+		set examinationrecordguid = #{examinationrecordguid},
+		mycandidatesguid = #{mycandidatesguid},
+		recommendguid=#{recommendguid},
+		state=#{state},
+		webuserguid =#{webuserguid:VARCHAR},
+		examinationdate = #{examinationdate:DATE},
+		examinationaddress = #{examinationaddress:VARCHAR},
+		examinationstate = #{examinationstate:INTEGER},
+		examinationresult =#{examinationresult:VARCHAR},
+		modiuser = #{modiuser:VARCHAR},
+		moditimestamp =#{moditimestamp:DATE},
+		modimemo = #{modimemo:VARCHAR},
+		thirdpartnerguid=#{thirdpartnerguid:VARCHAR},
+		filepath=#{filepath:VARCHAR},
+		examinationtype=#{examinationtype:INTEGER}
+		where examinationrecordguid =#{examinationrecordguid}
+	</update>
+
+	<select id="getExaminationRecordById" parameterType="String" resultType="com.mk.person.entity.ExaminationRecord">
+		select examinationrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		filepath
+		from j_examinationrecord
+		where examinationrecordguid = #{examinationrecordguid}
+	</select>
+
+
+	<select id="getExaminationRecordByMyCandidatesGuidAndState" parameterType="String" resultType="com.mk.person.entity.ExaminationRecord">
+		select examinationrecordguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		recommendguid,
+		modimemo
+		from j_examinationrecord
+		where mycandidatesguid = #{mycandidatesguid}
+		and state=1
+	</select>
+
+	<select id="getExaminationRecordByMyCandidatesGuid" parameterType="String" resultType="com.mk.person.entity.ExaminationRecord">
+		select examinationrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_examinationrecord
+		where mycandidatesguid = #{mycandidatesguid}
+		order by moditimestamp desc
+	</select>
+	
+	<select id="getExaminationsByRecommendGuid" parameterType="String" resultType="com.mk.person.entity.ExaminationRecord">
+		select examinationrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		filepath
+		from j_examinationrecord
+		where recommendguid = #{recommendguid}
+		order by moditimestamp
+	</select>
+	
+	
+	<select id="getExaminationsByMyRecommendguid" parameterType="String" resultType="com.mk.person.entity.ExaminationRecord">
+		select examinationrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		thirdpartnerguid,
+		webuserguid,
+		examinationdate,
+		examinationaddress,
+		examinationstate,
+		examinationresult,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_examinationrecord
+		where recommendguid = #{recommendguid}
+		order by moditimestamp desc
+	</select>
+
+	<delete id="delExaminatioRecordById" parameterType="String">
+		delete j_examinationrecord
+		where examinationrecordguid = #{examinationrecordguid}
+	</delete>
+
+	<delete id="delExaminationRecordByMyCandidatesGuid" parameterType="String">
+		delete j_examinationrecord
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+	<delete id="delExaminationRecordByCandidatesguidAndState" parameterType="String">
+		delete j_examinationrecord
+		where mycandidatesguid = #{mycandidatesguid}
+		and state=1
+	</delete>
+
+
+
+
+	<!-- 项目经历 -->
+	<insert id="insertTmpProjectExperience" parameterType="com.mk.person.entity.TmpProjectExperience">
+		insert into j_tmp_projectexperience
+		(projectexperienceguid,
+		mycandidatesguid,
+		itemname,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk)
+		values
+		(#{projectexperienceguid},
+		#{mycandidatesguid},
+		#{itemname},
+		#{startdate},
+		#{enddate:DATE},
+		#{jobdescription},
+		#{modtime},
+		#{rmk:VARCHAR})
+	</insert>
+
+	<update id="updateTmpProjectExperience" parameterType="com.mk.person.entity.TmpProjectExperience">
+		update j_tmp_projectexperience
+		set projectexperienceguid = #{projectexperienceguid},
+		mycandidatesguid = #{mycandidatesguid},
+		itemname =
+		#{itemname},
+		startdate = #{startdate},
+		enddate = #{enddate:DATE},
+		jobdescription = #{jobdescription},
+		modtime = #{modtime},
+		rmk = #{rmk:VARCHAR}
+		where projectexperienceguid = #{projectexperienceguid}
+	</update>
+
+	<delete id="delTmpProjectExperienceById" parameterType="String">
+		delete j_tmp_projectexperience
+		where
+		projectexperienceguid = #{projectexperienceguid}
+	</delete>
+
+	<delete id="delTmpProjectExperienceByMycandidatesguId" parameterType="String">
+		delete j_tmp_projectexperience
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+	<select id="getTmpProjectExperienceListByMycandidateGuid" parameterType="String" resultType="com.mk.person.entity.TmpProjectExperience">
+		select projectexperienceguid,
+		mycandidatesguid,
+		itemname,
+		startdate,
+		enddate,
+		jobdescription,
+		modtime,
+		rmk
+		from j_tmp_projectexperience
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+
+
+
+
+	<!-- 推荐信息 -->
+	<insert id="insertTmpRecommend" parameterType="com.mk.person.entity.TmpRecommend">
+		insert into j_tmp_recommend
+		(recommendguid, mycandidatesguid, name, sex, mobile,email, situation,recommendpostname,workage)
+		values
+		(#{recommendguid},
+		#{mycandidatesguid},
+		#{name},
+		#{sex},
+		#{mobile},
+		#{email:VARCHAR},
+		#{situation:VARCHAR},
+		#{recommendpostname:VARCHAR},
+		#{workage:INTEGER}
+		)
+	</insert>	
+		
+	<update id="updateTmpRecommend" parameterType="com.mk.person.entity.TmpRecommend">
+		update j_tmp_recommend
+		set recommendguid = #{recommendguid},
+		mycandidatesguid = #{mycandidatesguid},
+		name = #{name},
+		sex = #{sex},
+		email = #{email:VARCHAR},
+		mobile = #{mobile},
+		situation = #{situation:VARCHAR},
+		recommendpostname = #{recommendpostname:VARCHAR},
+		workage = #{workage:INTEGER}
+		where recommendguid = #{recommendguid}
+	</update>	
+		
+	<delete id="delTmpRecommendById" parameterType="String">
+		delete j_tmp_recommend
+		where recommendguid= #{recommendguid}
+	</delete>	
+		
+	<delete id="delTmpRecommendByMycandidatesguId" parameterType="String">
+		delete j_tmp_recommend
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>	
+		
+	<select id="getTmpRecommendListByMycandidateGuid" parameterType="String" resultType="com.mk.person.entity.TmpRecommend">
+		select recommendguid, mycandidatesguid, name, sex, mobile, email,situation,recommendpostname,workage from j_tmp_recommend
+		where
+		mycandidatesguid = #{mycandidatesguid}
+	</select>
+
+	
+
+</mapper>

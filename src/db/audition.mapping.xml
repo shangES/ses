@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.audition.dao.AuditionDao">
+	<!-- 面试记录 -->
+	<sql id="searchAuditionRecordWhere">
+		where a.auditionrecordguid=b.auditionrecordguid(+)
+		<if test="parameters.mycandidatesguid!=null and parameters.mycandidatesguid!=''">
+			and a.mycandidatesguid=#{parameters.mycandidatesguid}
+		</if>
+	</sql>
+
+	<select id="countAuditionRecord" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_auditionrecord a,J_AuditionResult b
+		<include refid="searchAuditionRecordWhere" />
+	</select>
+
+	<select id="searchAuditionRecord" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.audition.entity.AuditionRecord">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select a.auditionrecordguid,
+		a.mycandidatesguid,
+		a.state,
+		a.maininterviewerguid,
+		a.auditiondate,
+		a.auditionaddress,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		a.recommendguid,
+		b.isrelease,
+		b.resulttype,
+		b.resultcontent
+		from
+		j_auditionrecord a,J_AuditionResult b
+		<include refid="searchAuditionRecordWhere" />
+		order by a.moditimestamp desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<insert id="insertAuditionRecord" parameterType="com.mk.audition.entity.AuditionRecord">
+		insert into j_auditionrecord
+		(auditionrecordguid,
+		mycandidatesguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		recommendguid)
+		values
+		(#{auditionrecordguid},
+		#{mycandidatesguid},
+		#{state},
+		#{maininterviewerguid},
+		#{auditiondate},
+		#{auditionaddress},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{recommendguid})
+	</insert>
+
+
+	<update id="updateAuditionRecord" parameterType="com.mk.audition.entity.AuditionRecord">
+		update j_auditionrecord
+		set auditionrecordguid = #{auditionrecordguid},
+		mycandidatesguid = #{mycandidatesguid},
+		state=#{state},
+		maininterviewerguid=#{maininterviewerguid},
+		auditiondate = #{auditiondate},
+		auditionaddress = #{auditionaddress},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo=#{modimemo:VARCHAR},
+		recommendguid=#{recommendguid}
+		where
+		auditionrecordguid = #{auditionrecordguid}
+	</update>
+
+	<delete id="delAuditionRecordByAuditionRecordId" parameterType="String">
+		delete j_auditionrecord
+		where auditionrecordguid = #{auditionrecordguid}
+	</delete>
+
+	<delete id="delAuditionRecordByMycandidatesguid" parameterType="String">
+		delete j_auditionrecord
+		where mycandidatesguid = #{mycandidatesguid}
+	</delete>
+
+	<select id="getAuditionRecordByAuditionRecordId" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		mycandidatesguid,
+		state,
+		recommendguid,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionrecord
+		where auditionrecordguid=#{auditionrecordguid}
+	</select>
+
+	<select id="getAuditionRecordNoResultByMyCandidatesId" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		mycandidatesguid,
+		maininterviewerguid,
+		state,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		recommendguid
+		from j_auditionrecord
+		where mycandidatesguid=#{mycandidatesguid}
+		and auditionrecordguid not in(
+		select auditionrecordguid from J_AuditionResult
+		)
+	</select>
+
+	<select id="getAuditionRecordByMycandidatesguid" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		mycandidatesguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		recommendguid
+		from j_auditionrecord
+		where mycandidatesguid=#{mycandidatesguid}
+		order by moditimestamp desc
+	</select>
+
+	<select id="getAuditionRecordByToInterviewer" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		mycandidatesguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		recommendguid
+		from j_auditionrecord
+		where state=1
+		and auditionrecordguid not in (select operateguid from j_bussiness where tablename='J_AuditionRecord')
+		and mycandidatesguid in (select mycandidatesguid from j_mycandidates where candidatesstate=5)
+		<![CDATA[AND moditimestamp <=sysdate]]>
+		order by moditimestamp asc
+	</select>
+
+	<select id="getNewAuditionRecordByMycandidatesguid" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionrecord
+		where mycandidatesguid=#{mycandidatesguid}
+		order by moditimestamp desc
+	</select>
+
+
+	<select id="getAuditionRecordAndResultByMycandidatesguid" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select a.auditionrecordguid,
+		a.recommendguid,
+		a.mycandidatesguid,
+		a.state,
+		a.maininterviewerguid,
+		a.auditiondate,
+		a.auditionaddress,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		b.isrelease,
+		b.resulttype,
+		b.resultcontent,
+		b.hrresultcontent
+		from
+		j_auditionrecord a,J_AuditionResult b
+		where a.auditionrecordguid=b.auditionrecordguid
+		and
+		a.mycandidatesguid=#{mycandidatesguid}
+		order by a.moditimestamp desc
+	</select>
+
+
+	<select id="getAuditionRecordAndResultByRecommendGuid" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select a.auditionrecordguid,
+		a.recommendguid,
+		a.mycandidatesguid,
+		a.state,
+		a.maininterviewerguid,
+		a.auditiondate,
+		a.auditionaddress,
+		a.modiuser,
+		a.moditimestamp,
+		a.modimemo,
+		b.isrelease,
+		b.resulttype,
+		b.resultcontent,
+		b.hrresultcontent
+		from
+		j_auditionrecord a,J_AuditionResult b
+		where a.auditionrecordguid=b.auditionrecordguid(+)
+		and
+		a.recommendguid=#{recommendguid}
+		order by a.moditimestamp
+	</select>
+
+
+	<select id="getAuditionRecordByMycandidatesguidAndState" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		mycandidatesguid,
+		recommendguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionrecord
+		where mycandidatesguid=#{mycandidatesguid}
+		and state=1
+	</select>
+
+	<delete id="delAuditionRecordByCandidatesguidAndState" parameterType="String">
+		delete j_auditionrecord
+		where mycandidatesguid=#{mycandidatesguid}
+		and state=#{state}
+	</delete>
+	
+	<select id="getAuditionRecordAndResultByRecommendguid" parameterType="String" resultType="com.mk.audition.entity.AuditionRecord">
+		select auditionrecordguid,
+		recommendguid,
+		mycandidatesguid,
+		state,
+		maininterviewerguid,
+		auditiondate,
+		auditionaddress,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionrecord
+		where recommendguid = #{recommendguid}
+		order by moditimestamp desc
+	</select>
+	
+
+	<!-- 面试结果 -->
+	<insert id="insertAuditionResult" parameterType="com.mk.audition.entity.AuditionResult">
+		insert into j_auditionresult
+		(auditionrecordguid,
+		isrelease,
+		resulttype,
+		resultcontent,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		hrresultcontent)
+		values
+		(#{auditionrecordguid},
+		#{isrelease},
+		#{resulttype},
+		#{resultcontent:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR},
+		#{hrresultcontent:VARCHAR})
+	</insert>
+
+
+	<update id="updateAuditionResult" parameterType="com.mk.audition.entity.AuditionResult">
+		update j_auditionresult
+		set auditionrecordguid = #{auditionrecordguid},
+		isrelease = #{isrelease},
+		resulttype = #{resulttype},
+		resultcontent =
+		#{resultcontent:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR},
+		hrresultcontent=#{hrresultcontent}
+		where auditionrecordguid = #{auditionrecordguid}
+
+	</update>
+
+	<select id="getAuditionResultByAuditionRecordId" parameterType="String" resultType="com.mk.audition.entity.AuditionResult">
+		select auditionrecordguid,
+		isrelease,
+		resulttype,
+		resultcontent,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		hrresultcontent
+		from
+		j_auditionresult
+		where auditionrecordguid=#{auditionrecordguid}
+	</select>
+
+	<select id="getAuditionResultByMycandidatesguid" parameterType="String" resultType="com.mk.audition.entity.AuditionResult">
+		select auditionrecordguid,
+		isrelease,
+		resulttype,
+		resultcontent,
+		modiuser,
+		moditimestamp,
+		modimemo,
+		hrresultcontent
+		from
+		j_auditionresult
+		where auditionrecordguid in(
+		select auditionrecordguid from J_AuditionRecord where
+		mycandidatesguid=#{mycandidatesguid}
+		)
+		order by moditimestamp desc
+	</select>
+
+	<delete id="delAuditionResultByAuditionRecordId" parameterType="String">
+		delete j_auditionresult
+		where auditionrecordguid=#{auditionrecordguid}
+	</delete>
+
+	<delete id="delAuditionResultByMycandidatesguid" parameterType="String">
+		delete j_auditionresult
+		where auditionrecordguid in(
+		select auditionrecordguid from J_AuditionRecord where
+		mycandidatesguid=#{mycandidatesguid}
+		)
+	</delete>
+
+
+
+
+	<!-- 面试官(抄送) -->
+	<insert id="insertInterviewer" parameterType="com.mk.audition.entity.Interviewer">
+		insert into j_interviewer
+		(interviewerguid, auditionrecordguid, userguid)
+		values
+		(#{interviewerguid}, #{auditionrecordguid:VARCHAR}, #{userguid})
+	</insert>
+
+	<update id="updateInterviewer" parameterType="com.mk.audition.entity.Interviewer">
+		update j_interviewer
+		set interviewerguid = #{interviewerguid},
+		auditionrecordguid = #{auditionrecordguid:VARCHAR},
+		userguid = #{userguid}
+		where
+		interviewerguid = #{interviewerguid}
+	</update>
+
+	<select id="getInterviewerByAuditionRecordId" parameterType="String" resultType="com.mk.audition.entity.Interviewer">
+		select interviewerguid, auditionrecordguid, userguid from j_interviewer
+		where
+		auditionrecordguid=#{auditionrecordguid}
+	</select>
+
+	<select id="getInterviewerById" parameterType="String" resultType="com.mk.audition.entity.Interviewer">
+		select interviewerguid, auditionrecordguid, userguid from j_interviewer
+		where interviewerguid=#{interviewerguid}
+	</select>
+
+	<delete id="delInterviewerByAuditionRecordId" parameterType="String">
+		delete j_interviewer
+		where auditionrecordguid=#{auditionrecordguid}
+	</delete>
+
+	<delete id="delInterviewerById" parameterType="String">
+		delete j_interviewer
+		where interviewerguid=#{interviewerguid}
+	</delete>
+
+	<delete id="delInterviewerByMycandidatesguid" parameterType="String">
+		delete j_interviewer
+		where auditionrecordguid in(
+		select auditionrecordguid from J_AuditionRecord where
+		mycandidatesguid=#{mycandidatesguid}
+		)
+	</delete>
+
+	<!-- 面试地点管理 -->
+
+	<select id="getAllAuditionAddress" parameterType="String" resultType="com.mk.audition.entity.AuditionAddress">
+		select
+		auditionaddressguid,
+		auditionaddress,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionaddress
+		where state =
+		#{state}
+	</select>
+
+
+	<sql id="searchAuditionAddressWhere">
+		where 1= 1
+		<if test="parameters.auditionaddress!=null and parameters.auditionaddress!=''">
+			and auditionaddress = #{parameters.auditionaddress}
+		</if>
+		<if test="parameters.state!=null and parameters.state!='' and parameters.state==1">
+			and state = #{parameters.state}
+		</if>
+	</sql>
+
+	<select id="searchAuditionAddress" parameterType="com.mk.framework.grid.GridServerHandler" resultType="com.mk.audition.entity.AuditionAddress">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
+		select
+		auditionaddressguid,
+		auditionaddress,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionaddress
+		<include refid="searchAuditionAddressWhere" />
+		order by modimemo desc
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
+
+	<select id="countAuditionAddress" parameterType="com.mk.framework.grid.GridServerHandler" resultType="Integer">
+		select count(1) from j_auditionaddress
+		<include refid="searchAuditionAddressWhere" />
+	</select>
+
+	<insert id="insertAuditionAddress" parameterType="com.mk.audition.entity.AuditionAddress">
+		insert into j_auditionaddress(
+		auditionaddressguid,
+		auditionaddress,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo)
+		values(
+		#{auditionaddressguid},
+		#{auditionaddress},
+		#{state},
+		#{memo:VARCHAR},
+		#{modiuser},
+		#{moditimestamp},
+		#{modimemo:VARCHAR})
+	</insert>
+
+	<update id="updateAuditionAddress" parameterType="com.mk.audition.entity.AuditionAddress">
+		update j_auditionaddress
+		set
+		auditionaddressguid = #{auditionaddressguid},
+		auditionaddress = #{auditionaddress},
+		state = #{state},
+		memo =
+		#{memo:VARCHAR},
+		modiuser = #{modiuser},
+		moditimestamp = #{moditimestamp},
+		modimemo = #{modimemo:VARCHAR}
+		where
+		auditionaddressguid = #{auditionaddressguid}
+	</update>
+
+	<select id="getAuditionAddressById" parameterType="String" resultType="com.mk.audition.entity.AuditionAddress">
+		select
+		auditionaddressguid,
+		auditionaddress,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionaddress
+		where
+		auditionaddressguid = #{auditionaddressguid}
+	</select>
+
+	<select id="getAuditionAddressByName" parameterType="String" resultType="com.mk.audition.entity.AuditionAddress">
+		select
+		auditionaddressguid,
+		auditionaddress,
+		state,
+		memo,
+		modiuser,
+		moditimestamp,
+		modimemo
+		from j_auditionaddress
+		where
+		auditionaddress = #{auditionaddress}
+	</select>
+
+	<delete id="delAuditionAddressById" parameterType="String">
+		delete j_auditionaddress
+		where auditionaddressguid=#{auditionaddressguid}
+	</delete>
+
+</mapper>
