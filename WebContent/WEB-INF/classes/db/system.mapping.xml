@@ -283,7 +283,7 @@
 
 	<!-- 菜单 -->
 	<insert id="saveFunction" parameterType="com.mk.system.entity.Function">
-		insert into t_function_s
+		insert into t_function
 		(funid,
 		funpid,
 		orderid,
@@ -304,7 +304,7 @@
 	</insert>
 
 	<update id="updateFunction" parameterType="com.mk.system.entity.Function">
-		update t_function_s
+		update t_function
 		set funid = #{funid},
 		funpid = #{funpid:VARCHAR},
 		orderid = #{orderid},
@@ -319,16 +319,16 @@
 
 
 	<delete id="delFunctionById" parameterType="String">
-		delete from t_function_s where funid LIKE CONCAT(#{id},'%')
+		delete from t_function where funid LIKE CONCAT(#{id},'%')
 	</delete>
 
 	<select id="getFunctionById" parameterType="String" resultType="com.mk.system.entity.Function">
-		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function_s
+		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function
 		where funid =#{funid}
 	</select>
 
 	<select id="getMaxFunctionByFunpid" parameterType="String" resultType="String">
-		select max(funid) from t_function_s
+		select max(funid) from t_function
 		<where>
 			<if test="pid==null or pid==''">
 				funpid is null
@@ -340,7 +340,7 @@
 	</select>
 
 	<select id="getAllFunctions" parameterType="String" resultType="com.mk.system.entity.Function">
-		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function_s
+		select funid, funpid, orderid, labelname, funtype, javaevent, rmk, titlepicture from t_function
 		order by orderid ASC
 	</select>
 
@@ -355,7 +355,7 @@
 		javaevent,
 		rmk,
 		titlepicture
-		from t_function_s
+		from t_function
 		where funid in
 		(select funid
 		from
