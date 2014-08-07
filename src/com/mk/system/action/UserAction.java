@@ -85,7 +85,27 @@ public class UserAction {
 			grid.printLoadResponseText();
 
 	}
+	
+	/**
+	 * 搜索
+	 * 
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping("/system/searchUserByRole.do")
+	public void searchUserByRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		GridServerHandler grid = new GridServerHandler(request, response);
 
+		userService.searchUserByRole(grid);
+		if (Boolean.valueOf(grid.getParameter("export"))) {
+			ReportUtil report = new ReportUtil();
+			report.setTitle("系统用户列表");
+			report.reportGrid(grid);
+		} else
+			grid.printLoadResponseText();
+
+	}
+	
 	/**
 	 * 全部公司部门树
 	 * 

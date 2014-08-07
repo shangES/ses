@@ -160,6 +160,34 @@ public class UserService implements org.springframework.security.core.userdetail
 		}
 		grid.setData(data);
 	}
+	
+	/**
+	 * 通过角色搜索
+	 * 
+	 * @param grid
+	 */
+	public void searchUserByRole(GridServerHandler grid) {
+		SystemDao mapper = sqlSession.getMapper(SystemDao.class);
+
+		// 權限組織
+		Constance.initAdminPam(grid.getParameters());
+
+		List<JSONObject> data = new ArrayList<JSONObject>();
+		// 统计
+		Integer count = mapper.countUserByRole(grid);
+		PageUtils.setTotalRows(grid, count);
+
+		// 搜索
+		List<User> list = mapper.searchUserByRole(grid);
+		// 角色
+		Map<String, String> roleMap = codeConvertNameService.getAllRoleMap();
+		for (User model : list) {
+			// 用户角色
+			model.setRolename(roleMap.get(model.getUserguid()));
+			data.add(JSONUtils.Bean2JSONObject(model));
+		}
+		grid.setData(data);
+	}
 
 	/**
 	 * 全部公司部门树

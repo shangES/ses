@@ -565,6 +565,23 @@ public interface SystemDao {
 	 * @return
 	 */
 	List<User> searchUserFilter(GridServerHandler grid);
+	
+	/**
+	 * 通过角色搜索
+	 * 
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	List<User> searchUserByRole(GridServerHandler grid);
+	/**
+	 * 通过角色搜索
+	 * 
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	Integer countUserByRole(GridServerHandler grid);
 
 
 }

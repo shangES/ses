@@ -51,6 +51,7 @@ $(document).ready(function() {
     });
 	
     
+ 	loadGrid();
   	//加载树
  	buildRoleTree();
   	
@@ -117,6 +118,7 @@ var zTree;
 var selectNode=null;
 function buildRoleTree(){
 	var setting = {callback:{beforeClick: function(treeId, treeNode){
+		$("#myForm").clearForm();
 		selectNode=treeNode;
 		formDisabled(true);
 		//出现按钮组一
@@ -135,6 +137,7 @@ function buildRoleTree(){
 			//取数据
 			loadData(treeNode.id);
 		}
+		mygrid.reload();
 	}},
 	view: {
 		fontCss: getDeptFontCss
@@ -293,8 +296,110 @@ function delNode(){
     });
 }
 
+//参数设置
+var pam=null;
+function initPagePam(){
+	pam={};
+	pam.expAll=0;
+	
+	pam.roleid = $("#roleid").val();
+	
+	
+}
 </script>
 
+<script type="text/javascript">	
+var mygrid=null;
+function loadGrid(){
+	//var size=14;
+	var size=getGridSize();
+	var grid_demo_id = "myGrid1";
+	var dsOption= {
+			fields :[
+				{name : 'userguid'},
+				{name : 'employeeid'},
+				{name : 'loginname'},
+				{name : 'password'},
+				{name : 'isadmin'},
+				{name : 'state'},
+				{name : 'memo'},
+				{name : 'modiuser'},
+				{name : 'moditimestamp'},
+				{name : 'modimemo'},
+				{name : 'companyname'},
+				{name : 'deptname'},
+				{name : 'postname'},
+				{name : 'username'},
+				{name : 'rolename'},
+				{name : 'jobnumber'}
+			]
+		};
+		var colsOption = [
+			{id: '选择' ,isCheckColumn : true, editable:false,headAlign:'center',align:'center'},              
+			{id: 'companyname' , header: "公司名称" , width :250 ,headAlign:'center',align:'left'},              
+			{id: 'companyname' , header: "公司名称" , width :250 ,headAlign:'center',align:'left'},
+			{id: 'deptname' , header: "部门名称" , width :120 ,headAlign:'center',align:'left'},
+			{id: 'postname' , header: "岗位名称" , width :120 ,headAlign:'center',align:'left'},
+			{id: 'username' , header: "用户名" , width :80 ,headAlign:'center',align:'left'},
+			{id: 'loginname' , header: "登陆名" , width :80 ,headAlign:'center',align:'left'},
+			{id: 'rolename' , header: "用户角色" , width :200 ,headAlign:'center',align:'left'},
+			{id: 'modimemo' , header: "备注" , width :200 ,headAlign:'center',headAlign:'left',align:'left'}
+		];
+		
+	var gridOption={
+		id : grid_demo_id,
+		loadURL :'system/searchUserByRole.do',
+		beforeLoad:function(reqParam){
+			initPagePam();
+			reqParam['parameters']=pam;
+		},
+		exportURL : 'quota/searchQuota.do?export=true',
+		beforeExport:function(){
+			initPagePam();
+			pam.expAll=$('input[name="xls"]:checked').val();
+			mygrid.parameters=pam;
+		},
+		exportFileName : '编制信息表.xls',
+		width:'99.8%',
+		minHeight:"300",  //"100%", // 330,
+		container : 'gridbox', 
+		pageSizeList : [size,size*2,size*4,size*6,size*8,size*10],
+		autoLoad:true,
+		stripeRows: false,
+		remoteFilter:true,
+		showIndexColumn:true,
+		selectRowByCheck:true,
+		replaceContainer : true,
+		dataset : dsOption ,
+		columns : colsOption,
+		toolbarContent : 'nav | pagesize  state',
+		pageSize:size,
+		skin:getGridSkin(),
+		loadResponseHandler:function(response,requestParameter){
+			var obj = jQuery.parseJSON(response.text);
+			var page=obj.pageInfo;
+			var hg=(page.pageSize+1)*33+50;
+			
+			mygrid.setSize('99.9%',hg);
+			pageResize(hg);
+		},
+		onDblClickCell:function(value, record , cell, row, colNO, rowNO,columnObj,grid){
+			if(colNO!=0){
+				convertView('quota.do?page=tab&id='+record.quotaid+'&taskid='+record.taskid);
+			}
+		}
+	};
+	mygrid=new Sigma.Grid( gridOption );
+	Sigma.Util.onLoad( Sigma.Grid.render(mygrid) );
+}
+
+
+function pageResize(height){
+	$("#myContent").height(height);
+	//计算高度
+	_autoHeight();
+}
+</script>
 
 <script type="text/javascript">
 //菜单树
@@ -464,6 +569,8 @@ function callbackpost(){
     });
 	
 }
+
+
 </script>
 
 
@@ -596,7 +703,9 @@ function callbackpost(){
 								</ul>
   							</form>
 						</div>
-						
+						<div id="tab4" class="ui-layout-center" style="display:none;overflow:auto;height:508px;"> 
+							<div id="gridbox"></div>
+						</div>
 					</div>
 				</div>
 				
