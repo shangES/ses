@@ -53,8 +53,7 @@
 		a.memo,
 		a.modiuser,
 		a.moditimestamp,
-		a.modimemo,
-		a.processinstanceid
+		a.modimemo
 		from h_o_quota a,h_o_company b,h_o_department c,h_o_post d
 		<include refid="searchQuotaWhere" />
 		order by a.moditimestamp desc 
@@ -137,8 +136,7 @@
 		memo,
 		modiuser,
 		moditimestamp,
-		modimemo,
-		processinstanceid)
+		modimemo)
 		values
 		(#{quotaid},
 		#{quotacode},
@@ -150,8 +148,7 @@
 		#{memo:VARCHAR},
 		#{modiuser},
 		#{moditimestamp},
-		#{modimemo:VARCHAR},
-		#{processinstanceid:VARCHAR})
+		#{modimemo:VARCHAR})
 	</insert>
 
 	<update id="updateQuota" parameterType="com.mk.quota.entity.Quota">
@@ -166,8 +163,7 @@
 		memo = #{memo:VARCHAR},
 		modiuser = #{modiuser},
 		moditimestamp = #{moditimestamp},
-		modimemo = #{modimemo:VARCHAR},
-		processinstanceid=#{processinstanceid:VARCHAR}
+		modimemo = #{modimemo:VARCHAR}
 		where quotaid = #{quotaid}
 	</update>
 
@@ -182,8 +178,7 @@
 		memo,
 		modiuser,
 		moditimestamp,
-		modimemo,
-		processinstanceid
+		modimemo
 		from h_o_quota
 		where
 		quotaid=#{quotaid}
@@ -200,11 +195,8 @@
 		memo,
 		modiuser,
 		moditimestamp,
-		modimemo,
-		processinstanceid
+		modimemo
 		from h_o_quota
-		where
-		processinstanceid=#{processinstanceid}
 	</select>
 
 	<select id="getQuotaByPostIdAndBudgettype" parameterType="String" resultType="com.mk.quota.entity.Quota">
