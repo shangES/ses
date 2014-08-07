@@ -148,6 +148,9 @@ function hiddenInfo(){
 					<a href="http://125.210.208.60:9080/bookweb/book/home.do" style="color:#fff;"><img src="skins/images/weather_sun.png"/>阳光书屋</a>
 					&nbsp;
 					&nbsp; -->
+					<a href="#" style="color:#fff;"><img src="skins/images/group.png"/>我的工作</a>
+					&nbsp;
+					&nbsp;
 					<a href="address.do" style="color:#fff;"><img src="skins/images/group.png"/>通讯录</a>
 					&nbsp;
 					&nbsp;
