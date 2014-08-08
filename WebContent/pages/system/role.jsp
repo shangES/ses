@@ -8,8 +8,8 @@
 <meta http-equiv="cache-control" content="no-cache"/>
 <meta http-equiv="expires" content="0"/>    
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<link rel="stylesheet" type="text/css" href="skins/css/style.css"/>
-<link rel="stylesheet" type="text/css" href="skins/css/form.css"/>
+<link rel="stylesheet" href="skins/css/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="skins/css/form.css" type="text/css" media="all" />
 <link rel="stylesheet" type="text/css" href="skins/css/jquery-ui-1.8.15.custom.css"/>
 <link rel="stylesheet" type="text/css" href="plugin/tree/zTreeStyle.css"/>
 <link rel="stylesheet" type="text/css" href="plugin/tree/zTreeIcons.css"/>
@@ -23,10 +23,10 @@
 
 
 <script type="text/javascript" src="skins/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="skins/js/jquery.json-2.2.min.js"></script>
 <script type="text/javascript" src="skins/js/public.js"></script>
 <script type="text/javascript" src="skins/js/jquery.layout.js"></script>
 <script type="text/javascript" src="skins/js/jquery-ui-1.8.5.custom.min.js"></script>
-<script type="text/javascript" src="skins/js/jquery.json-2.2.min.js"></script>
 <script type="text/javascript" src="plugin/tree/jquery.ztree.all.min.js"></script>
 <script type="text/javascript" src="plugin/form/jquery.form.js"></script>
 <script type="text/javascript" src="plugin/form/jquery.validate.js"></script>
@@ -37,11 +37,9 @@
 <script type="text/javascript" src="plugin/grid/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="plugin/grid/gt_grid_all.js"></script>
 <script type="text/javascript" src="plugin/grid/gt_msg_cn.js"></script>
-
-<script type="text/javascript" src="pages/tree.js"></script>
-<script type="text/javascript" src="pages/bpmn/workflow.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	
 	//tab页
 	loadTab();
 	
@@ -50,11 +48,11 @@ $(document).ready(function() {
         west: {size:"300",resizable:false,spacing_open:0,spacing_closed:0}
     });
 	
-    
- 	loadGrid();
+ 	
   	//加载树
  	buildRoleTree();
   	
+	loadGrid();
   	
     //加载表单验证
     $("#myForm").validate();
@@ -118,8 +116,9 @@ var zTree;
 var selectNode=null;
 function buildRoleTree(){
 	var setting = {callback:{beforeClick: function(treeId, treeNode){
-		$("#myForm").clearForm();
+		//$("#gridbox").empty();
 		selectNode=treeNode;
+		mygrid.reload();
 		formDisabled(true);
 		//出现按钮组一
 		$('#b1').show();
@@ -137,7 +136,6 @@ function buildRoleTree(){
 			//取数据
 			loadData(treeNode.id);
 		}
-		mygrid.reload();
 	}},
 	view: {
 		fontCss: getDeptFontCss
@@ -301,18 +299,19 @@ var pam=null;
 function initPagePam(){
 	pam={};
 	pam.expAll=0;
-	
 	pam.roleid = $("#roleid").val();
-	
-	
+	if(selectNode!=null){
+		pam.roleid=selectNode.id;
+	}
 }
 </script>
 
 <script type="text/javascript">	
 var mygrid=null;
 function loadGrid(){
-	//var size=14;
 	var size=getGridSize();
+	var wh=$(document.body).outerWidth()-360;
+	$("#myTable").css({width:wh,height:495});
 	var grid_demo_id = "myGrid1";
 	var dsOption= {
 			fields :[
@@ -331,12 +330,12 @@ function loadGrid(){
 				{name : 'postname'},
 				{name : 'username'},
 				{name : 'rolename'},
-				{name : 'jobnumber'}
+				{name : 'jobnumber'},
+				{name : 'dorder'}
 			]
 		};
 		var colsOption = [
-			{id: '选择' ,isCheckColumn : true, editable:false,headAlign:'center',align:'center'},              
-			{id: 'companyname' , header: "公司名称" , width :250 ,headAlign:'center',align:'left'},              
+			{id: '选择' ,isCheckColumn : true, editable:false,headAlign:'center',align:'center',filterable:false},
 			{id: 'companyname' , header: "公司名称" , width :250 ,headAlign:'center',align:'left'},
 			{id: 'deptname' , header: "部门名称" , width :120 ,headAlign:'center',align:'left'},
 			{id: 'postname' , header: "岗位名称" , width :120 ,headAlign:'center',align:'left'},
@@ -353,41 +352,20 @@ function loadGrid(){
 			initPagePam();
 			reqParam['parameters']=pam;
 		},
-		exportURL : 'quota/searchQuota.do?export=true',
-		beforeExport:function(){
-			initPagePam();
-			pam.expAll=$('input[name="xls"]:checked').val();
-			mygrid.parameters=pam;
-		},
-		exportFileName : '编制信息表.xls',
-		width:'99.8%',
-		minHeight:"300",  //"100%", // 330,
+		width:'100%',
+		minHeight:"100%",  //"100%", // 330,
 		container : 'gridbox', 
-		pageSizeList : [size,size*2,size*4,size*6,size*8,size*10],
-		autoLoad:true,
+		autoLoad:false,
 		stripeRows: false,
-		remoteFilter:true,
 		showIndexColumn:true,
 		selectRowByCheck:true,
 		replaceContainer : true,
 		dataset : dsOption ,
 		columns : colsOption,
 		toolbarContent : 'nav | pagesize  state',
+		pageSizeList : [size,size*2,size*4,size*6,size*8,size*10],
 		pageSize:size,
 		skin:getGridSkin(),
-		loadResponseHandler:function(response,requestParameter){
-			var obj = jQuery.parseJSON(response.text);
-			var page=obj.pageInfo;
-			var hg=(page.pageSize+1)*33+50;
-			
-			mygrid.setSize('99.9%',hg);
-			pageResize(hg);
-		},
-		onDblClickCell:function(value, record , cell, row, colNO, rowNO,columnObj,grid){
-			if(colNO!=0){
-				convertView('quota.do?page=tab&id='+record.quotaid+'&taskid='+record.taskid);
-			}
-		}
 	};
 	mygrid=new Sigma.Grid( gridOption );
 	Sigma.Util.onLoad( Sigma.Grid.render(mygrid) );
@@ -625,42 +603,21 @@ function callbackpost(){
 						<ul id="tree" class="ztree"></ul>
 					</div>
 				</div>
-				<div class="ui-layout-center" style="overflow:hidden;">
+				<div class="ui-layout-center">
 					<div id="mytab">
 						<ul>
-							<li><a href="#tab0">基本信息</a></li>
+							<li><a href="#tab0">用户列表</a></li>
 							<li><a href="#tab1">菜单授权</a></li>
 							<li><a href="#tab2">用户授权</a></li>
 							<li><a href="#tab3">用户授权新实现</a></li>
-							<li><a href="#tab4">用户列表</a></li>
+							<li><a href="#tab4">基本信息</a></li>
 						</ul>
 						<div id="tab0">
-							<form action="system/saveOrUpdateRole.do" method="post" id="myForm" class="form">
-								<input id="roleid" name="roleid" type="hidden" value=""/>
-								<input id="state" name="state" type="hidden" value="1"/>
-								
-								<fieldset>
-									<legend>基本信息</legend>
-									<ul>
-										<li>
-										    <span><em class="red">* </em>排序号：</span>
-										    <input id="dorder" name="dorder" class="{required:true,number:true} inputstyle"/>
-										</li>
-									</ul>
-									<ul>
-										<li>
-										    <span><em class="red">* </em>角色名称：</span>
-										    <input id="rolename" name="rolename" class="{required:true,maxlength:20} inputstyle"/>
-										</li>
-									</ul>
-									<ul>
-						                <li>
-						                    <span>描述：</span>
-						                    <textarea id="description" name="description"  rows="3" cols="40" class="{maxlength:500} areastyle"></textarea>
-						                </li>
-						            </ul>
-						   		</fieldset>
-					       </form>
+							<div style="padding-top:5px;">
+								<div id="myTable" style="margin:0px auto;">
+									<div id="gridbox" ></div>
+				                </div>
+			                </div>
 						</div>
 						<div id="tab1" style="display:none;overflow:auto;height:508px;"> 
 							<ul id="funTree" class="ztree"></ul>
@@ -669,7 +626,7 @@ function callbackpost(){
 							<ul id="userTree" class="ztree"></ul>
 						</div>
 						<div id="tab3" style="display:none;overflow:auto;height:508px;" class="table-wrapper">
-							<form action="quota/saveOrUpdateQuota.do" method="post" id="myForm" class="form">
+							<form action="quota/saveOrUpdateQuota.do" method="post" id="myForm1" class="form">
 								<input id="quotaid" name="quotaid" type="hidden" value="" />
 								<input id="quotacode" name="quotacode" type="hidden" value="" />
 								<input id="state" name="state" type="hidden" value="1" />
@@ -703,8 +660,33 @@ function callbackpost(){
 								</ul>
   							</form>
 						</div>
-						<div id="tab4" class="ui-layout-center" style="display:none;overflow:auto;height:508px;"> 
-							<div id="gridbox"></div>
+						<div id="tab4">
+							<form action="system/saveOrUpdateRole.do" method="post" id="myForm" class="form">
+								<input id="roleid" name="roleid" type="hidden" value=""/>
+								<input id="state" name="state" type="hidden" value="1"/>
+								
+								<fieldset>
+									<legend>基本信息</legend>
+									<ul>
+										<li>
+										    <span><em class="red">* </em>排序号：</span>
+										    <input id="dorder" name="dorder" class="{required:true,number:true} inputstyle"/>
+										</li>
+									</ul>
+									<ul>
+										<li>
+										    <span><em class="red">* </em>角色名称：</span>
+										    <input id="rolename" name="rolename" class="{required:true,maxlength:20} inputstyle"/>
+										</li>
+									</ul>
+									<ul>
+						                <li>
+						                    <span>描述：</span>
+						                    <textarea id="description" name="description"  rows="3" cols="40" class="{maxlength:500} areastyle"></textarea>
+						                </li>
+						            </ul>
+						   		</fieldset>
+					       </form>
 						</div>
 					</div>
 				</div>
