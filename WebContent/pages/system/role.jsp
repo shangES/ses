@@ -40,7 +40,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	//tab页
 	loadTab();
 	
 	//加载布局
@@ -51,25 +50,28 @@ $(document).ready(function() {
  	
   	//加载树
  	buildRoleTree();
-  	
+	//tab页
+	
 	loadGrid();
   	
     //加载表单验证
     $("#myForm").validate();
     $('#myForm').ajaxForm(function(data) {
         //节点处理
-    	var nameValue=data.rolename;
+   	var nameValue=data.rolename;
     	
-    	if(add){//新增
-    		if(selectNode!=null&&selectNode.id!=null)
-    			selectNode=selectNode.getParentNode();
+   	if(add){//新增
+   		if(selectNode!=null&&selectNode.id!=null)
+  			{selectNode=selectNode.getParentNode();
     		var newNode = {id:data.roleid, name:nameValue,iconSkin:'role'};
        		zTree.addNodes(selectNode, newNode);
-        }else{
-        	selectNode.name = nameValue;
-   			zTree.updateNode(selectNode);
-   			zTree.selectNode(selectNode);
-        }
+      		}else {
+   		}
+    }else{
+       	selectNode.name = nameValue;
+		zTree.updateNode(selectNode);
+		zTree.selectNode(selectNode);
+   	}
     	add=false;
     	//不可编辑
     	formDisabled(true);
@@ -86,26 +88,6 @@ $(document).ready(function() {
 
 
 
-//tab页
-var tabIndex=0;
-function loadTab(){
-	$("#mytab").tabs({
-    	select: function(event, ui) {
-    		tabIndex=ui.index;
-    		$(".gruop_hidden").hide();
-    		$("#group"+tabIndex).show();
-    		$("#tab"+tabIndex).show();
-    		
-
-    		//刷新关系
-    		if(tabIndex==1){
-    			buildFunctionTree();
-    		}else if(tabIndex==2){
-    			buildUserTree();
-    		}
-    	}
-    });
-}
 
 
 
@@ -116,37 +98,57 @@ var zTree;
 var selectNode=null;
 function buildRoleTree(){
 	var setting = {callback:{beforeClick: function(treeId, treeNode){
-		//$("#gridbox").empty();
 		selectNode=treeNode;
 		mygrid.reload();
 		formDisabled(true);
-		//出现按钮组一
-		$('#b1').show();
-		$('#b2').hide();
-		//控制新增编辑
-		if(treeNode.id==null){
-			$('#new').show();
-			$('#edit').hide();
-			$('#del').hide();
-		}else{
-			$('#edit').show();
-			$('#new').show();
-			$('#del').show();
-
-			//取数据
-			loadData(treeNode.id);
-		}
+		loadData(selectNode.id);
 	}},
 	view: {
 		fontCss: getDeptFontCss
 	}
 	};
 	$.getJSON("system/buildRoleTree.do",function(tdata) {
+
 		zTree = $.fn.zTree.init($("#tree"),setting, tdata);
 		
 		//邦定定位事件
     	$("#myMarker").bind("keyup",markTreeNode);
     	$("#myMarker").bind("blur",markSelectTreeNode);
+    });
+}
+
+//tab页
+var tabIndex=0;
+function loadTab(){
+	$("#mytab").tabs({
+    	select: function(event, ui) {
+    		tabIndex=ui.index;
+    		$(".gruop_hidden").hide();
+    		$("#group"+tabIndex).show();
+    		$("#tab"+tabIndex).show();
+    		
+    		//刷新关系
+    		if(tabIndex==0){
+    			if(selectNode==null){
+	    			loadData(null);
+	    		}
+	    		else {
+	    			loadData(selectNode.id);
+	    		}
+    		}else if(tabIndex==1){
+    			buildFunctionTree();
+    		}else if(tabIndex==2){
+    			buildUserTree();
+    		}else if(tabIndex==4){
+	    		if(selectNode==null){
+	    			loadData(null);
+	    		}
+	    		else {
+	    			loadData(selectNode.id);
+	    		}
+    		}
+    	
+    	}
     });
 }
 
@@ -201,7 +203,7 @@ function getDeptFontCss(treeId, treeNode) {
 function loadData(tid) {
 	$("#myForm").clearForm();
 	if(tid!=null&&tid!=''&&tid!='null')
-		$.getJSON("system/getRoleById.do", {id:tid}, function(data) {
+		{$.getJSON("system/getRoleById.do", {id:tid}, function(data) {
 			for (var key in data) {
 		        var el = $('#' + key);
 		        if(el) 
@@ -210,12 +212,58 @@ function loadData(tid) {
 			
 			
     		//刷新关系
-    		if(tabIndex==1){
+    		if(tabIndex==0){
+				//出现按钮组一
+    			
+    			$('#b1_Role').show();
+    			$('#b2_Role').hide();
+    			//控制新增编辑
+    			
+   				$('#edit_role').show();
+   				$('#del_role').show();
+    		}else if(tabIndex==1){
     			buildFunctionTree();
     		}else if(tabIndex==2){
     			buildUserTree();
+    		}else if(tabIndex==4){
+    			//出现按钮组一
+    			alert("SSSS");
+    			
+    			$('#b1').show();
+    			$('#b2').hide();
+    			//控制新增编辑
+    			
+   				$('#edit').show();
+   				$('#new').show();
+   				$('#del').show();
+    		 
     		}
-		});
+		})}else {
+			if(tabIndex==0){
+				//出现按钮组一
+    			
+    			$('#b1_Role').show();
+    			$('#b2_Role').hide();
+    			//控制新增编辑
+    			
+   				$('#edit_role').show();
+   				$('#del_role').show();
+    		}else if(tabIndex==1){
+				$("#funTree").html(null);
+    			return;
+    		}else if(tabIndex==2){
+    			$("#userTree").html(null);
+    			return;
+    		}else if(tabIndex==4){
+    			$('#b1').show();
+    			$('#b2').hide();
+   				$('#new').show();
+   				$('#edit').hide();
+   				$('#del').hide();
+    		 
+    		}
+		};
+	
 }
 
 
@@ -227,6 +275,10 @@ function loadData(tid) {
 //新增
 var add=false;
 function addNode(){
+	if(selectNode==null){
+		alert("请先选择节点");
+		return;
+	}
 	$('#b1').hide();
 	$('#b2').show();
 	$("#myForm").clearForm();
@@ -246,8 +298,72 @@ function editNode(){
 	formDisabled(false);
 }
 
+function editRoleNode(){
+	$('#b1_Role').hide();
+	$('#b2_Role').show();
+	openRole(selectNode);
+	formDisabled(false);
+}
 
-
+//岗位授权
+var roleTree;
+function openRole(userguid){
+	$("#roleAudit").dialog({
+		autoOpen: true,
+		modal: true,
+		model:true,
+		resizable:false,
+		width:400,
+		height:500,
+		buttons: {
+			"确定": function() {
+				var nodes=roleTree.getCheckedNodes(true);
+				var array=new Array();
+				for(var i=0;i<nodes.length;i++){
+					var node=nodes[i];
+					if(node.id!=null&&node.id!=''){
+						
+						var obj={};
+						obj.roleid=node.id
+						obj.userguid=userguid;
+						array.push(obj);
+					}
+				}
+				
+				//参数
+				var data={userguid:userguid,list:array};
+				$.ajax({  
+			        url: "system/saveUserRole.do",  
+			        contentType: "application/json; charset=utf-8",  
+			        type: "POST",  
+			        dataType: "json",  
+			        data: JSON.stringify(data),
+			        success: function(result) { 
+			        	alert('授权成功！');
+			        	$("#roleAudit").dialog("close");
+			        	mygrid.reload();
+			        }
+			    });
+			},
+			"取消": function() {
+				$(this).dialog("close");
+			}
+		},
+		close: function() {
+			
+		},
+		open:function(){
+			$("#roleTree").html(null);
+		    $.getJSON("system/buildRoleCheckTree.do",{userguid:userguid}, function(tdata) {
+		    	//配置项
+		    	var setting = {check: {
+					enable: true
+				}};
+		    	roleTree = $.fn.zTree.init($("#roleTree"),setting, tdata);
+		    });
+		}
+	});
+}
 
 //保存
 function save(){
@@ -384,9 +500,9 @@ function pageResize(height){
 var funTree;
 function buildFunctionTree(){
 	var roleid= $("#roleid").val();
-	if(roleid==null||roleid=='')
+	if(roleid==null||roleid==''){
 		return;
-	
+	}
 	$("#funTree").html(null);
     $.getJSON("system/buildRoleRightTree.do",{roleid:roleid}, function(tdata) {
     	//配置项
@@ -568,6 +684,24 @@ function callbackpost(){
 				</div>
 				<div class="table-ctrl">
 					<span id="group0" class="gruop_hidden">
+					   	<span id="b1_Role" style="display:none;">
+							<a id="edit_role" class="btn" href="javascript:editRoleNode();" style="display:none;"><i class="icon icon-pencil"></i><span>修改</span></a>
+							<a id="del_role"  class="btn"  href="javascript:delRoleNode();" style="display:none;"><i class="icon icon-trash"></i><span>删除</span></a>
+				   		</span>
+				   		<span id="b2_Role" style="display:none;">
+							<a class="btn"  href="javascript:saveRole();"><i class="icon icon-check"></i><span>保存</span></a>
+							<a class="btn"  href="javascript:onCancelRole();"><i class="icon icon-share"></i><span>取消</span></a>
+				   		</span>
+				   		
+				   	</span>
+				   	<span id="group1" class="gruop_hidden" style="display:none;">
+				   		<a class="btn"  href="javascript:savePostFunction();"><i class="icon icon-check"></i><span>保存</span></a>
+				   	</span>
+				   	
+				   	<span id="group2" class="gruop_hidden" style="display:none;">
+						<a class="btn"  href="javascript:saveRoleUser();"><i class="icon icon-check"></i><span>保存</span></a>
+				   	</span>
+					<span id="group4" class="gruop_hidden">
 					   	<span id="b1" style="display:none;">
 							<a id="new" class="btn" href="javascript:addNode();" style="display:none;"><i class="icon icon-plus"></i><span>新增</span></a>
 							<a id="edit" class="btn" href="javascript:editNode();" style="display:none;"><i class="icon icon-pencil"></i><span>修改</span></a>
@@ -578,13 +712,6 @@ function callbackpost(){
 							<a class="btn"  href="javascript:onCancel();"><i class="icon icon-share"></i><span>取消</span></a>
 				   		</span>
 				   		
-				   	</span>
-				   	<span id="group1" class="gruop_hidden" style="display:none;">
-				   		<a class="btn"  href="javascript:savePostFunction();"><i class="icon icon-check"></i><span>保存</span></a>
-				   	</span>
-				   	
-				   	<span id="group2" class="gruop_hidden" style="display:none;">
-						<a class="btn"  href="javascript:saveRoleUser();"><i class="icon icon-check"></i><span>保存</span></a>
 				   	</span>
 				</div>
 			</div>
@@ -695,7 +822,9 @@ function callbackpost(){
 		</div>
 	</div>
 </div>
-
+<div id="roleAudit" style="display:none;" title="岗位授权" >
+<ul id="roleTree" class="ztree"></ul>
+</div>
 
 </body>
 </html>

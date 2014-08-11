@@ -66,8 +66,10 @@ public class RoleService {
 		SystemDao mapper = sqlSession.getMapper(SystemDao.class);
 		if (StringUtils.isEmpty(model.getRoleid())) {
 			model.setRoleid(UUIDGenerator.randomUUID());
+			model.setState(1);
 			mapper.insertRole(model);
 		} else {
+			model.setState(2);
 			mapper.updateRole(model);
 		}
 	}
