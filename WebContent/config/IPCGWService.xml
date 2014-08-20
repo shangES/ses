@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE GatewayClientService SYSTEM "IPCGWService.dtd">
+<GatewayClientService id="gatewayClientService"
+		conNum="1" retryTime="1000" socketTimeout="10000" maxHandlers="10" 
+		handlerClass="icbc.cmis.service.channel.ipcgw.IPCGWHandler"
+		receiverClass="icbc.cmis.service.channel.ipcgw.IPCGWReceiver"
+		senderClass="icbc.cmis.service.channel.ipcgw.IPCGWSender">
+		<host value="122.136.14.71:9998"/>
+		<Receiver name="receiver" checkTime="60000"/>
+		<Sender name="sender"/> 
+</GatewayClientService> 
+

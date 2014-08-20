@@ -3,8 +3,11 @@ package com.mk.system.service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -298,6 +301,24 @@ public class UserService implements org.springframework.security.core.userdetail
 		mapper.delUserRoleByUserId(userguid);
 		mapper.delUserByUserId(userguid);
 	}
+	/**
+	 * 删除用户角色
+	 * 
+	 * @param userguid
+	 */
+	@Transactional
+	public void delUserRoleByUserId(UserRolePam data) {
+		SystemDao mapper = sqlSession.getMapper(SystemDao.class);
+		String ids = data.getIds();
+		String roleid = data.getRoleid();
+		String[] obj = ids.split(",");
+		for (String userguid : obj) {
+			UserRole model = new UserRole();
+			model.setUserguid(userguid);
+			model.setRoleid(roleid);
+			mapper.delUserRoleByUserRole(model);
+		}
+	}
 
 	/**
 	 * 有效无效
@@ -351,7 +372,58 @@ public class UserService implements org.springframework.security.core.userdetail
 				mapper.insertUserRole(model);
 			}
 	}
+	/**
+	 * 保存赋权
+	 * 
+	 * @param data
+	 */
+	@Transactional
+	public void saveUserRoleBatch(UserRolePam data) {
+		SystemDao mapper = sqlSession.getMapper(SystemDao.class);
+		
+		String ids = data.getIds();
+		String[] obj = ids.split(",");
+		for (String id : obj) {
+			mapper.delUserRoleByUserId(id);
+		}
+		
+		//mapper.delUserRoleByUserId(data.getIds());
 
+		List<UserRole> list = data.getList();
+		String[] userGuid = list.get(0).getUserguid().split(",");
+		List userGuid1 = new ArrayList();
+		String userGuid3 = null;
+		int k = userGuid.length;
+		if (list != null && !list.isEmpty()){
+			Set set=new HashSet();
+			for(int i=0;i<k;i++){
+				set.add(userGuid[i]);
+			}
+			//获得迭代器  
+		    Iterator it=set.iterator();  
+			   //判断是否还有元素可以迭代  
+		    while(it.hasNext())  
+		    {  
+		    //返回迭代的下一个元素。   
+		    	userGuid3=it.next().toString(); 
+		    	userGuid1.add(userGuid3);
+		    } 
+		    int l = userGuid1.size();
+		    //String m = list.get(0).getRoleid();
+		    for(int i=0;i<l;i++){
+		    	//for(int j=0;j<list.get(0).)
+		    	for(int j=0;j<list.size();j++){
+		    		UserRole model = new UserRole();
+		    		model.setRoleid(list.get(j).getRoleid());
+		    		model.setUserguid(userGuid1.get(i).toString());
+		    		mapper.insertUserRole(model);
+		    	}
+		    }
+		   
+			/*for (UserRole model : list) {
+			}*/
+		}
+	}
 	// ================用户对公司赋权===================
 	/**
 	 * 用户对公司树
@@ -528,4 +600,5 @@ public class UserService implements org.springframework.security.core.userdetail
 			}
 		}
 	}
+
 }

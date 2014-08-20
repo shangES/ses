@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="GB2312"?>
+
+<dsefmts.XML>
+<!--
+	<kColl id="linkFiles">
+		<field fileName="..." type="entity" />
+	</kColl>
+	-->
+	<fmtDef id="transferSendFmt">
+		<record>
+			<constant value="TXAX"/>
+			<fHostString dataName="acctFrom"/>
+			<delim delimChar="#"/>
+			<fHostString dataName="acctTo"/>
+			<delim delimChar="#"/>
+			<fHostString dataName="BranchId"/>
+			<delim delimChar="#"/>
+			<!--fDate       dataName=OpnDate-->
+			<fHostDecor/>
+			<delim delimChar="#"/>
+			<fFloat dataName="amount"/>
+			<fHostDecor/>
+			<delim delimChar="#"/>
+			<fHostDecor/>
+			<delim delimChar="#"/>
+		</record>
+	</fmtDef>
+	
+	<fmtDef id="transferRecvFmt">
+		<record>
+			<fString dataName="TrxReplyCode"/>
+			<delim delimChar="#"/>
+			<fString dataName="TrxErrorMessage"/>
+			<delim delimChar="#"/>
+			<fString dataName="acctFromBalance"/>
+			<delim delimChar="#"/>
+			<delim delimChar="|"/>
+			<fString dataName="acctToBalance"/>
+			<delim delimChar="#"/>
+		</record>
+	</fmtDef>
+	
+	<!-- this format is defined for testing xml format                                 -->
+	<fmtDef id="test1">
+		<record>
+			<fString dataName="TrxReplyCode"/>
+			<delim delimChar="#"/>
+			<fString dataName="TrxErrorMessage"/>
+			<delim delimChar="#"/>
+			<fString dataName="acctFromBalance"/>
+			<delim delimChar="#"/>
+			 <iColl dataName="ic" times="*">
+       			       <record dataName="ik">
+					<fString dataName="p1"/>
+					<delim delimChar="#"/>
+					<fString dataName="p2"/>
+					<delim delimChar="#"/>
+			       </record>
+			</iColl>
+			<delim delimChar="|"/>
+			<fString dataName="acctToBalance"/>
+			<delim delimChar="#"/>
+		</record>
+	</fmtDef>
+	<fmtDef id="test2">
+		<record>
+			<xmlHead version = "1.0" encoding = "GB2312" standalone="no"/>
+			<xmlTag tagName="eb"/>
+			<xmlTag tagName="pub"/>
+			<xmlFullTag tagName="tc" dataName="tranCode"/>
+			<xmlFullTag tagName="zn" dataName="Area_code"/>
+			<xmlConstantTag tagName="fr" value="1"/>
+			<xmlConstantTag tagName="dt" value="Date" format="yyyy-MM-dd"/>
+			<xmlTag tagName="tm"/>
+				<xmlConstantTag tagName="ws" value="Time" format="HHmmss"/>
+			<xmlEndTag tagName="tm"/>
+			<xmlEndTag tagName="pub"/>
+			<xmlTag tagName="in"/>
+				<xmlFullTag tagName="itm" dataName="cardNum"/>
+				<xmlFullTag tagName="itm" dataName="acctCode"/>
+				<xmlFullTag tagName="itm" dataName="dpstNum"/>
+				<xmlFullTag tagName="itm" dataName="closeDate"/>
+				<xmlTag tagName="itm"/>
+	       			  <iColl dataName="testIC" times="*">
+	       			       <record dataName="testIK">
+						<xmlTag tagName="rd"/>
+						     <xmlFullTag tagName="f" dataName="param1"/>
+						     <xmlFullTag tagName="f" dataName="param2"/>
+						<xmlEndTag tagName="rd"/>
+				       </record>
+				  </iColl>
+			        <xmlEndTag tagName="itm"/>
+				<xmlFullTag tagName="itm" dataName="dpstNum"/>
+				<xmlFullTag tagName="itm" dataName="closeDate"/>
+			<xmlEndTag tagName="in"/>
+			<xmlEndTag tagName="eb"/>
+		</record>
+	</fmtDef>
+	<!-- 日志内容格式处理                                 -->
+	<fmtDef id="journalFmt">
+		<record>
+			<delim delimChar="userId="/>
+			<fString dataName="userId"/>
+			<delim delimChar="|tranDate="/>
+			<fString dataName="tranDate"/>
+			<delim delimChar="|areaCode="/>
+			<fString dataName="areaCode"/>
+			<delim delimChar="|netTerminal="/>
+			<fString dataName="netTerminal"/>
+		</record>
+	</fmtDef>
+	<!--Session 数据保存格式-->
+	<fmtDef id="SessionDataFmt">
+		<record>
+			<fString dataName="SessionId"/>
+			<delim delimChar="#"/>
+			<fString dataName="netType"/>
+			<delim delimChar="#"/>
+			<fString dataName="CoID"/>
+			<delim delimChar="#"/>
+			<fString dataName="CoName"/>
+			<delim delimChar="#"/>
+		</record>
+	</fmtDef>
+	
+	<!--格式化数据的样式-->
+	<fmtDef id="showFmt">
+		<record>
+			<fString dataName="data1"/>
+			<delim delimChar="#"/>
+			<fString dataName="data2"/>
+			<delim delimChar="#"/>
+			<fString dataName="data3"/>
+			<delim delimChar="#"/>
+		</record>
+	</fmtDef>
+	
+	<!--权限定制格式化-->
+	<fmtDef id="entityFmt">
+		<record>
+			<fString dataName="addFlag"/>
+			<delim delimChar="|"/>
+			<fString dataName="delFlag"/>
+			<delim delimChar="|"/>
+			 <iColl dataName="entityInfoIcoll" times="*">
+       			       <record dataName="entityInfoKcoll">
+					<fString dataName="colName"/>
+					<delim delimChar="|"/>
+					<fString dataName="colType"/>
+					<delim delimChar="|"/>
+					<fString dataName="colProperty"/>
+					<delim delimChar="|"/>
+					<fString dataName="colPrivilege"/>
+					<delim delimChar="|"/>
+					<fString dataName="colOrder"/>
+					<delim delimChar="|"/>
+					<fString dataName="colShowOrder"/>
+					<delim delimChar="|"/>
+					<fString dataName="colDefault"/>
+					<delim delimChar="|"/>
+					<fString dataName="entityKeyRel"/>
+					<delim delimChar="|"/>
+					<iColl dataName="entityKVIcoll" times="*">
+       			       			<record dataName="entityKVIcoll">
+       			       				<fString dataName="colPK"/>
+							<delim delimChar="#"/>
+							<fString dataName="colKV"/>
+							<delim delimChar="#"/>
+       			       			</record>
+       			       		</iColl>
+       			       		<delim delimChar="|"/>
+			       </record>
+			</iColl>
+			<delim delimChar="%"/>
+			<fString dataName="drillEntity"/>
+			<delim delimChar="|"/>
+		</record>
+	</fmtDef>
+	
+	<fmtDef id="entityHDFmt">
+		<record>
+			 <iColl dataName="entityHDInfoIcoll" times="*">
+       			       <record dataName="entityHDInfoKcoll">
+					<fString dataName="entityName"/>
+					<delim delimChar="|"/>
+					<fString dataName="entityChoose"/>
+					<delim delimChar="|"/>
+			       </record>
+			</iColl>
+		</record>
+	</fmtDef>
+	
+	<fmtDef id="entityFilterFmt">
+		<record>
+			<fString dataName="filterList"/>
+			<delim delimChar="|"/>
+			<iColl dataName="drillIcoll" times="*">
+       			       <record dataName="drillKcoll">
+					<fString dataName="entityName"/>
+					<delim delimChar="#"/>
+					<fString dataName="entityFilter"/>
+					<delim delimChar="#"/>
+			       </record>
+			</iColl>
+			<delim delimChar="|"/>
+		</record>
+	</fmtDef>
+</dsefmts.XML>
+

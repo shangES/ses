@@ -49,6 +49,56 @@
 		h_o_post
 		<include refid="searchUserWhere" />
 	</select>
+	
+	<select id="countUserByRole" parameterType="String" resultType="int">
+		select count(1) from t_sysuser t,
+		h_e_employee a,
+		h_e_position b,
+		h_o_company,
+		h_o_department,
+		h_o_post,
+		t_userrole,
+		t_role
+		<where>
+			t.employeeid = a.employeeid
+			and t.userguid = t_userrole.userguid
+			and t_userrole.roleid = t_role.roleid
+			and a.employeeid = b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and t.isadmin=0
+			and
+			t.state=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND a.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+			<if test="parameters.jobnumber!=null and parameters.jobnumber!=''">
+				AND a.jobnumber like CONCAT('%',CONCAT(#{parameters.jobnumber},'%'))
+			</if>
+
+			<if test="parameters.roleid!=null and parameters.roleid!=''">
+				and t_role.roleid=#{parameters.roleid}
+			</if>
+			<if test="parameters.companyid!=null and parameters.companyid!=''">
+				and b.companyid=#{parameters.companyid}
+			</if>
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+			<if test="parameters.postid!=null and parameters.postid!=''">
+				and b.postid=#{parameters.postid}
+			</if>
+		</where>
+	</select>
 
 	<select id="searchUser" parameterType="String" resultType="com.mk.system.entity.User">
 		<if test="parameters.expAll==0">
@@ -90,7 +140,86 @@
 		]]>
 		</if>
 	</select>
+	
+	<select id="searchUserByRole" parameterType="String" resultType="com.mk.system.entity.User">
+		<if test="parameters.expAll==0">
+			SELECT ROWALL.*,ROWNUM FROM
+			(SELECT ROW_.*, ROWNUM AS NUM_ FROM (
+		</if>
 
+		select h_o_company.companyname,
+		h_o_department.deptname,
+		h_o_post.postname,
+		a.name as username,
+		a.jobnumber,
+		t.userguid,
+		t.employeeid,
+		t.loginname,
+		t.password,
+		t.isadmin,
+		t.state,
+		t.memo,
+		t.modiuser,
+		t.moditimestamp,
+		t.modimemo
+		from t_sysuser t,
+		h_e_employee a,
+		h_e_position b,
+		h_o_company,
+		h_o_department,
+		h_o_post,
+		t_userrole,
+		t_role
+		<where>
+			t.employeeid = a.employeeid
+			and t.userguid = t_userrole.userguid
+			and t_userrole.roleid = t_role.roleid
+			and a.employeeid = b.employeeid
+			and b.companyid = h_o_company.companyid(+)
+			and b.deptid = h_o_department.deptid(+)
+			and b.postid = h_o_post.postid(+)
+			and t.isadmin=0
+			and
+			t.state=1
+			<if test="parameters.name!=null and parameters.name!=''">
+				AND a.name like CONCAT('%',CONCAT(#{parameters.name},'%'))
+			</if>
+			<if test="parameters.jobnumber!=null and parameters.jobnumber!=''">
+				AND a.jobnumber like CONCAT('%',CONCAT(#{parameters.jobnumber},'%'))
+			</if>
+
+			<if test="parameters.roleid!=null and parameters.roleid!=''">
+				and t_role.roleid=#{parameters.roleid}
+			</if>
+			<if test="parameters.companyid!=null and parameters.companyid!=''">
+				and b.companyid=#{parameters.companyid}
+			</if>
+			<if test="parameters.companyid==null or parameters.companyid==''">
+				<if test="parameters.admin==false">
+					and b.companyid in (
+					select companyid from t_h_usermanagerange where userguid = #{parameters.userguid}
+					)
+				</if>
+			</if>
+
+			<if test="parameters.deptid!=null and parameters.deptid!=''">
+				and b.deptid=#{parameters.deptid}
+			</if>
+			<if test="parameters.postid!=null and parameters.postid!=''">
+				and b.postid=#{parameters.postid}
+			</if>
+		</where>
+		order by h_o_company.companycode,
+		h_o_department.deptcode,
+		a.dorder
+
+		<if test="parameters.expAll==0">
+		<![CDATA[
+			)ROW_ WHERE ROWNUM <=#{pageInfo.endRowNum}) ROWALL
+			WHERE NUM_ >#{pageInfo.startRowNum}
+		]]>
+		</if>
+	</select>
 
 	<select id="getAllUser" parameterType="String" resultType="com.mk.system.entity.User">
 		select userguid,

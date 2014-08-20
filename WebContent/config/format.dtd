@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding = "GB2312" ?>
+
+<!ELEMENT FormatDef (Format*)>
+
+<!ELEMENT Format ( RecordFormat*)>
+<!ATTLIST Format
+	id CDATA #REQUIRED
+	>
+
+<!ELEMENT RecordFormat ( XMLHeadTagFormat?, (XMLTagFormat|XMLConstantTagFormat|XMLFullTagFormat|XMLEndTagFormat|IndexedCollectionFormat)*)>
+<!ATTLIST RecordFormat
+	dataName CDATA #IMPLIED
+	>
+
+<!ELEMENT XMLHeadTagFormat EMPTY>
+<!ATTLIST XMLHeadTagFormat
+	version CDATA #REQUIRED
+	encoding CDATA #REQUIRED
+	standalone CDATA #REQUIRED
+	>
+	
+<!ELEMENT XMLTagFormat EMPTY>
+<!ATTLIST XMLTagFormat
+	tagName CDATA #REQUIRED
+	>
+	
+<!ELEMENT IndexedCollectionFormat (RecordFormat)>
+<!ATTLIST IndexedCollectionFormat
+	dataName CDATA #REQUIRED
+	times CDATA #REQUIRED
+	>
+<!ELEMENT KeyedCollectionFormat (RecordFormat)>
+<!ATTLIST KeyedCollectionFormat
+	dataName CDATA #REQUIRED
+	>
+
+<!ELEMENT XMLConstantTagFormat EMPTY>
+<!ATTLIST XMLConstantTagFormat
+	tagName CDATA #REQUIRED
+	value CDATA #REQUIRED
+	format CDATA #IMPLIED
+	>
+
+<!ELEMENT XMLFullTagFormat EMPTY>
+<!ATTLIST XMLFullTagFormat
+	tagName CDATA #REQUIRED
+	dataName CDATA #REQUIRED
+	>
+
+<!ELEMENT XMLEndTagFormat EMPTY>
+<!ATTLIST XMLEndTagFormat
+	tagName CDATA #REQUIRED
+	>

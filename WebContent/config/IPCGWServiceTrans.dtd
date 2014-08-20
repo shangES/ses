@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT TRADES (TRADE*)>
+	<!ELEMENT TRADE (field*)>
+	<!ATTLIST TRADE id CDATA #REQUIRED>
+	<!ELEMENT field EMPTY>
+	<!ATTLIST field tagName CDATA #REQUIRED len CDATA #IMPLIED type CDATA #IMPLIED>

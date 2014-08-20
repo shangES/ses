@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding = "GB2312" ?>
+<!ELEMENT CTESettings (field*,DBUserVerifyPool,JDBCConnectionPool,ECCMQConnectionPool,Monitor,AppEntryPool,CM2002Service)>	
+
+<!ELEMENT field (#PCDATA)>
+<!ATTLIST field 
+	id CDATA #REQUIRED
+	value CDATA #REQUIRED
+	>
+
+<!ELEMENT DBUserVerifyPool (DBUsers+)>
+<!ELEMENT DBUsers (#PCDATA)>
+<!ATTLIST DBUsers
+	userID 	CDATA #REQUIRED
+	verify 	CDATA #REQUIRED
+	pool 	CDATA #REQUIRED
+	>
+
+	
+<!ELEMENT JDBCConnectionPool (WasJDBCConnectionPoolService?,JDBCConnectionPoolService?)>
+
+<!ELEMENT WasJDBCConnectionPoolService (JDBCResource+)>
+<!ELEMENT JDBCConnectionPoolService (JDBCResource+)>
+
+<!ELEMENT JDBCResource (#PCDATA)>
+<!ATTLIST JDBCResource
+	resourceID 	CDATA #REQUIRED
+	driverName 	CDATA #REQUIRED
+	dbURL 		CDATA #REQUIRED
+	maxConnection 	CDATA #REQUIRED
+	>
+
+<!ELEMENT ECCMQConnectionPool (QManager,MQResource*)>
+
+<!ELEMENT QManager (#PCDATA)>
+<!ATTLIST QManager
+	QMgrName 	CDATA #REQUIRED
+	channel 	CDATA #REQUIRED
+	hostName 	CDATA #REQUIRED
+	port 		CDATA #REQUIRED
+	charSet 	CDATA #REQUIRED
+	maxConnections 	CDATA #REQUIRED
+	>
+<!ELEMENT MQResource (#PCDATA)>
+<!ATTLIST MQResource
+	resourceID 		CDATA #REQUIRED
+	QMgrName 		CDATA #REQUIRED
+	sendToQ 		CDATA #REQUIRED
+	replyToQ 		CDATA #REQUIRED
+	PutMessageOptions 	CDATA #REQUIRED
+	getMessageOptions 	CDATA #REQUIRED
+	synchronousMode 	CDATA #REQUIRED
+	serverOrClient 		CDATA #REQUIRED
+	sendToQOpenOptions 	CDATA #REQUIRED
+	replyToQOpenOptions 	CDATA #REQUIRED
+	persistence 		CDATA #REQUIRED
+	timeout 		CDATA #REQUIRED
+	>
+<!ELEMENT Monitor (#PCDATA)>
+<!ATTLIST Monitor
+	listenPort 		CDATA #REQUIRED
+	checkInterval 		CDATA #REQUIRED
+	server 			CDATA #REQUIRED
+	retryInterval 		CDATA #REQUIRED
+	mgrName 		CDATA #REQUIRED
+	mgrPass 		CDATA #REQUIRED
+	serverStart 		CDATA #REQUIRED
+	>
+	
+<!ELEMENT AppEntryPool (Status,AppEntry*)>
+<!ELEMENT Status (#PCDATA)>
+<!ATTLIST Status 
+	enabled CDATA #REQUIRED
+	>
+
+<!ELEMENT AppEntry (#PCDATA)>
+<!ATTLIST AppEntry
+	sysCode 		CDATA #REQUIRED
+	url 		CDATA #REQUIRED
+	>
+<!ELEMENT CM2002Service (field*,CM2002MQService*) >
+    <!ATTLIST CM2002Service 
+                         enabled CDATA #REQUIRED>
+       <!ELEMENT CM2002MQService (QManager*,MQResource*)>
+       		<!ATTLIST CM2002MQService
+       					maxServiceThread CDATA #REQUIRED> 
+       					

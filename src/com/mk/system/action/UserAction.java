@@ -234,7 +234,31 @@ public class UserAction {
 	public void saveUserRole(@RequestBody UserRolePam data) throws Exception {
 		userService.saveUserRole(data);
 	}
-
+	
+	/**
+	 * 保存赋权
+	 * 
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping("/system/saveUserRoleBatch.do")
+	@ResponseBody
+	public void saveUserRoleBatch(@RequestBody UserRolePam data) throws Exception {
+		userService.saveUserRoleBatch(data);
+	}
+	
+	/**
+	 * 删除用户角色
+	 * 
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping("/system/delUserRoleByUserId.do")
+	@ResponseBody
+	public void delUserRoleByUserId(@RequestBody UserRolePam data) throws Exception {
+		userService.delUserRoleByUserId(data);
+	}
+	
 	// ==================用户对公司赋权===================
 
 	/**

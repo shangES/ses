@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE FormatDef SYSTEM "format.dtd">
+
+<FormatDef>
+ 
+  <!--合同列表查询接口-请求数据包格式需翻页-->
+<Format id="listContract_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37001"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>
+				<XMLFullTagFormat tagName="TP" dataName="TurnPage"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="EntrustClientCode"/><!--网银传入客户代码-->
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--合同列表查询接口-返回数据包格式翻页-->
+<Format id="listContract_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37001"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+          				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>				
+				<XMLTagFormat tagName="itm"/>
+					<IndexedCollectionFormat dataName="ContractList" times="*">
+						<RecordFormat dataName="kColl">
+							 <XMLTagFormat tagName="rd"/>
+							 	<XMLFullTagFormat tagName="f" dataName="LoanClientCode"/><!--借款人客户代码-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanClientName"/><!--借款人客户名称-->
+							 	<XMLFullTagFormat tagName="f" dataName="ContractCode"/><!--合同号-->
+							 	<XMLFullTagFormat tagName="f" dataName="ProtocolCode"/><!--委托协议号-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanAreaName"/><!--贷款业务所在行名称-->
+							 <XMLEndTagFormat tagName="rd"/>
+						</RecordFormat>
+					</IndexedCollectionFormat>
+				<XMLEndTagFormat tagName="itm"/>
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+
+<!--合同明细查询接口-请求数据包格式不翻页-->
+<Format id="queryContract_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37002"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="ContractCode"/><!--合同号-->
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+
+<!--合同明细查询接口-返回数据包格式不翻页-->
+<Format id="queryContract_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37002"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientName"/><!--借款人名称-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustAmount"/><!--申请委托金额-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustCurrency"/><!--委托币种-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanCurrency"/><!--贷款币种-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanYearRate"/><!--贷款年利率-->
+				<XMLFullTagFormat tagName="itm" dataName="FineRate"/><!--未按用途使用罚金比率-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanType"/><!--贷款方式-->
+				<XMLFullTagFormat tagName="itm" dataName="ChargeClientCode"/><!--手续费付费人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanTerm"/><!--贷款期限-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanDate"/><!--客户约定放款日-->
+				<XMLFullTagFormat tagName="itm" dataName="RepayDate"/><!--客户约定还款日-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanSubject"/><!--贷款科目-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanPurpose"/><!--贷款用途-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAreaName"/><!--贷款业务所在行名称-->
+				<XMLTagFormat tagName="itm"/>
+					<IndexedCollectionFormat dataName="LoanAccountList" times="*"><!--贷款账号记录组-->
+						<RecordFormat dataName="kColl">
+							 <XMLTagFormat tagName="rd"/>
+							 	<XMLFullTagFormat tagName="f" dataName="LoanAccount"/><!--贷款账号-->
+							 	<XMLFullTagFormat tagName="f" dataName="InterestAccount"/><!--付息账号-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanSubject"/><!--科目号-->							 	
+							 <XMLEndTagFormat tagName="rd"/>
+						</RecordFormat>
+					</IndexedCollectionFormat>
+				<XMLEndTagFormat tagName="itm"/>
+				
+				<XMLTagFormat tagName="itm"/>
+					<IndexedCollectionFormat dataName="RMBEntrustAccountList" times="*">
+						<RecordFormat dataName="kColl">
+							 <XMLTagFormat tagName="rd"/>
+							 	<XMLFullTagFormat tagName="f" dataName="SettleAccount"/><!--结算账号-->
+							 	<XMLFullTagFormat tagName="f" dataName="SettleAccountType"/><!--结算账号种类-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanSubject"/><!--科目号-->							 	
+							 <XMLEndTagFormat tagName="rd"/>
+						</RecordFormat>
+					</IndexedCollectionFormat>
+				<XMLEndTagFormat tagName="itm"/>				
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--借据列表查询接口-请求数据包格式需翻页-->
+<Format id="listDueBill_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37003"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>
+				<XMLFullTagFormat tagName="TP" dataName="TurnPage"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="ContractCode"/><!--合同号-->
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--借据列表查询接口-返回数据包格式翻页-->
+<Format id="listDueBill_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37003"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+          				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="EntrustClientCode"/><!--委托人客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientName"/><!--借款人客户名称-->
+				<XMLFullTagFormat tagName="itm" dataName="ContractCode"/><!--合同号-->
+				<XMLTagFormat tagName="itm"/>
+					<IndexedCollectionFormat dataName="DueBillList" times="*">
+						<RecordFormat dataName="kColl">
+							 <XMLTagFormat tagName="rd"/>
+							 	<XMLFullTagFormat tagName="f" dataName="DueBillCode"/><!--借据编号-->
+							 	<XMLFullTagFormat tagName="f" dataName="DueBillStatus"/><!--借据状态-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanCurrency"/><!--贷款币种-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanAmount"/><!--发放金额-->
+							 	<XMLFullTagFormat tagName="f" dataName="LoanBalance"/><!--贷款余额-->
+							 <XMLEndTagFormat tagName="rd"/>
+						</RecordFormat>
+					</IndexedCollectionFormat>
+				<XMLEndTagFormat tagName="itm"/>
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--借据明细查询接口-请求数据包格式不翻页-->
+<Format id="queryDueBill_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37004"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="DueBillCode"/><!--借据号-->
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+
+<!--借据明细查询接口-返回数据包格式不翻页-->
+<Format id="queryDueBill_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37004"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>				
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="ProtocolCode"/><!--委托协议号-->
+				<XMLFullTagFormat tagName="itm" dataName="ContractCode"/><!--借款合同号-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustClientCode"/><!--主委托人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="REntrustClientCode"/><!--实际委托人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustAreaName"/><!--协议受托行名称-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAreaName"/><!--贷款经办行名称-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientCode"/><!--借款人代码-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanClientName"/><!--借款人名称-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAccount"/><!--贷款帐号-->
+				<XMLFullTagFormat tagName="itm" dataName="DueBillCode"/><!--借据号-->
+				<XMLFullTagFormat tagName="itm" dataName="RMBEntrustAccount"/><!--人民币委托资金户-->
+				<XMLFullTagFormat tagName="itm" dataName="IndictFlag"/><!--是否起诉处理-->
+				<XMLFullTagFormat tagName="itm" dataName="IndictDate"/><!--起诉日期-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAreaFlag"/><!--贷款发放地标志-->
+				<XMLFullTagFormat tagName="itm" dataName="DueBillStatus"/><!--借据状态-->
+				<XMLFullTagFormat tagName="itm" dataName="PCYWDate"/><!--平仓业务发生日-->
+				<XMLFullTagFormat tagName="itm" dataName="HostDueBillCode"/><!--主机借据号-->
+				<XMLFullTagFormat tagName="itm" dataName="HostDueBillSerial"/><!--主机借据序号-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustCurrency"/><!--委托币种-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustAmount"/><!--委托金额-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanCurrency"/><!--贷款币种-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAmount"/><!--发放金额-->
+				<XMLFullTagFormat tagName="itm" dataName="YearBaseRate"/><!--年基准利率-->
+				<XMLFullTagFormat tagName="itm" dataName="DriftType"/><!--浮动类型-->
+				<XMLFullTagFormat tagName="itm" dataName="DriftNumber"/><!--浮动点数（档次）-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanDate"/><!--放款日期-->
+				<XMLFullTagFormat tagName="itm" dataName="RepayDate"/><!--到期日期-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanBalance"/><!--贷款余额-->
+				<XMLFullTagFormat tagName="itm" dataName="YSInterest"/><!--累计应计息-->
+				<XMLFullTagFormat tagName="itm" dataName="SSInterest"/><!--累计实收息-->
+				<XMLFullTagFormat tagName="itm" dataName="OweInterest"/><!--期末欠息余额-->
+				<XMLFullTagFormat tagName="itm" dataName="DupInterest"/><!--	其中：复息-->
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--通知书新增接口-请求数据包格式不翻页-->
+<Format id="insertNotice_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37005"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="EntrustClientCode"/><!--网银传入客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="ContractCode"/><!--委托合同号-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanDate"/><!--指定放款日-->
+				<XMLFullTagFormat tagName="itm" dataName="RepayDate"/><!--指定还款日-->
+				<XMLFullTagFormat tagName="itm" dataName="EntrustAmount"/><!--委托金额-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAmount"/><!--贷款金额-->
+				<XMLFullTagFormat tagName="itm" dataName="LoanAccount"/><!--贷款帐号-->
+				<XMLFullTagFormat tagName="itm" dataName="RMBEntrustAccount"/><!--人民币委托资金户-->
+				<XMLFullTagFormat tagName="itm" dataName="OnlyOrderCode"/><!--唯一指令序号-->				
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--通知书新增接口-返回数据包格式不翻页-->
+<Format id="insertNotice_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37005"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="NoticeCode"/><!--通知书号-->				
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+
+<!--通知书状态查询接口-请求数据包格式不翻页-->
+<Format id="queryNoticeStatus_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37006"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="EntrustClientCode"/><!--网银传入客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="NoticeCode"/><!--通知书号-->				
+				<XMLFullTagFormat tagName="itm" dataName="OnlyOrderCode"/><!--唯一指令序号-->				
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--通知书状态查询接口-返回数据包格式不翻页-->
+<Format id="queryNoticeStatus_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="37006"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          				<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          				<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          				<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="NoticeStatus"/><!--处理状态-->				
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+
+<!--个贷PCM部分-->
+  <!--查询合作单位基本信息接口-查询数据包格式-->
+<Format id="queryCisInfo_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="99001"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="PcmClientCode"/><!--个贷传入客户代码-->
+
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--查询合作单位基本信息接口-返回数据包格式-->
+<Format id="queryCisInfo_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="99001"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          			<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          			<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          			<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="itm" dataName="TA200011005"/><!--技术监督局编码-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011003"/><!--客户全称-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011011"/><!--客户经济性质-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011006"/><!--法人代表或负责人-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011039"/><!--地址及邮政编码-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011009"/><!--开业时间成立时间-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011074"/><!--企业营业执照-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011021"/><!--注册资金（万元）-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011071"/><!--资质等级-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011040"/><!--信用等级-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011013"/><!--主管部门-->
+				<XMLFullTagFormat tagName="itm" dataName="TA200011070"/><!--比照信用等级-->				
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+  <!--查询合作单位贷款情况接口-查询数据包格式-->
+<Format id="queryCisLoader_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="99002"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>			
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="PcmClientCode"/><!--个贷传入客户代码-->
+				<XMLFullTagFormat tagName="itm" dataName="PcmLeaderDate"/><!--个贷传入总帐时间-->
+				<XMLFullTagFormat tagName="itm" dataName="BeginRow"/>
+          		<XMLFullTagFormat tagName="itm" dataName="EndRow"/>				
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--查询合作单位贷款情况接口-返回数据包格式-->
+<Format id="queryCisLoader_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="99002"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          			<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          			<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          			<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/>
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+          	<XMLTagFormat tagName="itm"/>
+            <IndexedCollectionFormat dataName="CisLoaderList" times="*">
+               <RecordFormat dataName="kColl">
+                 <XMLTagFormat tagName="rd"/>
+                    <XMLFullTagFormat tagName="TA200011003" dataName="TA200011003"/>
+                    <XMLFullTagFormat tagName="TA200361008" dataName="TA200361008"/>
+                    <XMLFullTagFormat tagName="TA200361065" dataName="TA200361065"/>
+                    <XMLFullTagFormat tagName="TA200361069" dataName="TA200361069"/>
+                    <XMLFullTagFormat tagName="TA200361073" dataName="TA200361073"/>
+                    <XMLFullTagFormat tagName="TA200361077" dataName="TA200361077"/>
+                    <XMLFullTagFormat tagName="TA200361081" dataName="TA200361081"/>                    
+                    <XMLFullTagFormat tagName="TA200011063" dataName="TA200011063"/>
+                    <XMLFullTagFormat tagName="TA200361003" dataName="TA200361003"/>
+                    <XMLFullTagFormat tagName="TA200011063_t" dataName="TA200011063_t"/>
+                  <XMLEndTagFormat tagName="rd"/>
+               </RecordFormat>
+             </IndexedCollectionFormat>
+          	<XMLEndTagFormat tagName="itm"/>
+        	<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+			<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+<!--个贷PCM部分结束-->
+
+<!--通用查询部分开始-->
+  <!--查询柜员基本信息与数据库用户信息情况接口-查询数据包格式-->
+<Format id="queryDBUserInfo_req">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="98001"/>
+				<XMLFullTagFormat tagName="ID" dataName="AuthId"/>
+				<XMLFullTagFormat tagName="Verify" dataName="VerifyStr"/>
+				<XMLFullTagFormat tagName="Area" dataName="AreaCode"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="SID" dataName="SysID"/>
+				<XMLFullTagFormat tagName="Date" dataName="TransDate"/>				
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			<!--请求输入数据-->
+			<XMLTagFormat tagName="in"/>
+				<XMLFullTagFormat tagName="itm" dataName="inEmpCode"/><!--通用查询传入柜员代码-->
+				<XMLFullTagFormat tagName="itm" dataName="inEmpPass"/><!--通用查询传入柜员密码-->
+			<XMLEndTagFormat tagName="in"/>
+			<!--请求输入数据-->
+			
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+
+<!--查询柜员基本信息与数据库用户信息情况接口-返回数据包格式-->
+<Format id="queryDBUserInfo_res">
+	<RecordFormat>
+		<XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+		<XMLTagFormat tagName="CM2002"/>
+		
+			<!--包头-->
+			<XMLTagFormat tagName="pub"/>
+				<XMLConstantTagFormat tagName="TransNo" value="98001"/>
+				<XMLFullTagFormat tagName="SN" dataName="SerialNo"/>
+				<XMLFullTagFormat tagName="TN" dataName="TransNo"/>
+				<XMLFullTagFormat tagName="TS" dataName="TranStatus"/>
+				<XMLFullTagFormat tagName="BR" dataName="BeginRow"/>
+          			<XMLFullTagFormat tagName="ER" dataName="EndRow"/>
+          			<XMLFullTagFormat tagName="RC" dataName="RecCount"/><!--记录总数-->
+				<XMLFullTagFormat tagName="ErrCode" dataName="ErrorCode"/>
+          			<XMLFullTagFormat tagName="ErrMsg" dataName="ErrorMsg"/><!--柜员检验结果,没有说明成功,否则会具体说明错误信息-->
+			<XMLEndTagFormat tagName="pub"/>
+			<!--包头-->
+			
+			<!--交易结果数据-->
+			<XMLTagFormat tagName="out"/>
+				<XMLFullTagFormat tagName="AC" dataName="areaCode"/><!--柜员地区取一个有效的-->
+				<XMLFullTagFormat tagName="EM" dataName="employeeMajor"/><!--柜员业务代码-->
+				<XMLFullTagFormat tagName="EC" dataName="employeeClass"/><!--柜员岗位级别代码-->
+				<XMLFullTagFormat tagName="dUN" dataName="dbUserName"/><!--数据库用户名query_8位地区代码-->
+				<XMLFullTagFormat tagName="dUP" dataName="dbUserPass"/><!--数据库用户密码-->
+				<XMLFullTagFormat tagName="dIA" dataName="dbIpAddress"/><!--数据库IP地址-->
+				<XMLFullTagFormat tagName="dPN" dataName="dbPortNum"/><!--数据库端口号-->
+				<XMLFullTagFormat tagName="dSN" dataName="dbSidName"/><!--数据库实例名-->
+			<XMLEndTagFormat tagName="out"/>
+			<!--交易结果数据-->
+		<XMLEndTagFormat tagName="CM2002"/>
+	</RecordFormat>
+</Format>
+<!--通用查询部结束-->
+
+</FormatDef>
+ 

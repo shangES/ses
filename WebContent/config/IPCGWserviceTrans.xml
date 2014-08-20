@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding ="GB2312"?>
+<!DOCTYPE TRADES SYSTEM "IPCGWServiceTrans.dtd">
+<TRADES>
+	<TRADE id="1_in"><!--必须是4位的且和主机定的一致-->
+		<field tagName="ONLY_ID"        len="33"   type="CHAR" />                <!--唯一标识33位，无用-->  
+		<field tagName="NEWSTYPE"       len="1"    type="NUM" />                 <!--1：对公贷款2：承兑汇票、保函-->                          
+        <field tagName="TIMESTMP"       len="33"   type="CHAR" />                <!--时间标记-->                          
+        <field tagName="TRXTYPE"    	len="1"    type="NUM" />                 <!--1、	管理类交易2、	结算类交易-->                              
+        <field tagName="ZONENO"     	len="5"    type="NUM" />                 <!--地区号-->                              
+        <field tagName="PHYBRNO"       	len="5"    type="NUM" />                 <!--物理网点号-->    
+        <field tagName="ACCNO"       	len="17"   type="NUM" />                 <!--贷款账号-->  
+        <field tagName="LOANNO"       	len="17"   type="NUM" />                 <!--借据编号--> 
+        <field tagName="LOANSQNO"       len="3"    type="NUM" />                 <!--借据序号--> 
+        <field tagName="CURRTYPE"       len="3"    type="NUM" />                 <!--币种-->
+        <field tagName="TRXCODE"       	len="5"    type="NUM" />                 <!--交易代码-->
+        <field tagName="BUSIDATE"       len="10"   type="CHAR" />                <!--工作日期-->
+        <field tagName="BUSITIME"       len="8"    type="CHAR" />                <!--工作时间-->
+        <field tagName="TELLERNO"       len="5"    type="NUM" />                 <!--柜员号-->
+        <field tagName="TRXSQNB"       	len="5"    type="NUM" />                 <!--大交易序号-->
+        <field tagName="TRXSQNS"       	len="3"    type="NUM" />                 <!--小交易序号-->
+        <field tagName="WORKDATE"       len="10"   type="CHAR" />                <!--许可证发放日期-->
+        <field tagName="SEQNO"       	len="7"    type="NUM" />                 <!--许可证序号-->
+        <field tagName="TRANTYPE"       len="3"    type="NUM" />                 <!--业务种类-->
+        <field tagName="STATUS"       	len="1"    type="NUM" />                 <!--许可证状态-->
+        <field tagName="UPDTRANF"       len="1"    type="NUM" />                 <!--冲正标志--> 
+        <field tagName="REVTRANF"       len="1"    type="NUM" />                 <!--0：正交易1：反交易--> 
+        <field tagName="DRCRF"       	len="1"    type="NUM" />                 <!--借贷标志--> 
+        <field tagName="SUBCODE"       	len="7"    type="NUM" />                 <!--科目号--> 
+        <field tagName="FLAG"       	len="1"    type="NUM" />                 <!--符号位标志-->
+        <field tagName="AMOUNT"       	len="17"   type="NUM" />                 <!--本金发生额-->
+        <field tagName="BALANCE"       	len="17"   type="NUM" />                 <!--本金余额--> 
+        <field tagName="RATECODE"       len="7"    type="NUM" />                 <!--正常利率代码--> 
+        <field tagName="FLOARATE_FLAG"  len="1"    type="NUM" />                 <!--正常浮动率正负标志  --> 
+        <field tagName="FLOARATE"       len="9"    type="NUM" />                 <!--正常浮动率  --> 
+        <field tagName="EXHRCODE"       len="7"    type="NUM" />                 <!--展期利率代码--> 
+        <field tagName="EXHFRATE_FLAG"  len="1"    type="NUM" />                 <!--展期浮动率正负标志  -->        
+        <field tagName="EXHFRATE"       len="9"    type="NUM" />                 <!--展期浮动率  -->
+        <field tagName="FINFRATE_FLAG"  len="1"    type="NUM" />                 <!--逾期浮动率正负标志  -->           
+        <field tagName="FINFRATE"       len="9"    type="NUM" />                 <!--逾期浮动率  --> 
+        <field tagName="CALINTCL"       len="1"    type="NUM" />                 <!--计息周期    --> 
+        <field tagName="RATEINCM"       len="1"    type="NUM" />                 <!--利率变动方式-->
+        <field tagName="MEMFDATE"       len="10"   type="CHAR"/>                 <!--合同生效日  --> 
+        <field tagName="BRTNFLAG"       len="1"    type="NUM" />                 <!--批量扣款标志-->                                                                     
+	</TRADE>
+	<TRADE id="1_out">
+		<field tagName="RETFLAG"       len="4"     type="NUM"/>                  <!--返回成功失败标志-->
+	</TRADE>	
+	<TRADE id="2_in">
+	    <field tagName="ONLY_ID"        len="33"   type="CHAR"/>                 <!--唯一标识33位，无用--> 
+		<field tagName="NEWSTYPE"       len="1"    type="NUM" />                 <!--1：对公贷款2：承兑汇票、保函-->                          
+        <field tagName="TIMESTMP"       len="33"   type="CHAR"/>                 <!--时间标记-->                                 
+        <field tagName="ZONENO"     	len="5"    type="NUM" />                 <!--地区号-->                              
+        <field tagName="BRNO"       	len="5"    type="NUM" />                 <!--网点号--> 
+        <field tagName="VOUHTYPE"       len="3"    type="NUM" />                 <!--凭证种类（1.汇票 2.保函）-->
+        <field tagName="VOUHNO"       	len="9"    type="NUM" />                 <!--凭证号码-->
+        <field tagName="HSTNO"       	len="17"   type="NUM" />                 <!--主机协议号-->
+        <field tagName="SEQNO"       	len="7"    type="NUM" />                 <!--许可证顺序号-->
+        <field tagName="TRANTYPE"       len="1"    type="NUM" />                 <!--许可证业务种类(1.开票 2.退票 3.保函部分支付)-->
+        <field tagName="CURRTYPE"       len="3"    type="NUM" />                 <!--币种-->
+        <field tagName="AMOUNT"       	len="17"   type="NUM" />                 <!--金额-->
+        <field tagName="BALANCE"       	len="17"   type="NUM" />                 <!--余额-->
+        <field tagName="STATUS"       	len="1"    type="NUM" />                 <!--汇票/保函状态(1.开票2.退票 3.承兑支付 4.承兑垫款)-->
+        <field tagName="STATUS1"       	len="1"    type="NUM" />                 <!--许可证主机处理状态（0.未处理1.已处理2.已作废）-->
+        <field tagName="ACCNO"       	len="17"   type="NUM" />                 <!--付款帐号-->
+        <field tagName="GRTTYPE"       	len="3"    type="NUM" />                 <!--保函种类-->
+        <field tagName="OPENDATE"       len="10"   type="NUM" />                 <!--开立日期-->
+        <field tagName="MATDATE"       	len="10"   type="NUM" />                 <!--到期日期-->
+        <field tagName="CLOSDATE"       len="10"   type="NUM" />                 <!--核销日期-->
+        <field tagName="TELLERNO"       len="5"    type="NUM" />                 <!--承兑柜员-->
+        <field tagName="AUTHTLNO"       len="5"    type="NUM" />                 <!--授权柜员--> 
+        <field tagName="NOTES1"       	len="20"   type="CHAR"/>                 <!--备注1--> 
+        <field tagName="NOTES2"       	len="40"   type="CHAR"/>                 <!--备注2--> 
+        <field tagName="NOTES3"       	len="40"   type="CHAR"/>                 <!--备注3--> 
+        <field tagName="NOTES4"       	len="60"   type="CHAR"/>                 <!--备注4--> 
+        <field tagName="BUSIDATE"       len="10"   type="CHAR"/>                 <!--主机处理日期--> 
+        <field tagName="BUSITIME"       len="8"    type="CHAR"/>                 <!--主机处理时间--> 
+        <field tagName="TRXZONENO"      len="5"    type="NUM" />                 <!--交易地区号--> 
+        <field tagName="TRXBRNO"      	len="5"    type="NUM" />                 <!--交易网点号-->
+        <field tagName="TRXTELLER"      len="5"    type="NUM" />                 <!--交易柜员号-->
+        <field tagName="TRXSQNB"      	len="5"    type="NUM" />                 <!--大交易序号-->
+        <field tagName="TRXSQNS"      	len="3"    type="NUM" />                 <!--小交易序号-->  
+        <field tagName="REVTRANF"      	len="1"    type="NUM" />                 <!--正反交易标志（0.正交易 1.反交易）-->                                                                      
+	</TRADE>
+	<TRADE id="2_out">
+		<field tagName="RETFLAG"       len="4"     type="NUM"/>                  <!--返回成功失败标志-->
+	</TRADE>
+</TRADES>

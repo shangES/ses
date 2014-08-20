@@ -1,0 +1,37 @@
+body {  font-size: 9pt; color: #000000; background-image:  url(../images/icbcbg.gif)}
+h1 {  font-size: 24pt}
+h2 {  font-size: 18pt}
+h3 {  font-size: 14pt; font-style: normal}
+h4 {  font-size: 12pt}
+h5 {  font-size: 9pt}
+h6 {  font-size: 7pt}
+table {  font-size: 9pt}
+a {  cursor: hand}
+input {  border-color: black black #000000; border-top-width: 0px; border-right-width: 0px; border-bottom-width: thin; border-left-width: 0px; font-size: 9pt}
+select {  font-size: 9pt}
+textarea {  font-size: 9pt}
+a:active {  color: #0000FF}
+a:link {  color: #0000FF}
+a:visited {  color: #0000FF}
+a:hover {  color: #FF00FF}
+.td1 {  background-color: #E4E4E4}
+.td2 {  background-color: #e6e6e6}
+.td3 {  background-color: #f1f1f1}
+.tr1 {  background-color: #BBBBBB}
+.thlt {  border-top:1.5pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext; background: silver}
+.thct {  border-top:1.5pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thrt {  border-top:1.5pt solid windowtext;	border-right:1.5pt solid windowtext;border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thlm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext; background: silver}
+.thcm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thrm {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.tblt {  border-top:1pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbct {  border-top:1pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tbrt {  border-top:1pt solid windowtext;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tblm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbcm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tbrm {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tblb {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbcb {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:none;}
+.tbrb {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:none;}
+.tfix {  color: #000000; background-color: #E4E4E4}
+.hand {  cursor: hand}

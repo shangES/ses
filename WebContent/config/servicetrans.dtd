@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT TransCfg (TransMap,TransFmtMap)>	
+	<!ELEMENT TransMap (field*)>
+	<!ELEMENT TransFmtMap (field*)>
+		<!ELEMENT field (#PCDATA)>
+		<!ATTLIST field 
+			id CDATA #REQUIRED
+			value CDATA #REQUIRED
+			>

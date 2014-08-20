@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding ="GB2312"?>
+<!DOCTYPE TransCfg SYSTEM "servicetrans.dtd">
+<TransCfg>
+	<TransMap>
+		<field id="00000" value="icbc.cmis.service.channel.test.CustomerInfoQuery"/>
+		<field id="00001" value="icbc.cmis.service.channel.test.LoanBillQuery"/>
+	<!--委贷二期（网银接口）-->	
+		<field id="37001" value="icbc.cmis.Entrust.interfaces.UF_ContractList_Op"/>
+		<field id="37002" value="icbc.cmis.Entrust.interfaces.UF_ContractQuery_Op"/>
+		<field id="37003" value="icbc.cmis.Entrust.interfaces.UF_DueBillList_Op"/>
+		<field id="37004" value="icbc.cmis.Entrust.interfaces.UF_DueBillQuery_Op"/>
+		<field id="37005" value="icbc.cmis.Entrust.interfaces.UE_NoticeInsert_Op"/>
+		<field id="37006" value="icbc.cmis.Entrust.interfaces.UE_NoticeStatusQuery_Op"/>
+	<!--个贷接口-->
+		<field id="99001" value="icbc.cmis.pcm.interfaces.queryCisInfo_Op"/>
+		<field id="99002" value="icbc.cmis.pcm.interfaces.queryCisLoader_Op"/>
+	<!--通用查询接口-->
+		<field id="98001" value="icbc.cmis.comqy.interfaces.queryDBUserInfo_Op"/>
+	</TransMap>
+	<TransFmtMap>
+		<field id="00000IN" value="queryCustomerInfo_req"/>
+		<field id="00000OUT" value="queryCustomerInfo_res"/>
+		<field id="00001IN" value="queryLoanBillInfo_req"/>
+		<field id="00001OUT" value="queryLoanBillInfo_res"/>
+	<!--委贷二期（网银接口）-->
+		<field id="37001IN" value="listContract_req"/>
+		<field id="37001OUT" value="listContract_res"/>		
+		<field id="37002IN" value="queryContract_req"/>
+		<field id="37002OUT" value="queryContract_res"/>		
+		<field id="37003IN" value="listDueBill_req"/>
+		<field id="37003OUT" value="listDueBill_res"/>		
+		<field id="37004IN" value="queryDueBill_req"/>
+		<field id="37004OUT" value="queryDueBill_res"/>		
+		<field id="37005IN" value="insertNotice_req"/>
+		<field id="37005OUT" value="insertNotice_res"/>		
+		<field id="37006IN" value="queryNoticeStatus_req"/>
+		<field id="37006OUT" value="queryNoticeStatus_res"/>		
+
+	<!--个贷接口-->
+		<field id="99001IN" value="queryCisInfo_req"/>
+		<field id="99001OUT" value="queryCisInfo_res"/>		
+		<field id="99002IN" value="queryCisLoader_req"/>
+		<field id="99002OUT" value="queryCisLoader_res"/>
+	<!--通用查询接口-->
+		<field id="98001IN" value="queryDBUserInfo_req"/>
+		<field id="98001OUT" value="queryDBUserInfo_res"/>	
+	</TransFmtMap>
+</TransCfg>

@@ -196,6 +196,14 @@ public interface SystemDao {
 	 * @param userguid
 	 */
 	void delUserRoleByUserId(String userguid);
+	
+	/**
+	 * 删除
+	 * 
+	 * @param userguid
+	 * @param roleid
+	 */
+	void delUserRoleByUserId(String userguid,String roleid);
 
 	/**
 	 * 删除

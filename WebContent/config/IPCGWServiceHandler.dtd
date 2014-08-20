@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT GatewayClientService (Handler)>	
+<!ATTLIST GatewayClientService id CDATA #REQUIRED >
+	<!ELEMENT Handler (switch*)>
+	<!ATTLIST Handler putMsgField CDATA #REQUIRED getMsgField CDATA #REQUIRED
+	defaultOperation CDATA #REQUIRED>
+		<!ELEMENT switch (#PCDATA)>
+		<!ATTLIST switch 
+			case CDATA #REQUIRED
+			operation CDATA #REQUIRED
+			>

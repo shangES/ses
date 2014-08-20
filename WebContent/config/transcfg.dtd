@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT TRADE
+   (module+,field?)
+>
+
+
+<!ATTLIST TRADE
+dsrName CDATA #IMPLIED
+>
+
+
+<!ATTLIST TRADE
+id CDATA #IMPLIED
+>
+
+<!ATTLIST TRADE
+type CDATA #IMPLIED
+>
+
+
+<!ELEMENT TRADES
+   (TRADE+)
+>
+<!ELEMENT TYPES
+   (type+)
+>
+
+
+<!ELEMENT configs
+   (TYPES,modules,TRADES)
+>
+<!ELEMENT field
+   EMPTY
+>
+
+<!ELEMENT cyclePart
+   (field+)
+>
+
+
+<!ATTLIST field
+id CDATA #IMPLIED
+>
+
+
+<!ATTLIST field
+type CDATA #IMPLIED
+>
+
+
+<!ATTLIST field
+value CDATA #IMPLIED
+>
+
+<!ATTLIST field
+ioType CDATA #IMPLIED
+>
+
+<!ATTLIST field
+format CDATA #IMPLIED
+>
+
+<!ATTLIST field
+mapField CDATA #IMPLIED
+>
+
+<!ELEMENT module
+   (field*,cyclePart*,field*)
+>
+
+<!ATTLIST module
+id CDATA #IMPLIED
+>
+
+<!ATTLIST module
+refid CDATA #IMPLIED
+>
+
+<!ATTLIST module
+iCollName CDATA #IMPLIED
+>
+
+<!ATTLIST module
+newOrOld CDATA #IMPLIED 
+>
+
+<!ATTLIST module
+cycle CDATA #IMPLIED
+>
+
+<!ATTLIST module
+alias CDATA #IMPLIED
+>
+
+<!ELEMENT modules
+   (module+)
+>
+
+
+<!ELEMENT type
+   EMPTY
+>
+
+
+<!ATTLIST type
+class CDATA #IMPLIED
+>
+
+
+<!ATTLIST type
+id CDATA #IMPLIED
+>
+
+
+<!ATTLIST type
+value CDATA #IMPLIED
+>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="GB2312"?>
+
+<dseoper.XML>
+	<!-- Event Manager internal operation. DO NOT MODIFY!!!                  -->
+	<com.icbc.cte.base.EventManagerServerOperation id="eventManagerServerOperation"/>
+
+	<!-- Definition for the HTML Processor Operation. -->
+	<!-- This is the internal operation used by the infrastructure to control and manage -->
+	<!-- the processors that are created for navigation flows-->
+	<com.icbc.cte.statemachine.htmlimplement.CTEHtmlStateMachineOperation id="dse_htmlProcessorOp"/>
+</dseoper.XML>
+

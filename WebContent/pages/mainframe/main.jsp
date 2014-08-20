@@ -151,6 +151,9 @@ function hiddenInfo(){
 					<a href="#" style="color:#fff;"><img src="skins/images/group.png"/>我的工作</a>
 					&nbsp;
 					&nbsp;
+					<a href="/hrmweb/gongZuoLiu.jsp" style="color:#fff;"><img src="skins/images/group.png"/>流程审查</a>
+					&nbsp;
+					&nbsp;
 					<a href="address.do" style="color:#fff;"><img src="skins/images/group.png"/>通讯录</a>
 					&nbsp;
 					&nbsp;

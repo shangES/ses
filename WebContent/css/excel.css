@@ -1,0 +1,15 @@
+.thlt {  border-top:1.5pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext; background: silver}
+.thmt {  border-top:1.5pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thrt {  border-top:1.5pt solid windowtext;	border-right:1.5pt solid windowtext;border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thlm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext; background: silver}
+.thmm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.thrm {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none; background: silver}
+.tblt {  border-top:1pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbmt {  border-top:1pt solid windowtext;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tbrt {  border-top:1pt solid windowtext;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tblm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbmm {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tbrm {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:.5pt solid windowtext; border-left:none;}
+.tblb {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:1.5pt solid windowtext;}
+.tbmb {  border-top:none;	border-right:.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:none;}
+.tbrb {  border-top:none;	border-right:1.5pt solid windowtext;	border-bottom:1.5pt solid windowtext; border-left:none;}

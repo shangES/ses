@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE FormatDef SYSTEM "format.dtd">
+
+<FormatDef>
+<!--查询主机客户情况-->
+  <Format id="queryCustomerInfoIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9001"/><!--查询主机客户 CCIDANC-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户信息号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号（存款）-->
+          <XMLFullTagFormat tagName="itm" dataName="AccFlag"/><!--帐号标志-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryCustomerInfoOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9001"/><!--查询主机客户 CCIDANC-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户信息号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号（存款）-->
+          <XMLFullTagFormat tagName="itm" dataName="AccFlag"/><!--帐号标志-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户信息号-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITNAME"/><!--企业全称-->
+          <XMLFullTagFormat tagName="itm" dataName="CHNSNAME"/><!--法人代表-->
+          <XMLFullTagFormat tagName="itm" dataName="REGISDATE"/><!--注册日期-->
+          <XMLFullTagFormat tagName="itm" dataName="TOTEMP"/><!--职工人数-->
+          <XMLFullTagFormat tagName="itm" dataName="REGISCAPL"/><!--注册资本-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSISCAL"/><!--经营范围-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNUM"/><!--贷款证号码-->
+          <XMLFullTagFormat tagName="itm" dataName="MASDW"/><!--主管单位名称-->
+          <XMLFullTagFormat tagName="itm" dataName="ADDRESS"/><!--地址-->
+          <XMLFullTagFormat tagName="itm" dataName="ZIP"/><!--邮政编码-->
+          <XMLFullTagFormat tagName="itm" dataName="SALMTHDAY"/><!--发薪日-->
+          <XMLFullTagFormat tagName="itm" dataName="LCNCNUM"/><!--营业执照-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号（存款）-->
+          <XMLFullTagFormat tagName="itm" dataName="AccFlag"/><!--帐号标志-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--客户建档-->
+  <Format id="createCustomerIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9003"/><!--客户建档 CCIDANI-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITCDTP"/><!--代码类型-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITCODE"/><!--单位代码-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITNAME"/><!--单位名称-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="createCustomerOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9003"/><!--客户建档 CCIDANC-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--无-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITCDTP"/><!--代码类型-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITCODE"/><!--单位代码-->
+          <XMLFullTagFormat tagName="itm" dataName="UNITNAME"/><!--单位名称-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="CUSTNO"/><!--客户号-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询主机借据余额-->
+  <Format id="queryBillBalanceIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="208"/><!--查询借据余额-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="ZjDkCode"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjCode"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjXh"/><!--借据序号-->
+          <XMLConstantTagFormat tagName="itm" value="9"/><!--状态-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryBillBalanceOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="208"/><!--查询借据余额-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="ZjDkCode"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjCode"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjXh"/><!--借据序号-->
+          <XMLConstantTagFormat tagName="itm" value="9"/><!--状态-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+           <XMLTagFormat tagName="itm"/>
+             <IndexedCollectionFormat dataName="BillDetail1" times="*">
+               <RecordFormat dataName="Detail">
+                 <XMLTagFormat tagName="rd"/>
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--贷款帐号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据编号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据序号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--币种-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--状态-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--利率-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--户名-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--科目号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--信息编码-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据合同号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--贷款类型-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--贷款性质-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--起息日期-->
+                    <XMLFullTagFormat tagName="f" dataName="DqRq"/><!--到期日期-->
+                    <XMLFullTagFormat tagName="f" dataName="ZqDqRq"/><!--展期到期日-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--记息周期/还款周期-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--利率变动方式-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--付息帐号-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--联行帐号-->
+                    <XMLFullTagFormat tagName="f" dataName="ZjJjFse"/><!--贷款总金额-->
+                    <XMLFullTagFormat tagName="f" dataName="ZjJjYe"/><!--贷款余额-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--表内欠息-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--表外欠息-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据欠息-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--表内欠息复利-->
+                    <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--表外欠息复利-->
+                  <XMLEndTagFormat tagName="rd"/>
+               </RecordFormat>
+             </IndexedCollectionFormat>
+           <XMLEndTagFormat tagName="itm"/>
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--发放电子准贷证-->
+  <Format id="addLoanProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9032"/><!--发放电子准贷证-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYPE"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLConstantTagFormat tagName="itm" value="户名"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种(贷款)-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANBAL"/><!--贷款金额-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--计息周期/还款周期-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--逾期利率%-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="FXACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--联行行号/交换号-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--还款方式-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="KZACCNO"/><!--还款帐号/控制帐号-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--贷款区分-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--单位/个人标志-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--冲帐标志-->
+          <XMLConstantTagFormat tagName="itm" value="备注"/><!--备注-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="addLoanProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9032"/><!--发放电子准贷证-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYPE"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLConstantTagFormat tagName="itm" value="户名"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种(贷款)-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANBAL"/><!--贷款金额-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--计息周期/还款周期-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--逾期利率%-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="FXACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--联行行号/交换号-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--还款方式-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="KZACCNO"/><!--还款帐号/控制帐号-->
+          <XMLConstantTagFormat tagName="itm" value="1"/><!--贷款区分-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--单位/个人标志-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--冲帐标志-->
+          <XMLConstantTagFormat tagName="itm" value="备注"/><!--备注-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--贷款企业帐号确认-->
+  <Format id="verifyAccountIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9035"/><!--贷款企业帐号确认 NAI9035-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户信息号-->
+          <XMLFullTagFormat tagName="itm" dataName="CHACCNO"/><!--往来帐号/付利息-->
+          <XMLFullTagFormat tagName="itm" dataName="LNACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSEF"/><!--控制新旧帐号使用标志-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="verifyAccountOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9035"/><!--贷款企业帐号确认 NAI9035-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户信息号-->
+          <XMLFullTagFormat tagName="itm" dataName="CHACCNO"/><!--往来帐号/付利息-->
+          <XMLFullTagFormat tagName="itm" dataName="LNACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSEF"/><!--控制新旧帐号使用标志-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="RTNCODE"/><!--返回代码-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询帐户存款余额 NAI9004-->
+  <Format id="queryAccBalanceIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9004"/><!--查询帐户存款余额 NAI9004-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSEF"/><!--新旧帐号使用标志-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryAccBalanceOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9004"/><!--查询帐户存款余额 NAI9004-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSEF"/><!--新旧帐号使用标志-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--上期余额-->
+          <XMLFullTagFormat tagName="itm" dataName="BALANCE"/><!--余额-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--金额-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--代扣金额-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--待收金额-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--保留金额-->
+          <XMLFullTagFormat tagName="itm" dataName="NOUSE"/><!--冻结金额-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询主机借据处理明细-->
+  <Format id="queryBillBalanceDetailIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="207"/><!--查询主机借据处理明细-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="ZjBz"/><!--币钟-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--新旧账号标志-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjDkCode"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="TimeFlag"/><!--时间标记-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjCode"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjXh"/><!--借据序号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryBillBalanceDetailOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="207"/><!--查询主机借据处理明细-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="ZjBz"/><!--币钟-->
+          <XMLConstantTagFormat tagName="itm" value="0"/><!--新旧账号标志-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjDkCode"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="TimeFlag"/><!--时间标记-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjCode"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ZjJjXh"/><!--借据序号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+           <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+           <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+           <XMLTagFormat tagName="itm"/>
+             <IndexedCollectionFormat dataName="BillDetail" times="*">
+               <RecordFormat dataName="Detail">
+                 <XMLTagFormat tagName="rd"/>
+                   <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--客户信息号-->
+                   <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--贷款帐号-->
+                   <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据编号-->
+                   <XMLFullTagFormat tagName="f" dataName="NOUSE"/><!--借据序号-->
+                   <XMLFullTagFormat tagName="f" dataName="YwZl"/><!--业务种类-->
+                   <XMLFullTagFormat tagName="f" dataName="TimeFlag"/><!--时间标记-->
+                   <XMLFullTagFormat tagName="f" dataName="ZjDkFse"/><!--发生额-->
+                  <XMLEndTagFormat tagName="rd"/>
+               </RecordFormat>
+             </IndexedCollectionFormat>
+           <XMLEndTagFormat tagName="itm"/>
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--删除电子准贷证 NAI9033-->
+  <Format id="deleteLoanProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9033"/><!--删除电子准贷证 NAI9033-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="deleteLoanProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9033"/><!--删除电子准贷证 NAI9033-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询电子准贷证 NAI9031-->
+  <Format id="queryLoanProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9031"/><!-- 查询电子准贷证 NAI9031-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryLoanProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9031"/><!-- 查询电子准贷证 NAI9031-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYEP"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNAME"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLFullTagFormat tagName="itm" dataName="INFOCODE"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNATU"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANBAL"/><!--贷款金额-->
+          <XMLFullTagFormat tagName="itm" dataName="CALINTCL"/><!--计息周期/还款周期-->
+          <XMLFullTagFormat tagName="itm" dataName="RATEINCM"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINRATE"/><!--逾期利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINFRATE"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="BANKCODE"/><!--联行行号/交换号-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNMODE"/><!--还款方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCT"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCNO"/><!--还款帐号/控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANFLAG"/><!--贷款区分-->
+          <XMLFullTagFormat tagName="itm" dataName="CORPERF"/><!--单位/个人标志-->
+          <XMLFullTagFormat tagName="itm" dataName="UPDTRANF"/><!--冲帐标志-->
+          <XMLFullTagFormat tagName="itm" dataName="NOTES"/><!--备注-->
+          <XMLFullTagFormat tagName="itm" dataName="SAFEPARA"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--修改电子准贷证 NAI9034-->
+  <Format id="modifyLoanProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9034"/><!-- 修改电子准贷证 NAI9034-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYEP"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNAME"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLFullTagFormat tagName="itm" dataName="INFOCODE"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNATU"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANBAL"/><!--贷款金额-->
+          <XMLFullTagFormat tagName="itm" dataName="CALINTCL"/><!--计息周期/还款周期-->
+          <XMLFullTagFormat tagName="itm" dataName="RATEINCM"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINRATE"/><!--逾期利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINFRATE"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="BANKCODE"/><!--联行行号/交换号-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNMODE"/><!--还款方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCT"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCNO"/><!--还款帐号/控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANFLAG"/><!--贷款区分-->
+          <XMLFullTagFormat tagName="itm" dataName="CORPERF"/><!--单位/个人标志-->
+          <XMLFullTagFormat tagName="itm" dataName="UPDTRANF"/><!--冲帐标志-->
+          <XMLFullTagFormat tagName="itm" dataName="NOTES"/><!--备注-->
+          <XMLFullTagFormat tagName="itm" dataName="SAFEPARA"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期--><!--改后-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="M_TRANTYEP"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNAME"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="M_LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLFullTagFormat tagName="itm" dataName="INFOCODE"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNATU"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="M_LOANBAL"/><!--贷款金额-->
+          <XMLFullTagFormat tagName="itm" dataName="CALINTCL"/><!--计息周期/还款周期-->
+          <XMLFullTagFormat tagName="itm" dataName="RATEINCM"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINRATE"/><!--逾期利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINFRATE"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="BANKCODE"/><!--联行行号/交换号-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNMODE"/><!--还款方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCT"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCNO"/><!--还款帐号/控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANFLAG"/><!--贷款区分-->
+          <XMLFullTagFormat tagName="itm" dataName="CORPERF"/><!--单位/个人标志-->
+          <XMLFullTagFormat tagName="itm" dataName="UPDTRANF"/><!--冲帐标志-->
+          <XMLFullTagFormat tagName="itm" dataName="NOTES"/><!--备注-->
+          <XMLFullTagFormat tagName="itm" dataName="SAFEPARA"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="modifyLoanProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9034"/><!-- 修改电子准贷证 NAI9034-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYEP"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNAME"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLFullTagFormat tagName="itm" dataName="INFOCODE"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNATU"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANBAL"/><!--贷款金额-->
+          <XMLFullTagFormat tagName="itm" dataName="CALINTCL"/><!--计息周期/还款周期-->
+          <XMLFullTagFormat tagName="itm" dataName="RATEINCM"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINRATE"/><!--逾期利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINFRATE"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="BANKCODE"/><!--联行行号/交换号-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNMODE"/><!--还款方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCT"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCNO"/><!--还款帐号/控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANFLAG"/><!--贷款区分-->
+          <XMLFullTagFormat tagName="itm" dataName="CORPERF"/><!--单位/个人标志-->
+          <XMLFullTagFormat tagName="itm" dataName="UPDTRANF"/><!--冲帐标志-->
+          <XMLFullTagFormat tagName="itm" dataName="NOTES"/><!--备注-->
+          <XMLFullTagFormat tagName="itm" dataName="SAFEPARA"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+          <XMLFullTagFormat tagName="itm" dataName="WORKDATE"/><!--许可证发放日期--><!--改后-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--许可证序号-->
+          <XMLFullTagFormat tagName="itm" dataName="M_TRANTYEP"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNAME"/><!--户名-->
+          <XMLFullTagFormat tagName="itm" dataName="ACCNO"/><!--贷款帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNO"/><!--借据编号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANSQNO"/><!--借据序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="SUBCODE"/><!--科目号-->
+          <XMLFullTagFormat tagName="itm" dataName="VALUEDAY"/><!--起息日-->
+          <XMLFullTagFormat tagName="itm" dataName="M_LOANDATE"/><!--贷款发放/错帐日-->
+          <XMLFullTagFormat tagName="itm" dataName="MATUDATE"/><!--贷款到期日-->
+          <XMLFullTagFormat tagName="itm" dataName="INFOCODE"/><!--信息编码-->
+          <XMLFullTagFormat tagName="itm" dataName="LNMEMNO"/><!--借据合同号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANTYPE"/><!--贷款类型-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANNATU"/><!--贷款性质-->
+          <XMLFullTagFormat tagName="itm" dataName="M_LOANBAL"/><!--贷款金额-->
+          <XMLFullTagFormat tagName="itm" dataName="CALINTCL"/><!--计息周期/还款周期-->
+          <XMLFullTagFormat tagName="itm" dataName="RATEINCM"/><!--利率变动方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RATE"/><!--正常（展期）利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FLOARATE"/><!--正常（展期）利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINRATE"/><!--逾期利率%-->
+          <XMLFullTagFormat tagName="itm" dataName="FINFRATE"/><!--逾期利率浮动率%-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPDEPAT"/><!--存款部门-->
+          <XMLFullTagFormat tagName="itm" dataName="DEPACCNO"/><!--付息帐号/开发商结算帐号/储蓄帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="BANKCODE"/><!--联行行号/交换号-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNMODE"/><!--还款方式-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCT"/><!--还款帐户/控制帐号新旧标志-->
+          <XMLFullTagFormat tagName="itm" dataName="RTNACCNO"/><!--还款帐号/控制帐号-->
+          <XMLFullTagFormat tagName="itm" dataName="LOANFLAG"/><!--贷款区分-->
+          <XMLFullTagFormat tagName="itm" dataName="CORPERF"/><!--单位/个人标志-->
+          <XMLFullTagFormat tagName="itm" dataName="UPDTRANF"/><!--冲帐标志-->
+          <XMLFullTagFormat tagName="itm" dataName="NOTES"/><!--备注-->
+          <XMLFullTagFormat tagName="itm" dataName="SAFEPARA"/><!--安全-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--记帐日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--记帐时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+          <XMLFullTagFormat tagName="itm" dataName="ERRNO"/><!--处理错误代码-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--表外业务-->
+<!--新增电子准签证 NAI9081-->
+  <Format id="addBillProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9081"/><!--新增电子准签证 NAI9081-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYPE"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="AMOUNT"/><!--金额-->
+          <XMLFullTagFormat tagName="itm" dataName="MATDATE"/><!--票据到期日期-->
+          <XMLFullTagFormat tagName="itm" dataName="GRTRATE"/><!--保证金比例-->
+          <XMLFullTagFormat tagName="itm" dataName="GRTAMT"/><!--保证金金额-->
+          <XMLFullTagFormat tagName="itm" dataName="OPENDATE"/><!--发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="CLOSDATE"/><!--准签证有效日期-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="addBillProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9081"/><!--新增电子准签证 NAI9081-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+          <XMLFullTagFormat tagName="itm" dataName="CINO"/><!--客户编号-->
+          <XMLFullTagFormat tagName="itm" dataName="TRANTYPE"/><!--业务种类-->
+          <XMLFullTagFormat tagName="itm" dataName="AMOUNT"/><!--金额-->
+          <XMLFullTagFormat tagName="itm" dataName="MATDATE"/><!--票据到期日期-->
+          <XMLFullTagFormat tagName="itm" dataName="GRTRATE"/><!--保证金比例-->
+          <XMLFullTagFormat tagName="itm" dataName="GRTAMT"/><!--保证金金额-->
+          <XMLFullTagFormat tagName="itm" dataName="OPENDATE"/><!--发放日期-->
+          <XMLFullTagFormat tagName="itm" dataName="CLOSDATE"/><!--准签证有效日期-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="BUSIDATE"/><!--主机处理日期-->
+          <XMLFullTagFormat tagName="itm" dataName="BUSITIME"/><!--主机处理时间-->
+          <XMLFullTagFormat tagName="itm" dataName="STATUS"/><!--处理状态-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--作废电子准签证 NAI9082-->
+  <Format id="deleteBillProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9082"/><!--作废电子准签证 NAI9082-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="deleteBillProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9082"/><!--作废电子准签证 NAI9082-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询电子准签证-->
+  <Format id="queryBillProveIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="209"/><!--查询电子准签证-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryBillProveOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="209"/><!--查询电子准签证-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+          <XMLFullTagFormat tagName="itm" dataName="SEQNO"/><!--顺序号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+           <XMLTagFormat tagName="itm"/>
+             <IndexedCollectionFormat dataName="BillProveDetail" times="*">
+               <RecordFormat dataName="Detail">
+                 <XMLTagFormat tagName="rd"/>
+                    <XMLFullTagFormat tagName="f" dataName="CINO"/><!--客户号-->
+                    <XMLFullTagFormat tagName="f" dataName="TRANTYPE"/><!--业务种类-->
+                    <XMLFullTagFormat tagName="f" dataName="AMOUNT"/><!--金额-->
+                    <XMLFullTagFormat tagName="f" dataName="MATDATE"/><!--票据到期日期-->
+                    <XMLFullTagFormat tagName="f" dataName="GRTRATE"/><!--保证金比例-->
+                    <XMLFullTagFormat tagName="f" dataName="GRTAMT"/><!--保证金金额-->
+                    <XMLFullTagFormat tagName="f" dataName="OPENDATE"/><!--发放日期-->
+                    <XMLFullTagFormat tagName="f" dataName="CLOSDATE"/><!--准签证有效日期-->
+                    <XMLFullTagFormat tagName="f" dataName="BUSIDATE"/><!--主机处理日期-->
+                    <XMLFullTagFormat tagName="f" dataName="BUSITIME"/><!--主机处理时间-->
+                    <XMLFullTagFormat tagName="f" dataName="STATUS"/><!--处理状态-->
+                  <XMLEndTagFormat tagName="rd"/>
+               </RecordFormat>
+             </IndexedCollectionFormat>
+           <XMLEndTagFormat tagName="itm"/>
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+<!--查询保证金 NAI9083-->
+  <Format id="queryGuaranteeBanlanceIn">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9083"/><!--查询保证金 NAI9083-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="1"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+        <XMLEndTagFormat tagName="in"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+  <Format id="queryGuaranteeBanlanceOut">
+    <RecordFormat>
+      <XMLHeadTagFormat version = "1.0" encoding = "GB2312" standalone="no"/>
+      <XMLTagFormat tagName="eb"/>
+        <XMLTagFormat tagName="pub"/>
+          <XMLConstantTagFormat tagName="tc" value="9083"/><!--查询保证金 NAI9083-->
+          <XMLFullTagFormat tagName="zn" dataName="AreaCode"/>
+          <XMLConstantTagFormat tagName="fr" value="0"/>
+          <XMLConstantTagFormat tagName="dt" value="Date" format="yyyyMMdd"/>
+          <XMLTagFormat tagName="tm"/>
+            <XMLConstantTagFormat tagName="ws" value="Time" format="HHmmss"/>
+            <XMLFullTagFormat tagName="gs" dataName="queryTime"/>
+            <XMLConstantTagFormat tagName="ge" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="we" value="Time" format="HHmmss"/>
+            <XMLConstantTagFormat tagName="rct" value="Time" format="HHmmss"/>
+          <XMLEndTagFormat tagName="tm"/>
+        <XMLEndTagFormat tagName="pub"/>
+        <XMLTagFormat tagName="in"/>
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="CURRTYPE"/><!--币种-->
+          <XMLFullTagFormat tagName="itm" dataName="BRNO"/><!--网点号-->
+          <XMLFullTagFormat tagName="itm" dataName="VOUHTYPE"/><!--凭证种类1：承兑汇票 2：保函-->
+          <XMLFullTagFormat tagName="itm" dataName="HSTNO"/><!--主机协议号-->
+        <XMLEndTagFormat tagName="in"/>
+        <XMLTagFormat tagName="out"/>
+          <XMLFullTagFormat tagName="gwcd" dataName="GWRetCode"/>
+          <XMLFullTagFormat tagName="appcd" dataName="TranResult"/>
+          <XMLFullTagFormat tagName="itm" dataName="LSTBAL"/><!--上期余额-->
+          <XMLFullTagFormat tagName="itm" dataName="BALANCE"/><!--余额-->
+          <XMLFullTagFormat tagName="itm" dataName="STAYPAMT"/><!--待扣金额-->
+          <XMLFullTagFormat tagName="itm" dataName="STAYRAMT"/><!--待收金额-->
+          <XMLFullTagFormat tagName="itm" dataName="HOLDCEIL"/><!--保留金额-->
+          <XMLFullTagFormat tagName="itm" dataName="FRZAMT"/><!--冻结金额-->
+        <XMLEndTagFormat tagName="out"/>
+      <XMLEndTagFormat tagName="eb"/>
+    </RecordFormat>
+  </Format>
+
+</FormatDef>

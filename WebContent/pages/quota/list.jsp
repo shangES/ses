@@ -171,16 +171,18 @@ function initPagePam(){
 	pam.companyid=$("#companyid").val();
 	pam.deptid=$("#deptid").val();
 	pam.postname=$("#postname").val();
+	alert(pam.companyid+"|"+pam.deptid+"|"+pam.postname);
 	
-	
+	alert("0000");
 	if(selectNode!=null){
+		alert("111111111");
 		if(selectNode.code=='dept'){
 			pam.deptcode=selectNode.deptcode;
 		}else if(selectNode.code='company'){
 			pam.companycode=selectNode.companycode;
 		}
 	}
-	
+	alert("22222222222");
 }
 
 
@@ -419,6 +421,7 @@ function loadGrid(){
 		id : grid_demo_id,
 		loadURL :'quota/searchQuota.do',
 		beforeLoad:function(reqParam){
+			alert("SSSSS");
 			initPagePam();
 			reqParam['parameters']=pam;
 		},

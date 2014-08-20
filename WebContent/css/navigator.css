@@ -1,0 +1,20 @@
+.title1 { background-image: url(../images/t3.gif); font-size: 9pt; font-weight: bolder; color: #FFFFFF; background-attachment: fixed; background-repeat: no-repeat }
+.title {  background-image:  url(../images/t1.gif); font-size: 9pt; font-weight: bolder; color: #FFFFFF; background-attachment: fixed; background-repeat: no-repeat; background-position: left bottom}
+.sub {  font-size: 9pt; color: #FFFFFF; background-color: #6699cc; background-image:  url(/icbc/cmis/images/t2.gif)}
+.td9 {  font-size: 9pt; font-weight: bold; color: #FFFFFF}
+a:link {  color: #FFFFFF; text-decoration: none}
+a:visited {  color: #FFFFFF; text-decoration: none}
+a:hover {  color: #FFFF00; text-decoration: underline}
+body {  font-size: 9pt; color: #000000; background-color: #336699; background-image: url(../images/menubk.gif);scrollbar-base-color:#336699; scrollbar-arrow-color:#ffff88;}
+table {  font-size: 9pt; font-weight: bold}
+
+.Navigator 
+{ 
+color: #003366; 
+} 
+.Navigator-Hidden 
+{ 
+display:none; 
+} 
+.nselect {  }
+.bselect {  background-color: #336699; color: #FFFFFF; border-style: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; font-weight: bold}

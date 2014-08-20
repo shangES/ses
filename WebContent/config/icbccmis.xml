@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding ="GB2312" standalone="no" ?>
+<!DOCTYPE CTESettings SYSTEM "cmis.dtd">
+	<CTESettings>
+		<field id="cycleTime" value="15000"/>
+		<field id="areaTransEnable" value="true"/>
+		<field id="fileRootPath" value="D:\eclipse\eclipse-jee-juno-win32\workspace\hrmweb\WebContent\config\"/>
+		<field id="errTableFileName" value="tranerrormsg.txt"/>
+		<field id="formatDefFileName" value="format.xml"/>
+		<field id="dbUserInfoFileName" value="dbuserinfo.txt"/>
+		<field id="limitedOpListFileName" value="limitedoplist.txt"/>
+		<field id="signOnErrPage" value="/sesserror.jsp"/>
+		<field id="tranErrorPage" value="/error.jsp"/>
+		<field id="operationPackages" value="icbc.cmis.CA|icbc.cmis.OD|icbc.cmis.OE|icbc.cmis.OF|icbc.cmis.OG|icbc.cmis.OH|icbc.cmis.OI|icbc.cmis.OJ|icbc.cmis.OU|icbc.cmis.CD|icbc.cmis.RJ|icbc.cmis.LA|icbc.cmis.LB|icbc.cmis.EF|icbc.cmis.RE|icbc.cmis.VD|icbc.cmis.FP|icbc.cmis.IF|icbc.missign|icbc.cmis.IA|icbc.cmis.IB|icbc.cmis.IG|icbc.cmis.EI|icbc.cmis.VE|icbc.cmis.PF|icbc.cmis.VB|icbc.cmis.VC|icbc.cmis.FN|icbc.cmis.FJ|icbc.cmis.MA|icbc.cmis.VB|icbc.cmis.EA|icbc.cmis.EC|icbc.cmis.operation|icbc.cmis.FE|icbc.cmis.FK|icbc.cmis.PF|icbc.cmis.PC|icbc.cmis.FA|icbc.cmis.FB|icbc.cmis.FG|icbc.cmis.FH|icbc.cmis.MA|icbc.cmis.MB|icbc.cmis.MC|icbc.cmis.MD|icbc.cmis.ME|icbc.cmis.MF|icbc.cmis.PB|icbc.cmis.PE|icbc.cmis.util|icbc.cmis.EB|icbc.cmis.PJ|icbc.cmis.EE|icbc.cmis.PG|icbc.cmis.FR|icbc.cmis.HA|icbc.cmis.HB|icbc.cmis.HC|icbc.cmis.HD|icbc.cmis.HE"/>
+		<field id="jdbcResourceName" value="CMISDB"/>
+		<field id="dbUserInName" value="ICBCSEC"/>
+		<field id="dbUserInPass" value="ICBCSECPASS"/>	
+		<field id="subApplication" value="909|911|913|915|917|919|921|925|901|903|914|099|100|200|210|220|230|240|250|260|270|280|300|400|370|290|810|310|440|320|380|390|410"/>
+		<field id="mqResource" value="MQRESOURCE"/>
+		<field id="cmis3UserName" value="cmis3"/>
+		<field id="cmis3Verify" value="cmis3"/>
+		<field id="displayMaxRow" value="200"/>
+		<field id="transLogProcName" value="transLogProc"/>
+		<field id="enableTracer" value="false"/>
+		<field id="traceToDisplay" value="no"/>
+		<field id="displayNumberOfLines" value="5000"/>
+		<field id="threadRunInteval" value="90000"/>
+		<field id="GCRunInteval" value="1200000"/>
+		<field id="getUserPassProc" value="getuserpasswd"/>
+		<field id="balanceAppSrvIPAddrs" value="109.248.13.1672|109.248.13.1671"/>
+		<field id="needClearDictDay" value="1"/>
+		<field id="encoding" value="GB2312"/>
+		<field id="enableSessionCtl" value="true"/>
+		<field id="webBasePath" value="/hrmweb"/>
+		<field id="isDebugModel" value="false"/>
+		<field id="enableLimitedOpCtl" value="true"/>
+		<field id="limitedOpRetryTimes" value="3"/>
+		<field id="limitedOpRetryInterval" value="1000"/>
+		<field id="sessionManual" value="true"/>
+		<field id="rowUnlimited" value="true"/>
+		<field id="perPageNum" value="15"/>
+		<field id="logEnable" value="4"/>
+		<field id="cycleTime" value="5000"/>
+		<field id="reportURL" value="http://16.1.74.13/commonQuery/servlet/logon.Logon"/>
+		<field id="maxUploadFileSize" value="1048576"/>
+		<field id="allowedUploadFileExt" value="xls,zip,rar"/>
+		<field id="application" value="cmis|bmis|bift"/>
+		<field id="enableSqlAnalyser" value="true"/>
+		<field id="enableMQ" value="true"/>
+		<field id="dsrConnTimeout" value="5000"/>
+		<field id="dsrSendTimeout" value="20000"/>
+		<field id="dsrRecvTimeout" value="20000"/>
+		<field id="dsrXMLFileName" value="transcfg.xml"/>
+		<field id="dsrPoolFileName" value="ConnectionPoolConfig.xml"/>
+		<field id="dsrEndoding" value="GBK"/>
+		<field id="poolSwitch" value="true"/>
+		<field id="IPCGWEnabled" value="false"/>
+		<field id="enableLimitedopSceneCtlDeli" value="" />
+		<field id="enableLimitedOpSceneCtl" value="true" />
+		<field id="enableLimitedOpSceneTag" value="scene" />
+<!--bms参数-->			
+		<field id="bmsDebugFlag" value="true"/>
+<!-- 20040615 增加参数配置 enableBankCtrl 表示在银行信息管理里如果是BMS应用则银行归属到bmsbankcredit表中查询,默认为false -->
+		<field id="enableBankCtrl" value="true" />
+<!-- 20040615 增加参数配置 enableSingCtrl 二季度版本中需要签批人有效性检查,true检查，false不检查，默认为检查 -->
+		<field id="enableSignCtrl" value="true" />
+		
+		
+<!--是否启用CTP框架-->	
+    <field id="CTPEnabled" value="false"/>
+<!--统一柜员认证参数段开始-->
+        <field id="enableSSIC" value="false"/><!--统一柜员认证启用标志-->
+        <field id="SSICServerIP" value="10.15.254.222"/><!--北京统一认证服务器地址-->         
+        <field id="SSICFilePath" value="/keys"/><!--统一认证公、私钥文件所在路径(最后不要带/或\)-->
+        <field id="SSICVersion" value="1.0"/><!--统一认证版本-->
+        <field id="LocalSystemName" value="CMIS"/><!--本地专业系统的代号-->
+        <field id="LocalSystemURL" value="http://83.1.33.1/icbc/cmis/"/><!--本地专业服务器起始链接-->
+        <field id="LocalSystemPrivateKeyPassword" value="1a2b3c"/><!--本地专业认证私钥密码-->
+        <field id="enableIDAndCryptoConfig" value="false"/>
+<!--统一柜员认证参数段结束-->
+		<DBUserVerifyPool>
+				<DBUsers
+					userID="cmis3"
+					verify="cmis3"
+					pool="CMISDB"/>
+				<DBUsers
+					userID="missign"
+					verify="missign"
+					pool="CMISDBM"/>					
+		</DBUserVerifyPool>
+		<JDBCConnectionPool>
+			<JDBCConnectionPoolService>
+				<JDBCResource
+					resourceID="CMISDB"
+					driverName="oracle.jdbc.driver.OracleDriver"
+					dbURL="jdbc:oracle:thin:@10.0.84.30:1521:CRM1"
+					maxConnection="30"/>
+				<JDBCResource
+					resourceID="CMISDBM"
+					driverName="oracle.jdbc.driver.OracleDriver"
+					dbURL="jdbc:oracle:thin:@10.0.84.30:1521:CRM1"
+					maxConnection="30"/>
+					
+			</JDBCConnectionPoolService>
+		</JDBCConnectionPool>
+
+		<ECCMQConnectionPool>
+			<QManager QMgrName="QM_ZH"
+				channel="SERVERCONN"
+				hostName="10.15.254.50"  
+				port="1418"
+				charSet="1381"
+				maxConnections="5"
+				/>
+			<MQResource resourceID="MQRESOURCE" QMgrName="QM_ZH"
+				sendToQ="BUFFER_MIS_REQ"
+				replyToQ="BUFFER_MIS_ANS"
+				PutMessageOptions="MQPMO_NO_SYNCPOINT"
+				getMessageOptions="MQGMO_WAIT"
+				synchronousMode="disabled"
+				serverOrClient="client"
+				sendToQOpenOptions="MQOO_OUTPUT"
+				replyToQOpenOptions="MQOO_INPUT_SHARED"
+				persistence="MQPER_PERSISTENT"
+				timeout="20000" />
+		</ECCMQConnectionPool>
+		<Monitor
+			listenPort="1880"
+			checkInterval="18000"
+			server="16.1.74.1"
+			retryInterval="10000"
+			mgrName="icbc"
+			mgrPass="icbc"
+			serverStart="false"
+		/>
+		
+	       <AppEntryPool>
+	         <Status enabled="true"/>     
+                   <AppEntry sysCode="02" url="http://109.248.13.167/icbc/bms/servlet/icbc.cmis.servlets.CmisSessionServlet?operationName=icbc.missign.SwitchLogin" />
+                   <AppEntry sysCode="04" url="http://109.248.13.167/icbc/bift/servlet/icbc.cmis.servlets.CmisSessionServlet?operationName=icbc.missign.SwitchLogin" />
+               </AppEntryPool>
+     	<CM2002Service enabled="true">
+        	<field id="TranscfgFile" value="servicetranscfg.xml"/>
+        	<field id="TransMapFile"	value="servicetrans.xml"/>
+        	<field id="HttpEnabled" value="true"/>
+        	<field id="HttpHandler" value="icbc.cmis.service.channel.http.CmisServiceHttpReqHandler"/>
+        	<field id="MQEnabled" value="false"/>
+        	<field id="MQHandler" value="icbc.cmis.service.channel.mq.CmisServiceMQReqHandler"/>
+        	<field id="TurnPageMax" value="100"/>
+        	<field id="IDAuthenticate" value=""/>
+        	<field id="SessionMaxTimeInterval" value="18000L"/>
+        	<CM2002MQService maxServiceThread="100">
+        		<QManager QMgrName="QM_CM2002"
+					channel="SERVERCONN"
+					hostName="109.248.13.43"
+					port="1414"
+					charSet="1381"
+					maxConnections="20"/>
+        		<MQResource resourceID="NETBANK_ZJ" QMgrName="QM_CM2002"
+					sendToQ="CM2002_SENDER"
+					replyToQ="CM2002_RECEIVER"
+					PutMessageOptions="MQPMO_NO_SYNCPOINT"
+					getMessageOptions="MQGMO_WAIT"
+					synchronousMode="disabled"
+					serverOrClient="client"
+					sendToQOpenOptions="MQOO_OUTPUT"
+					replyToQOpenOptions="MQOO_INPUT_SHARED"
+					persistence="MQPER_PERSISTENT"
+					timeout="20000" />
+        	</CM2002MQService>
+        </CM2002Service>    
+               
+	</CTESettings>
+	
+
+
+
+
+
+

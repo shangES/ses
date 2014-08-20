@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE GatewayClientService SYSTEM "IPCGWServiceHandler.dtd">
+<GatewayClientService id="gatewayClientService">
+		<Handler putMsgField="reqMsg" getMsgField="repMsg" 
+			defaultOperation="">
+			<switch case="1" operation="icbc.cmis.service.channel.ipcgw.util.LoanOp"/>
+			<switch case="2" operation="icbc.cmis.service.channel.ipcgw.util.draftOp"/>
+		</Handler>
+</GatewayClientService> 
+

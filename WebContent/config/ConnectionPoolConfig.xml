@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!--
+<ConnectionPoolDriver>
+	<ConnectionPoolManager id="PoolId1" className="com.icbc.util.comm.DsrGateConnection"  checkInterval="10000" minConnections="1"  maxConnections="20"  maxFreeTime="100000"  timeout="70000" logFile="./yourlogfilename1" fileLength="0">
+		<HostResource 
+			hostIP="109.248.13.70"
+			port="6015"
+			priority="3"
+		/>
+		<HostResource 
+			hostIP="109.248.13.70"
+			port="6015"
+			priority="9"
+		/>
+-->	
+<ConnectionPoolDriver>
+	<ConnectionPoolManager id="PoolId2" className="com.icbc.util.comm.DsrGateConnection"  checkInterval="10000" minConnections="1"  maxConnections="20"  maxFreeTime="100000"  timeout="70000" logFile="./yourlogfilename1" fileLength="0">
+		<HostResource 
+			hostIP="122.138.13.55"
+			port="7011"
+			priority="2"
+		/>
+		
+	</ConnectionPoolManager>
+</ConnectionPoolDriver>
+
+
+
+

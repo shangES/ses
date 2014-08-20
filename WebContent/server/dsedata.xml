@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<dsedata.XML>
+	
+	<kColl id="linkFiles">
+		<field fileName="acms/acmsdata.xml" type="acms" /><!--代理行授信数据配置文件-->
+                <field fileName="badloan/badloandata.xml" type="badloan" /><!--不良贷款管理系统数据配置文件-->
+	</kColl>
+	<kColl id="serverData">
+		<!--杨光润删除 {-->
+		<!--field id="BranchId" value="111111"/-->
+		<!--field id="roleFlag" value="0"/-->    <!-- 选择角色标志：“0”选择；“1”不选择 -->
+		<!--field id="authJDBCServiceName" value="JDBCConnectionPool"/-->
+		<!--field id="authJDBCSourceName" value="ORACLEJDBC"/-->
+		<!--}杨光润删除-->
+		
+		<!--refData refId="branchInfoIcoll"/-->	<!-- 机构信息结果集 --> <!-- jinzw del -->
+		<!--refData refId="userInfoIcoll"/-->	<!-- 用户信息结果集 -->
+		<!--refData refId="roleInfoIcoll"/-->	<!-- 角色信息结果集 -->
+		
+		<!--杨光润删除 {-->
+		<!--refData refId="menuInfoIcoll"/-->	<!-- 菜单信息结果集 -->
+		<!--refData refId="itemInfoIcoll"/-->	<!-- 功能信息结果集 -->
+		<!-- jinzw added begin -->
+		<!--refData refId="iBranchLevel"/-->	<!-- 机构级别信息结果集 -->
+		<!-- jinzw added end -->
+		<!--}杨光润删除-->
+	</kColl>
+  
+
+	<kColl id="sessionData">
+		<field id="SessionId"/>		<!--session id-->
+		<field id="netType"/>		<!--netType-->
+		<!--field id="userId"/-->		<!--客户号-->
+		<!--field id="pw"/-->		<!--客户登录密码-->
+		<field id="GWRetCode"/>		<!--交易网关返回码-->
+		<field id="TranResult"/>	<!--交易主机返回码-->
+		<field id="CTEException"/>	<!--交易错误信息-->
+		<field id="tranDate"/>		<!--交易日期（yyyyMMddHHmmss）-->
+		<field id="areaCode"/>		<!--地区-->
+		<field id="netTerminal"/>	<!--网点-->
+		<field id="opFlag"/>
+		<!--added by zhaodl-->
+		<field id="tranCode"/>		<!--交易代码-->
+		<field id="ProcRetCode"/>	<!--存储过程返回码-->
+		<field id="dynamicOpId"/>	<!--用于交易动态数据管理，保存op名-->
+		<field id="dynamicOpData"/>	<!--用于交易动态数据管理，保存交易数据-->
+		<field id="Language" value="zh_CN"/><!-- 用户语言环境 -->
+		<field id="MessageID"/>		<!-- MQ的Message标识号 -->
+		<field id="resourceId"/>	<!-- MQ的资源ID号 -->
+		<field id="hostRetCode"/>	<!-- 主机返回码 -->
+		<!-- added by xiecy-->
+		<field  id="showNum" value="10"/><!--每页显示最大页数 -->
+		<!-- added by xiecy end-->
+		<!--added by zhaodl end-->
+		<field id="CoID"/>			<!--企业编码-->
+		<field id="CoName"/>		<!--企业名称-->
+	    
+	    <!--杨光润删除{-->
+		<!--field id="userName"/-->		<!-- 用户名称 -->
+		<!--field id="userState"/-->	<!-- 用户状态 1：激活；0：冻结 -->
+		<!--field id="branchId"/-->		<!-- 所属机构 -->
+		<!--field id="branchName"/-->	<!-- 所属机构名称 -->
+		<!--field id="userLevel"/-->		<!-- 用户级别 -->
+		<!--field id="userDes"/-->		<!-- 用户描述 -->
+		<!--field id="userPhone"/-->		<!-- 用户电话 -->
+		<!--field id="userEmail"/-->		<!-- 用户电子邮件 -->
+		<!--field id="userAddress"/-->	<!-- 地址 -->
+		<!--field id="userPostcode"/-->	<!-- 邮政编码 -->
+		<!--field id="userMobile"/-->	<!-- 用户手机 -->
+		<!--field id="defaultRoleId"/-->	<!-- 用户选择登录的角色 -->
+		<!--field id="userStyle"/-->		<!-- 用户选择的菜单样式 -->
+		<!--refData refId="roleIDIcoll"/-->	<!-- 用户角色列表 -->
+		<!--field id="menuXMLString"/-->
+	
+		<!-- jinzw added begin -->
+		<!--field id="branchRegionId"/--><!-- 所属机构地区代码 -->
+		<!--field id="branchCategory"/--><!-- 所属机构类型 -->
+		<!--field id="userCategory"/-->	<!-- 用户类别，0：系统用户，1：新增用户 -->
+		<!--field id="userPriAll"/-->	<!-- 用户权限管理全部级别标志，0：否，1：是 -->
+		<!--field id="userPriSelf"/-->	<!-- 用户权限管理本级别标志，0：否，1：是 -->
+		<!--field id="userPriOther"/-->	<!-- 用户权限管理下级级别数 -->
+		<!--field id="branchSName"/-->	<!-- 所属机构简称 -->
+		<!--field id="branchDesc"/-->	<!-- 所属机构描述 -->
+		<!--field id="branchStatus"/-->	<!-- 机构状态 -->   																	
+		<!--field id="branchLevel"/-->	<!-- 机构级别 -->   																	
+		<!--field id="branchPId"/-->		<!-- 父机构编号 --> 																	
+		<!--field id="branchPName"/-->	<!-- 父机构名称 --> 																	
+		<!--field id="branchPSName"/-->	<!-- 父机构简称 -->
+		<!-- }杨光润删除 -->
+		 																	
+		<!-- 杨光润添加 -->
+		<field id="CM2002SessionData"/> <!-- 用于存放CM2002 Session数据-->
+		<field id="prevOperation"/><!-- 用于存放前一次调用的Operation名字-->
+		<field id="infoTitle"/>		<!-- 用于存储信息窗口标题 -->
+		<field id="infoMsg"/>		<!-- 用于存储信息窗口提示信息 -->
+		<field id="infoReturn"/>	<!-- 用于存储信息窗口返回URL -->
+		<field id="ServerIP"/>		<!-- 服务器IP -->
+		<field id="UserIP"/>		<!-- 浏览器IP -->
+		<!-- 杨光润添加 -->
+	
+		<!-- jinzw added begin -->
+		<!--iColl id="iAccount"-->	<!--账号集合-->
+			<!--kColl id="kAccount"-->
+				<!--field id="account"/--><!-- 卡号 -->
+				<!--field id="acctName"/--><!-- 户名 -->
+			<!--/kColl-->
+		<!--/iColl-->
+	</kColl>
+
+	<iColl id="userRoleNameIcoll">
+		<refData refId="userRoleNameKcoll"/>
+	</iColl>
+
+	<kColl id="userRoleNameKcoll">
+		<field id="userRoleName"/>
+	</kColl>
+
+	<iColl id="roleIDIcoll" count="*">	<!-- 角色信息结果集 -->
+		<refData refId="roleIDKcoll"/>	<!-- 角色信息 -->
+	</iColl>
+
+	<kColl id="roleIDKcoll">   		<!-- 角色信息 -->
+		<field id="roleId"/>		<!-- 角色编号 -->
+		<!-- jinzw added begin -->
+		<field id="roleName"/>		<!-- 角色名称 -->
+		<!-- jinzw added end -->
+	</kColl>
+
+	<!-- 权限管理定义数据 -->
+	<iColl id="branchInfoIcoll" count="*">	<!-- 机构信息结果集 -->
+		<refData refId="branchInfoKcoll"/><!-- 机构信息 -->
+	</iColl>
+
+	<kColl id="branchInfoKcoll">   		<!-- 机构信息 -->
+		<field id="branchId"/>		<!-- 机构编号 -->
+		<field id="branchName"/>	<!-- 机构名称 -->
+		<field id="branchLevel"/>	<!-- 机构级别 -->
+		<field id="branchState"/>	<!-- 机构状态 1：激活；0：冻结 -->
+		<field id="parentBranchId"/>	<!-- 父机构 -->
+		<field id="parentBranchName"/>	<!-- 父机构名称 -->
+		<field id="branchRegionId"/>	<!-- 区号 -->
+		<field id="branchDes"/>		<!-- 机构描述 -->
+		<field id="isNode"/>		<!-- 是否是节点，0：节点；1：叶子 -->
+	</kColl>
+
+	<!-- 机构级别数据 -->
+		<iColl id="iBranchLevel" count="*"><!-- 机构级别信息结果集 -->
+		<refData refId="kBranchLevel"/>	<!-- 机构级别信息 -->
+	</iColl>
+
+	<kColl id="kBranchLevel">		<!-- 机构级别信息 -->
+		<field id="levelId"/>		<!-- 机构级别编号 -->
+		<field id="levelName"/>		<!-- 机构级别名称 -->
+	</kColl>
+
+	<iColl id="userInfoIcoll" count="*">	<!-- 用户信息结果集 -->
+		<refData refId="userInfoKcoll"/><!-- 用户信息 -->
+	</iColl>
+
+	<kColl id="userInfoKcoll">   		<!-- 机构信息 -->
+		<field id="userId"/>		<!-- 用户编号 -->
+		<field id="userName"/>		<!-- 用户名称 -->
+		<field id="userPassword" /> 	<!-- 用户登陆口令 （密文）-->
+		<field id="userState"/>		<!-- 用户状态 1：激活；0：冻结 -->
+		<field id="branchId"/>		<!-- 所属机构 -->
+		<field id="branchName"/>	<!-- 所属机构名称 -->
+		<field id="userLevel"/>		<!-- 用户级别 -->
+		<field id="userDes"/>		<!-- 用户描述 -->
+		<field id="userPhone"/>		<!-- 用户电话 -->
+		<field id="userEmail"/>		<!-- 用户电子邮件 -->
+		<field id="userAddress"/>	<!-- 地址 -->
+		<field id="userPostcode"/>	<!-- 邮政编码 -->
+		<field id="userMobile"/>	<!-- 用户手机 -->
+		<field id="userStyle"/>		<!-- 菜单样式 -->
+	</kColl>
+
+	<iColl id="roleInfoIcoll" count="*">	<!-- 角色信息结果集 -->
+		<refData refId="roleInfoKcoll"/><!-- 角色信息 -->
+	</iColl>
+
+	<kColl id="roleInfoKcoll">   		<!-- 角色信息 -->
+		<field id="roleId"/>		<!-- 角色编号 -->
+		<field id="roleName"/>		<!-- 角色名称 -->
+		<field id="roleDes"/>		<!-- 角色描述 -->
+	</kColl>
+
+	<iColl id="roleMenuPrivilegeIcoll" count="*">	<!-- 菜单权限列表 -->
+		<refData refId="roleMenuPrivilegeKcoll"/><!-- 菜单权限信息 -->
+	</iColl>
+
+	<kColl id="roleMenuPrivilegeKcoll">   	<!-- 菜单信息 -->
+		<field id="roleId"/>		<!-- 角色编号 -->
+		<field id="menuId"/>		<!-- 菜单编号 -->
+		<field id="privilege"/>		<!-- 权限 -->
+	</kColl>
+
+
+	<iColl id="roleItemPrivilegeIcoll" count="*">	<!-- 功能权限列表 -->
+		<refData refId="roleItemPrivilegeKcoll"/><!-- 功能权限信息 -->
+	</iColl>
+
+	<kColl id="roleItemPrivilegeKcoll">   	<!-- 功能信息 -->
+		<field id="roleId"/>		<!-- 角色编号 -->
+		<field id="itemId"/>		<!-- 功能编号 -->
+		<field id="privilege"/>		<!-- 权限 -->
+	</kColl>
+
+	<iColl id="menuInfoIcoll" count="*">	<!-- 菜单信息结果集 -->
+		<refData refId="menuInfoKcoll"/><!-- 菜单信息 -->
+	</iColl>
+
+	<kColl id="menuInfoKcoll">		<!-- 菜单信息 -->
+		<field id="menuId"/>		<!-- 菜单编号 -->
+		<field id="menuName"/>		<!-- 菜单名称 -->
+		<field id="menuLevel"/>		<!-- 菜单级别 -->
+		<field id="menuStatus"/>	<!-- 菜单状态 1：激活；0：冻结 -->
+		<field id="menuDesc"/>		<!-- 菜单描述 -->
+		<field id="menuLabel"/>		<!-- 菜单标签 -->
+		<field id="menuParentId"/>	<!-- 父菜单 -->
+		<refData refId="itemIDIcoll"/>	<!-- 功能列表 -->
+	</kColl>
+
+	<iColl id="itemIDIcoll" count="*">	<!-- 功能编号结果集 -->
+		<refData refId="itemIDKcoll"/>	<!-- 功能编号 -->
+	</iColl>
+
+	<kColl id="itemIDKcoll">   		<!-- 功能功能编号 -->
+		<field id="itemId"/>		<!-- 功能编号 -->
+	</kColl>
+
+	<iColl id="itemInfoIcoll" count="*"><!-- 功能信息结果集 -->
+		<refData refId="itemInfoKcoll"/><!-- 功能信息 -->
+	</iColl>
+
+	<kColl id="itemInfoKcoll">		<!-- 功能信息 -->
+		<field id="itemId"/>		<!-- 功能编号 -->
+		<field id="itemName"/>		<!-- 功能名称 -->
+		<field id="itemStatus"/>	<!-- 功能状态 1：激活；0：冻结-->
+		<field id="itemLevel"/>		<!-- 功能级别 -->
+		<field id="itemDesc"/>		<!-- 功能描述 -->
+		<field id="itemLabel"/>		<!-- 功能标签 -->
+		<field id="URL"/>	        <!-- URL -->
+		<field id="itemType"/>		<!-- 功能类别 -->
+	</kColl>
+
+	<!-- 权限管理定义数据 完 -->
+	<kColl id="tcpipSessionData">
+		<field id="SessionId"/>		<!--session id-->
+		<field id="netType"/>		<!--netType-->
+		<field id="userId"/>		<!--客户号-->
+		<field id="pw"/>		<!--客户登录密码-->
+		<field id="GWRetCode"/>		<!--交易网关返回码-->
+		<field id="TranResult"/>	<!--交易主机返回码-->
+		<field id="CTEException"/>	<!--交易错误信息-->
+		<field id="tranDate"/>		<!--交易日期（yyyyMMddHHmmss）-->
+		<field id="areaCode"/>		<!--地区-->
+		<field id="netTerminal"/>	<!--网点-->
+		<field id="opFlag"/>
+		<!--added by zhaodl-->
+		<field id="tranCode"/>		<!--交易代码-->
+		<field id="ProcRetCode"/>	<!--存储过程返回码-->
+		<field id="dynamicOpId"/>	<!--用于交易动态数据管理，保存op名-->
+		<field id="dynamicOpData"/>	<!--用于交易动态数据管理，保存交易数据-->
+		<field id="Language" value="zh_CN"/>	<!-- 用户语言环境 -->
+		<field id="ProcRetCode"/>	<!-- 操作标志 -->
+		<field id="MessageID"/>		<!-- MQ的Message标识号 -->
+		<field id="resourceId"/>	<!-- MQ的资源ID号 -->
+		<field id="hostRetCode"/>	<!-- 主机返回码 -->
+	</kColl>
+
+
+	<!--====杨晓宇添加系统管理数据 Begin===============-->
+	<iColl id="roleInUserIcoll" count="*">	<!-- 角色信息结果集 -->
+		<refData refId="roleInUserKcoll"/>	<!-- 角色与用户关系结果集 -->
+	</iColl>
+
+	<kColl id="roleInUserKcoll">	<!--角色与用户关系结果集 -->
+		<field id="userId"/>		<!-- 用户编号 -->
+		<field id="userName"/>		<!-- 用户名称 -->
+		<field id="isHave"/>		<!-- 是否拥有 -->
+	</kColl>
+
+	<iColl id="userInRoleIcoll" count="*">	<!-- 用户拥有信息结果集 -->
+		<refData refId="userInRoleKcoll"/><!-- 用户拥有角色信息 -->
+	</iColl>
+
+	<kColl id="userInRoleKcoll">	<!-- 用户与角色信息 -->
+		<field id="roleId"/>		<!-- 角色编号 -->
+		<field id="roleName"/>		<!-- 角色名称 -->
+		<field id="isHave"/>		<!-- 是否拥有 -->
+	</kColl>
+
+	<!--用户权限列表-->
+	<iColl id = "userItemPrivilegeIcoll">
+		<refData refId="userItemPrivilegeKcoll"/>
+	</iColl>
+	
+	<kColl id = "userItemPrivilegeKcoll">
+		<field id ="userId"/>		<!--用户编号-->
+		<field id ="itemId"/>		<!--功能编号-->
+		<field id ="privilege"/>	<!--权限-->
+	</kColl>
+
+	<iColl id = "userMenuPrivilegeIcoll">	<!--用户/角色权限列表-->
+		<refData refId="userMenuPrivilegeKcoll"/>
+	</iColl>
+	<kColl id = "userMenuPrivilegeKcoll">
+		<field id ="userId"/>		<!--用户编号-->
+		<field id ="menuId"/>		<!--菜单编号-->
+		<field id ="privilege"/>	<!--权限-->
+	</kColl>
+        <!--====杨晓宇添加系统管理数据 End===============-->
+
+	<iColl id="insertUserInfoIcoll" count="*"><!-- 用户详细情况列表 -->
+		<refData refId="insertUserInfoKcoll"/>
+	</iColl>
+
+	<kColl id="insertUserInfoKcoll">
+		<field id="userid"/>	<!-- 栏目编号 -->
+		<field id="roleid"/>	<!-- 角色编号 -->
+		<field id="email"/>		<!--数据类型 -->
+		<field id="mobile"/>
+		<field id="sendway"/>
+	</kColl>
+</dsedata.XML>
+

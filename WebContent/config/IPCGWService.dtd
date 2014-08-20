@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT GatewayClientService (host*,Receiver,Sender)>	
+<!ATTLIST GatewayClientService id CDATA #REQUIRED conNum CDATA #REQUIRED
+    retryTime CDATA #REQUIRED socketTimeout CDATA #REQUIRED 
+    maxHandlers CDATA #REQUIRED
+    handlerClass CDATA #REQUIRED receiverClass CDATA #REQUIRED
+    senderClass CDATA #REQUIRED>
+	<!ELEMENT host EMPTY>
+	<!ATTLIST host value CDATA #REQUIRED>
+	<!ELEMENT Receiver (#PCDATA)>
+	<!ATTLIST Receiver name CDATA #REQUIRED checkTime CDATA #REQUIRED>
+	<!ELEMENT Sender (#PCDATA)>
+	<!ATTLIST Sender name CDATA #REQUIRED>
+

@@ -64,7 +64,71 @@
 	</filter-mapping>
 
 
+	<!-- 工作流 -->
+	<servlet>
+         <servlet-name>CmisStartupServlet</servlet-name>
+         <servlet-class>icbc.cmis.servlets.CmisStartupServlet</servlet-class>
+         <init-param>
+            <param-name>initStart</param-name>
+            <param-value>true</param-value>
+         </init-param>
+         <init-param>
+            <param-name>CTEFilePath</param-name>
+            <param-value>D:\eclipse\eclipse-jee-juno-win32\workspace\hrmweb\WebContent\config\icbccmis.xml</param-value>
+         </init-param>
+         <init-param>
+            <param-name>userName</param-name>
+            <param-value>icbc</param-value>
+         </init-param>
+         <init-param>
+            <param-name>userPass</param-name>
+            <param-value>icbc</param-value>
+         </init-param>
+         <init-param>
+            <param-name>JVMID</param-name>
+            <param-value>1</param-value>
+         </init-param>
+         <init-param>
+            <param-name>appCode</param-name>
+            <param-value>3</param-value>
+         </init-param>
+         <init-param>
+            <param-name>dseIniPath</param-name>
+            <param-value>D:\eclipse\eclipse-jee-juno-win32\workspace\hrmweb\WebContent\server\dse.ini</param-value>
+         </init-param>
+         <load-on-startup>1</load-on-startup>
+      </servlet>
+      <servlet>
+         <servlet-name>CmisReqServlet</servlet-name>
+         <servlet-class>icbc.cmis.servlets.CmisReqServlet</servlet-class>
+      </servlet>
+      <servlet-mapping>
+         <servlet-name>CmisReqServlet</servlet-name>
+         <url-pattern>/servlet/icbc.cmis.servlets.CmisReqServlet</url-pattern>
+      </servlet-mapping>
 
+
+      <taglib>
+         <taglib-uri>cmisTags</taglib-uri>
+         <taglib-location>/WEB-INF/taglib/cmisTagLib.tld</taglib-location>
+      </taglib>
+      <taglib>
+         <taglib-uri>CTPTLD</taglib-uri>
+         <taglib-location>/WEB-INF/taglib/CTPTaglib.tld</taglib-location>
+      </taglib>
+      <resource-ref>
+     	<description>CMISDB</description>
+		<res-ref-name>jdbc/CMISDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	  </resource-ref>
+      <resource-ref>
+     	<description>CMISDBM</description>
+		<res-ref-name>jdbc/CMISDBM</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	  </resource-ref>
+	
 	<!-- spring mvc dispatcher servlet -->
 	<servlet>
 		<servlet-name>mk</servlet-name>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="GB2312"?>
+
+
+<dsesrvce.XML>
+
+	<!-- =====================dsesrvce.xml的其他补充文件定义 ======================== -->
+	
+	<kColl id="linkFiles">
+		<!--field fileName="auth/authsrvce.xml" type="aut" /-->
+		<field fileName="acms/acmssrvce.xml" type="acms"/><!-- 代理行授信服务配置 -->
+                <field fileName="badloan/badloansrvce.xml" type="badloan"/><!-- 不良贷款服务配置 -->
+	</kColl>
+	
+	<!-- =====================通信和后台维护线程 ======================== -->	
+	<ftpFileService id="ftpFileService" 
+		ftpServer="122.136.14.190" 
+		userName="root" 
+		password="Xzd123"
+	/>       
+                		 	
+	<!-- =====================通信和后台维护线程 ======================== -->	
+	<CSServer id="realCSServer" 
+		inactivityClientTimeout="1800000" 
+		timeBetweenSessionCheck="300000"
+	/>
+	
+	<!-- =====================会话超时处理监听器 ======================== -->			
+	<CTEEventListener id="CTEListener"/>
+    
+	<!-- =====================系统数据字典同步Service ======================== -->	
+	<SystemDataSyncByHttpService id="systemDataSyncSrv"
+		hostList="127.0.0.1:8080"
+		requestURL="servlet/com.icbc.cte.cs.servlet.NoSessionReqServlet"
+		uri="/icbc/cmis/"
+	/>
+    	
+    	
+	<!-- ===================== MQ连接缓冲池定义 ======================== -->
+	<ECCMQConnectionPool id="MQConnectionPool">
+
+		<QManager
+			QMgrName="QM_ZH"
+			channel="SERVERCONN"
+			hostName="10.10.50.16"
+			port="1414"
+			charSet="1381"
+			maxConnections="10"
+			/>
+
+		<MQResource
+			resourceID="QM_ZH"
+			QMgrName="QM_ZH"
+			sendToQ="BUFFER_STD_REQ"
+			replyToQ="BUFFER_STD_ANS"
+			PutMessageOptions="MQPMO_NO_SYNCPOINT"
+			getMessageOptions="MQGMO_WAIT"
+			serverOrClient="client"
+			sendToQOpenOptions="MQOO_OUTPUT"
+			replyToQOpenOptions="MQOO_INPUT_SHARED"
+			timeout="10000" />
+
+	</ECCMQConnectionPool>
+
+	<!-- =====================MQ发送数据包service======================== -->
+	<TransactionSwich id="TransactionSwich" timeOut="6000" demoFlag="1"/>
+
+	<!-- =====================MQ接收数据包service======================== -->
+	<MQReceiveService id="MQReceiveService" timeOut="6000" demoFlag="1"/>
+
+	<!-- =====================MQ接收数据包service======================== -->
+	<MQReceiveService id="MQReceiveService" timeOut="6000" demoFlag="1"/>
+
+	<!-- =====================数据库连接缓冲池定义======================== -->
+	<!--init_ctx_factory value:
+	was35:com.ibm.ejs.ns.jndi.CNInitialContextFactory
+	was40:com.ibm.websphere.naming.WsnInitialContextFactory
+	weblogic:weblogic.jndi.WLInitialContextFactory-->
+	<WasJDBCConnectionPool id="JDBCPool">
+		<!--JDBCResource resourceID="DB2JDBC"
+			init_ctx_factory="com.ibm.websphere.naming.WsnInitialContextFactory"
+			jndiURI=""
+			driverName="COM.ibm.db2.jdbc.app.DB2Driver"
+			dbURL="jdbc:db2:ICBCINBS"
+			dbUserName="db2admin"
+			dbPassword="db2admin"
+			maxConnection="10"/-->
+
+		<!--JDBCResource resourceID="ORACLEJDBC"
+			init_ctx_factory="com.ibm.websphere.naming.WsnInitialContextFactory"
+			jndiURI=""
+			driverName="oracle.jdbc.driver.OracleDriver"
+			dbURL="jdbc:oracle:thin:@109.248.13.163:1521:misorcl"
+			dbUserName="cmis3"
+			dbPassword="icbc_cmis3"
+			maxConnection="5"/-->
+		<JDBCResource resourceID="CMISDB"
+			init_ctx_factory="com.ibm.websphere.naming.WsnInitialContextFactory"
+			jndiURI=""
+			driverName="oracle.jdbc.driver.OracleDriver"
+			dbURL="jdbc:oracle:thin:@109.248.13.165:1521:misorcl"
+			dbUserName="cmis3"
+			dbPassword="icbc_cmis3_165165"
+			maxConnection="5"/>
+		<JDBCResource resourceID="CMISDBM"
+			init_ctx_factory="com.ibm.websphere.naming.WsnInitialContextFactory"
+			jndiURI=""
+			driverName="oracle.jdbc.driver.OracleDriver"
+			dbURL="jdbc:oracle:thin:@109.248.13.165:1521:misorcl"
+			dbUserName="missign"
+			dbPassword="icbc_missign_165165"
+			maxConnection="5"/>
+	</WasJDBCConnectionPool>
+
+	<!-- =====================存储过程调用接口services======================== -->
+	<!--DriverType: ORACLE,DB2,INFORMIX,JDBCODBC-->
+	<ProcedureAccessService id="ProcedureAccessService" DriverType="ORACLE"/>
+
+	<!-- ============================存储过程定义service================================= -->
+	<!--dbResource 的配置（如ORACLEJDBC）必须与jdbc缓冲池中的某个resourceId的配置一致,iCollName和trxType 可选-->
+	<JDBCProcedureDefine id="procedureName" procedureName="" dbResource="ORACLEJDBC" iCollName="iCollName" trxType="batch">
+	    <!--存储过程接口顺序：输入场，输出场，cursor1,cursor2...-->
+		<!--输入场定义-->
+		 <input>
+		 	<!--输入场有序枚举-->
+		 	<param name="inputParam1"/>
+		</input>
+
+		<!--输出场定义-->
+		<result>
+			<!--输出场有序枚举-->
+			<param name="returnFlag"/> <!--存储过程操作成功与失败的标记，处在输出场的第一位；必须为数字类型，如 0：成功，-1失败...-->
+			<param name="errorMsg"/>
+		</result>
+
+		<!--输出场中的cursor有序枚举:即可以定义多个resultSet-->
+		<resultSet iCollName="IndexedDataCollectionName" append="false">
+			<!--cursor中的输出场有序枚举-->
+			<param name="iOutParam1"/>
+		</resultSet>
+		<errorMsgTable errorMsgField="errorMsg">
+			<param returnValue="1" errorCode="app_dbTestProc001"/>
+			<param returnValue="2" errorCode="app_dbTestProc002"/>
+			<param returnValue="3" errorCode="app_dbTestProc005"/>
+		</errorMsgTable>
+	</JDBCProcedureDefine>
+
+	<!--=======================邮件发送services(支持Notes)===================-->
+	<SendMailService id="SendMailService"
+		mailFrom="webmaster@dstest.com"
+		mailto="admin@dstest.com"
+		SMTPHost="122.136.14.2"
+		Debug="true"
+		userName="admin"
+		password="admin"/>
+	<!--============================socket通信连接缓冲管理services===================-->
+	<SocketPoolService id="socketService">
+		<socketResource resourceID="socket1"  hostName="127.0.0.1" port="1098" connections="4"/>
+		<socketResource resourceID="socket2"  hostName="xxx.xxx.xxx.xxx" port="8888" connections="4"/>
+	</SocketPoolService>
+
+	<!-- =====================动态交易数据同步服务========================= -->
+	<OperationDataService id="OperationDataService"
+		JDBCResourceName="ORACLEJDBC"
+		UpdateProcedureName="updateOpData"
+		DeleteProcedureName="deleteOpData"
+		LoadProcedureName="getOpData"/>
+
+	<!-- =====================session管理服务========================= -->
+	<SessionManager id="SessionManager"
+		sessionTimeOut="3000000"
+		checkInterval="60000"
+		garbageCheckTime = "20:00:00"
+		garbageTime = "4"
+		GCcheckInterval ="600000"
+		/>
+ 	<!-- ===============TCP/IP虚拟主机后台服务，响应端口在3060================-->
+	<VirtualHostService id="virtualHost" port="3060" />	
+ 
+	<!--=============================TCP/IP通信定义==========================================-->
+
+	<!-- 建立两个TCPIP连接与5098、3060的主机服务通信，在5011、5012端口监听回应  -->
+	<TCPIPCommService id="TCPIPCommService" packageProcessor="com.icbc.cte.services.tcpip.PackageCommProcessor">
+		<ListenPort
+			port="6000"
+			keepAlive="true"
+			inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"/>
+		<ListenPort
+			port="6100"
+			keepAlive="true"
+			inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"/>
+		<ConnectTo
+			hostAddr="127.0.0.1"
+			port="6000"
+			keepAlive="true"
+			inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"/>
+		<ConnectTo
+			hostAddr="127.0.0.1"
+			port="6100"
+			keepAlive="true"
+			inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"/>
+	</TCPIPCommService>
+
+	<!-- 在本机建立以个TCPIP服务器端服务，响应端口在5101，用于TCPIP渠道接入-->
+	<TCPIPDualServerCommService id="TCPIPDualServerCommService"
+		port="5101"
+		keepAlive="false"
+		inputProcessor="com.icbc.cte.cs.tcpip.TCPIPRequestHandler"
+		packageProcessor="com.icbc.cte.cs.tcpip.TCPIPRequestHandler"
+	/>
+	<!-- ===============在本机建立两个TCPIP服务器端服务，响应端口在5098================-->
+	<!-- 同主机3060端口建立TCPIP连接，最大连接数5-->
+	<TCPIPDualCommService id="HostCommClient"
+		hostName="127.0.0.1"
+		port="3060"
+		maxConnects="5"
+		inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"
+	/>
+	<!--
+	<TCPIPDualServerCommService id="HostCommServer"
+		port="3060"
+		keepAlive="false"
+		inputProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"
+		packageProcessor="com.icbc.cte.services.tcpip.HostCommProcessor"
+	/>
+	-->
+
+	<!--=============================Journal procedure==========================================-->
+	<JDBCProcedureDefine id="journalProcedureSrv" procedureName="journalProcedure" dbResource="ORACLEJDBC">
+		<input>
+			<param name="tranCode"/>                <!-- 交易代码 -->
+			<param name="tranDate"/>                <!-- 交易日期（yyyyMMddHHmmss） -->
+			<param name="areaCode"/>                <!-- 地区代码 -->
+			<param name="netTerminal"/>             <!-- 网点代码 -->
+			<param name="userId"/>                	<!-- 客户号 -->
+			<param name="errorCode"/>               <!-- 交易状态(错误代码) -->
+			<param name="errorMessage"/>            <!-- 错误信息 -->
+			<param name="errorLocation"/>           <!-- 错误定位 -->
+			<param name="errorDescription"/>        <!-- 错误描述 -->
+			<param name="errorStack"/>              <!-- 错误堆栈 -->
+			<param name="journalStr"/>              <!-- 日志内容 -->
+		</input>
+		<result>
+			<param name="ProcRetCode"/>
+		</result>
+		<errorMsgTable/>
+	</JDBCProcedureDefine>
+	<!--=============================监控服务配置==========================================-->
+	<MonitorService id ="monitorService"
+		port="1888"
+		server="localhost"
+		retryInterval="10000"
+		mgrName="ecc"
+		mgrPass="ecc"
+		serverStart="false"
+		serverCheckInterval="18000"
+	/>
+	<!--=============================CICS访问服务配置==========================================-->
+	<CICSAccessService id="CICSAccessService"/>
+	<!--=============================CICS缓冲池服务配置=========================================-->
+	<CICSConnectionPool id="CICSConnectionPool">
+		<CICSResource
+			resourceID="nothArea"
+			maxPoolSize="10"
+			gatewayName="auto://127.0.0.1"
+			gatewayPort="2006"
+			serverName="CICSTCP"
+			userId="CICSUSER"
+			password="        "
+			programName="CICSSVR"
+			synchronousMode="enabled"
+			commAreaLength="30000"
+		/>
+	</CICSConnectionPool>
+
+	<!-- ===================== 生成支付密码服务 ======================== -->
+	<GenPayPwdService id="genPayPwdService" key="ECCBCCCD" payPasswordLen="16"/>
+	<!--=============================SQL语句直接访问数据库定义==========================================-->
+	<!--    dbResource：数据库资源
+		DriverType：ORACLE,DB2,INFORMIX
+		succCond为该sql语句运行成功的条件（对查询语句，如果succCond不为空，表示必须存在满足条件的记录），op可能是==、>、<、>=、<=、!=,rows是期望操作的记录数，判断的格式为：实际操作记录数 op rows
+		iCollName查询结果所存放的结果集，当为查询结果不是结果集时，该参数为空
+		exp为sql语句
+		$S[...]标识需要做变量绑定处理的表达式，即用交易集合中的数据替换此处的表达式，$符号之后的字符标识S数据类型。默认为字符串类型，当前支持的类型如下：
+		I-int,F-float,D-double,S-String
+		{n,m}标识一个字段区间，如col{4,9},表示字段col4,col5,col6,col7,col8,col9
+		#[dataName]为需要替换的表达式，即用数据集合中dataName的值替换该表达式
+		杂趕elect语句，输出的字段值与数据集合中的对应关系如下：a.colB对应集合中的数据域a_colB，ss nameB对应集合中的数据nameB,如果集合中不存在对应的数据定义，则自动扩展;由此可推断，当要把一个字段存储到数据集合中时，对该字段定义一个别名，别名的名称就是数据集合中的数据名称。
+	-->
+	<!--对于一个查询语句，查询返回的记录字段可以动态的存储到集合当中-->
+
+	<SQLAccessService id="sqlAccessServiceTemp" dbResource="ORACLEJDBC"  DriverType="ORACLE">
+		<sqlDef exp="select col elementA,sss{3,6},col2 from t,t1 where x1=$S[x] and x2=$I[s]" 
+			iCollName="" 
+			succCond="op|rows"/>
+		<sqlDef 
+			exp="insert into #[tableName] (col3,col{4,9}) values('10',$S[dataName1],.....)" 
+			succCond="==|1"/>
+		<sqlDef 
+			exp="update table1 set (col1,col2,...) values (select $S[dataName1],11,... from dual) where col1='tt' and col2=$S[dataName1]" 
+			succCond=">|2"/>
+		<sqlDef 
+			exp="delete table1 where col1='tt' and col2=$S[dataName1]"
+			succCond="==|1"/>
+	</SQLAccessService>
+
+	<!-- ===================== DSR通信、配置文件处理服务 ======================== -->
+	<DsrInitialService id="DsrInitialService"/>
+</dsesrvce.XML>

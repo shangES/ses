@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="GB2312"?>
+<dsetype.xml>
+<!--
+	<kColl id="linkFiles">
+		<field fileName=".." type=".." />
+	</kColl>	
+	-->
+<!-- For Entity Type Converter. -->
+<type id="entity_String" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.StringTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.StringTypeConverter"/>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.StringTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Byte" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeConverter">
+		<param id="size" value="1"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Short" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeConverter">
+		<param id="size" value="2"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Integer" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeConverter">
+		<param id="size" value="4"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeValidator"/>
+  </Descriptor>
+</type>
+
+
+<type id="entity_Long" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeConverter">
+		<param id="size" value="8"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.IntegerTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Float" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.FloatTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.FloatTypeConverter">
+		<param id="size" value="4"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.FloatTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Double" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.DoubleTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.FloatTypeConverter">
+		<param id="size" value="8"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.DoubleTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="entity_Date" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.DateTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.DateTypeConverter">
+		<param id="mask" value="dd/MM/yyyy"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.DateTypeValidator">
+		<param id="mask" value="dd/MM/yyyy"/>
+	</Validator>
+  </Descriptor>
+</type>
+
+<!-- DSETYPE.SGM -->
+<type id="String" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.StringTypeDescription">
+	<Converter convTypes="default,host" implClass="com.icbc.cte.base.typeddata.implement.StringTypeConverter"/>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.StringTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="Date" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.DateTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.DateTypeConverter">
+		<param id="mask" value="ddMMyyyy"/>
+	</Converter>
+	<Converter convTypes="xml" implClass="com.icbc.cte.base.typeddata.implement.DateTypeConverter">
+		<param id="mask" value="ddMMyyyy"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.DateTypeValidator">
+		<param id="mask" value="ddMMyyyy"/>
+	</Validator>
+  </Descriptor>
+</type>
+
+<type id="Account" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.StringTypeDescription">
+    <Converter convTypes="default,host" implClass="com.icbc.cte.base.typeddata.implement.StringTypeConverter"/>
+    <Validator implClass="com.icbc.cte.base.typeddata.implement.StringTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="Amount" implClass="com.icbc.cte.base.DataField">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.implement.DoubleTypeDescription">
+	<Converter convTypes="default" implClass="com.icbc.cte.base.typeddata.implement.FloatTypeConverter">
+		<param id="size" value="8"/>
+	</Converter>
+	<Validator implClass="com.icbc.cte.base.typeddata.implement.DoubleTypeValidator"/>
+  </Descriptor>
+</type>
+
+<type id="AccountList" implClass="com.icbc.cte.base.IndexedCollection">
+	<Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.ICollTypeDescription">
+		<param id="size" value="0"/>
+	</Descriptor>
+	<Descriptor id="accountNumber" refType="String"/>
+</type>
+
+<type id="FundsTransfer" implClass="com.icbc.cte.base.KeyedCollection">
+  <Descriptor id="typeDefault" implClass="com.icbc.cte.base.typeddata.KCollTypeDescription"/>
+  <Descriptor id="accountFrom" refType="String" initialValue="2345"/>
+  <Descriptor id="accountTo" refType="String" initialValue="678589"/>
+  <Descriptor id="transactionDate" refType="Date">
+	<param id="mask" value="ddmmyy"/>
+  </Descriptor>
+</type>
+
+</dsetype.xml>

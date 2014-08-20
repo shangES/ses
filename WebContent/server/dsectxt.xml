@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="GB2312" ?>
+
+<dsectxt.XML>
+	<!--
+	<kColl id="linkFiles">
+		<field fileName=".." type=".." />
+	</kColl>
+	-->
+	<context id="serverCtx" type="root" parent="nil">
+		<refKColl refId="serverData"/>
+		<refService refId="realCSServer" alias="CSServer" type="cs"/>
+		<!--refService refId="MQConnectionPool" alias="MQConnectionPool" type="cs"/-->
+		<!--refService refId="TransactionSwich" alias="transactionSwitch" type="cs"/-->
+		<!--refService refId="MQReceiveService" alias="mqReceiveService" type="cs"/-->
+		<refService refId="ProcedureAccessService" alias="JDBCProcedure" type="cs"/>
+		<refService refId="JDBCPool" alias="JDBCConnectionPool" type="cs"/>
+		<refService refId="SendMailService" alias="SendMailService" type="cs"/>
+		<!--refService refId="socketService" alias="socketService" type="cs"/-->
+		<refService refId="OperationDataService" alias="OperationDataService" type="cs"/>
+		<!--refService refId="TCPIPCommService" alias="TCPIPCommService" type="cs"/-->
+		<!--refService refId="TCPIPDualServerCommService" alias="TCPIPDualServerCommService" type="cs"/-->
+		<refService refId="journalProcedureSrv" alias="journalProcedure" type="cs"/>
+		<refService refId="monitorService" alias="monitor" type="cs"/>
+		<refService refId="SessionManager" alias="SessionManager" type="cs"/>
+		<refService refId="HostCommClient" alias="HostCommClient" type="cs"/>
+		<!--refService refId="HostCommServer" alias="HostCommServer" type="cs"/-->
+		<refService refId="CTEListener" alias="CTEListener" type="cs"/>
+		<!--refService refId="CICSConnectionPool" alias="CICSConnectionPool" type="cs"/-->
+		<refService refId="DsrInitialService" alias="DsrInitialService" type="cs"/>
+	</context>
+
+	<!-- The session context is created by the StartHtmlSession operation -->
+	<!-- This context is dynamically chained to the root context by the operation -->
+	<context id="htmlSessionCtx" parent="serverCtx" type="session">
+		<refKColl refId="sessionData"/>
+		<!-- refService refId="dummyJournal" alias="journal" type="journal"/ -->
+		<!-- refService refId="dummyHost" alias="host" type="comms"/ -->
+	</context>
+
+	<!-- The tcpipSessionCtx is father context of the tcpip operation context, and created when tcpip session is created -->
+	<context id="tcpipSessionCtx" parent="serverCtx" type="cs">
+		<refKColl refId="tcpipSessionData"/>
+	</context>
+</dsectxt.XML>
+

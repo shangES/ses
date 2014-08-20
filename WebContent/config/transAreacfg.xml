@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<!DOCTYPE configs SYSTEM "transAreacfg.dtd">
+<configs>
+  <AREAS>
+    <area id="db" dsrPoolName="PoolId1" appNo="1">
+      <subarea id="01XX" /><!--总行-->
+      <subarea id="02XX" /><!--北京-->
+      <subarea id="03XX" /><!--天津-->
+      <subarea id="04XX" /><!--河北-->
+      <subarea id="05XX" /><!--山西-->
+      <subarea id="06XX" /><!--内蒙-->
+      <subarea id="07XX" /><!--辽宁-->
+      <subarea id="08XX" /><!--吉林-->
+      <subarea id="09XX" /><!--黑龙江-->
+      <subarea id="16XX" /><!--山东-->
+      <subarea id="17XX" /><!--河南-->
+      <subarea id="23XX" /><!--四川-->
+      <subarea id="24XX" /><!--贵州-->
+      <subarea id="25XX" /><!--云南-->
+      <subarea id="26XX" /><!--陕西-->
+      <subarea id="27XX" /><!--甘肃-->
+      <subarea id="28XX" /><!--青海-->
+      <subarea id="29XX" /><!--宁夏-->
+      <subarea id="30XX" /><!--新疆-->
+      <subarea id="31XX" /><!--重庆-->
+      <subarea id="33XX" /><!--沈阳-->
+      <subarea id="34XX" /><!--大连-->
+      <subarea id="35XX" /><!--哈尔滨-->
+      <subarea id="37XX" /><!--西安-->
+      <subarea id="38XX" /><!--青岛-->
+      <subarea id="42XX" /><!--长春-->
+      <subarea id="44XX" /><!--成都-->
+    </area>
+    <area id="ds" dsrPoolName="PoolId2" appNo="1">
+      <subarea id="4500" /><!--票据中心-->
+      <subarea id="10XX" /><!--上海-->
+      <subarea id="11XX" /><!--江苏-->
+      <subarea id="12XX" /><!--浙江-->
+      <subarea id="13XX" /><!--安徽-->
+      <subarea id="14XX" /><!--福建-->
+      <subarea id="15XX" /><!--江西-->
+      <subarea id="18XX" /><!--湖北-->
+      <subarea id="19XX" /><!--湖南-->
+      <subarea id="20XX" /><!--广东-->
+      <subarea id="21XX" /><!--广西-->
+      <subarea id="22XX" /><!--海南-->
+      <subarea id="32XX" /><!--武汉-->
+      <subarea id="36XX" /><!--广州-->
+      <subarea id="39XX" /><!--宁波-->
+      <subarea id="40XX" /><!--深圳-->
+      <subarea id="41XX" /><!--厦门-->
+      <subarea id="43XX" /><!--南京-->
+    </area>
+  </AREAS>
+</configs>

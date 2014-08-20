@@ -348,6 +348,7 @@ function delOptionList(){
 	for(var i=0;i<cords.length;i++){
 		var obj=cords[i];
 		array.push(obj.optionid);
+		alert("QQ"+obj.optionid+"QQ");
 	}
 	if(array.length<=0){
 		alert('请选择要删除的数据！');
@@ -356,9 +357,9 @@ function delOptionList(){
 	if(!confirm('确认要删除选中数据吗？')){
 		return;
 	}
-   	$.post("system/delOptionListById.do",{ids:array.toString()}, function() {
+   	/* $.post("system/delOptionListById.do",{ids:array.toString()}, function() {
 		mygrid.reload();
-    });
+    }); */
 }
 </script>
 

@@ -15,6 +15,9 @@
 		<s:intercept-url pattern="/upload/**" filters="none" />
 		<s:intercept-url pattern="/pages/login/**" filters="none" />
 		<s:intercept-url pattern="/login.do" filters="none" />
+		<s:intercept-url pattern="/images/**" filters="none" />
+		<s:intercept-url pattern="/jslib/**" filters="none" />
+		<s:intercept-url pattern="/css/**" filters="none" />
 		<s:intercept-url pattern="/manager/**" access="hasAnyRole('ROLE_ADMIN')" />
 		<s:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN')" />
 
@@ -26,6 +29,8 @@
 		</s:session-management>
 	</s:http>
 
+	<!-- 工作流 -->
+	
 
 	<!-- 认证配置, 使用userService提供的用户信息 -->
 	<s:authentication-manager alias="authenticationManager">

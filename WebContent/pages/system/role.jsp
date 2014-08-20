@@ -40,19 +40,20 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	loadTab();
 	
 	//加载布局
 	$('#myContent').layout({
         west: {size:"300",resizable:false,spacing_open:0,spacing_closed:0}
     });
 	
+	loadGrid();
+	loadTab();
+	
  	
   	//加载树
  	buildRoleTree();
 	//tab页
 	
-	loadGrid();
   	
     //加载表单验证
     $("#myForm").validate();
@@ -131,9 +132,11 @@ function loadTab(){
     		if(tabIndex==0){
     			if(selectNode==null){
 	    			loadData(null);
+	    			//loadGrid();
 	    		}
 	    		else {
 	    			loadData(selectNode.id);
+	    			//loadGrid();
 	    		}
     		}else if(tabIndex==1){
     			buildFunctionTree();
@@ -227,7 +230,7 @@ function loadData(tid) {
     			buildUserTree();
     		}else if(tabIndex==4){
     			//出现按钮组一
-    			alert("SSSS");
+    			//alert("SSSS");
     			
     			$('#b1').show();
     			$('#b2').hide();
@@ -297,11 +300,25 @@ function editNode(){
 	$('#b2').show();
 	formDisabled(false);
 }
-
+/* var userguid = $("#userguid").val();
+alert("SSSSSSSSS");
+alert("|"+userguid+"|"); */
 function editRoleNode(){
-	$('#b1_Role').hide();
-	$('#b2_Role').show();
-	openRole(selectNode);
+	
+	var array=new Array();
+	var cords=mygrid.getSelectedRecords();
+	if(cords.length>0){
+		for(var i=0;i<cords.length;i++){
+			var obj=cords[i];
+			array.push(obj.userguid);
+			//alert("QQ"+obj.userguid+"QQ");
+		}
+		openRole(array.toString());
+	}else{
+		alert("请选择要修改的用户");
+	}
+	//alert("asdasdas");
+	//openRole(array);
 	formDisabled(false);
 }
 
@@ -319,6 +336,7 @@ function openRole(userguid){
 			"确定": function() {
 				var nodes=roleTree.getCheckedNodes(true);
 				var array=new Array();
+				if(nodes.length>0){
 				for(var i=0;i<nodes.length;i++){
 					var node=nodes[i];
 					if(node.id!=null&&node.id!=''){
@@ -331,9 +349,9 @@ function openRole(userguid){
 				}
 				
 				//参数
-				var data={userguid:userguid,list:array};
+				var data={ids:userguid,list:array};
 				$.ajax({  
-			        url: "system/saveUserRole.do",  
+			        url: "system/saveUserRoleBatch.do",  
 			        contentType: "application/json; charset=utf-8",  
 			        type: "POST",  
 			        dataType: "json",  
@@ -344,6 +362,9 @@ function openRole(userguid){
 			        	mygrid.reload();
 			        }
 			    });
+				}else{
+					alert("请选择角色");
+				}
 			},
 			"取消": function() {
 				$(this).dialog("close");
@@ -354,13 +375,13 @@ function openRole(userguid){
 		},
 		open:function(){
 			$("#roleTree").html(null);
-		    $.getJSON("system/buildRoleCheckTree.do",{userguid:userguid}, function(tdata) {
+		    $.getJSON("system/buildRoleCheckTree.do",{userguid:null}, function(tdata) {
 		    	//配置项
 		    	var setting = {check: {
 					enable: true
 				}};
 		    	roleTree = $.fn.zTree.init($("#roleTree"),setting, tdata);
-		    });
+		    }); 
 		}
 	});
 }
@@ -409,14 +430,48 @@ function delNode(){
  		formDisabled(true);
     });
 }
+//删除用户角色
+function delRoleNode(){
+	
+	var array=new Array();
+	var cords=mygrid.getSelectedRecords();
+	if(cords.length>0){
+	for(var i=0;i<cords.length;i++){
+		var obj=cords[i];
+		array.push(obj.userguid);
+	}
+	if(!confirm('确认要删除吗？')){
+		return;
+	}
+	//参数
+	var data={ids:array.toString(),roleid:selectNode.id};
+	$.ajax({  
+        url: "system/delUserRoleByUserId.do",  
+        contentType: "application/json; charset=utf-8",  
+        type: "POST",  
+        dataType: "json",  
+        data: JSON.stringify(data),
+        success: function(result) { 
+        	alert('删除成功！');
+        	//$("#roleAudit").dialog("close");
+        	mygrid.reload();
+        }
+    });
+	}else{
+		alert("请选择删除数据");
+	}
+}
 
 //参数设置
 var pam=null;
 function initPagePam(){
+	//alert("VVVVVV");	
 	pam={};
 	pam.expAll=0;
-	pam.roleid = $("#roleid").val();
-	if(selectNode!=null){
+	//pam.roleid = $("#roleid").val();
+	//alert("|"+pam.roleid+"|");
+	if(selectNode!=null&&selectNode.id!=null){
+		//alert("wrong");	
 		pam.roleid=selectNode.id;
 	}
 }
@@ -425,6 +480,7 @@ function initPagePam(){
 <script type="text/javascript">	
 var mygrid=null;
 function loadGrid(){
+	//alert("111");
 	var size=getGridSize();
 	var wh=$(document.body).outerWidth()-360;
 	$("#myTable").css({width:wh,height:495});
@@ -451,7 +507,7 @@ function loadGrid(){
 			]
 		};
 		var colsOption = [
-			{id: '选择' ,isCheckColumn : true, editable:false,headAlign:'center',align:'center',filterable:false},
+			{id: '选择' ,isCheckColumn : true, editable:true,headAlign:'center',align:'center',filterable:false},
 			{id: 'companyname' , header: "公司名称" , width :250 ,headAlign:'center',align:'left'},
 			{id: 'deptname' , header: "部门名称" , width :120 ,headAlign:'center',align:'left'},
 			{id: 'postname' , header: "岗位名称" , width :120 ,headAlign:'center',align:'left'},
@@ -461,18 +517,21 @@ function loadGrid(){
 			{id: 'modimemo' , header: "备注" , width :200 ,headAlign:'center',headAlign:'left',align:'left'}
 		];
 		
+		//alert("QQQ");
 	var gridOption={
 		id : grid_demo_id,
 		loadURL :'system/searchUserByRole.do',
 		beforeLoad:function(reqParam){
+			//alert("asdas");
 			initPagePam();
 			reqParam['parameters']=pam;
 		},
 		width:'100%',
 		minHeight:"100%",  //"100%", // 330,
 		container : 'gridbox', 
-		autoLoad:false,
-		stripeRows: false,
+		autoLoad:true,
+		stripeRows: true,
+		remoteFilter:true,
 		showIndexColumn:true,
 		selectRowByCheck:true,
 		replaceContainer : true,
@@ -822,7 +881,7 @@ function callbackpost(){
 		</div>
 	</div>
 </div>
-<div id="roleAudit" style="display:none;" title="岗位授权" >
+<div id="roleAudit" style="display:none;" title="角色授权" >
 <ul id="roleTree" class="ztree"></ul>
 </div>
 

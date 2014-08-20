@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding="gb2312"?>
+<!ELEMENT AREAS
+   (area+)
+>
+<!ELEMENT area
+   (subarea*)
+>
+
+<!ATTLIST area
+dsrPoolName CDATA #IMPLIED
+>
+
+
+<!ATTLIST area
+id CDATA #IMPLIED
+>
+
+<!ATTLIST area
+appNo CDATA #IMPLIED
+>
+
+<!ELEMENT configs
+   (AREAS)
+>
+
+
+<!ELEMENT subarea
+   EMPTY
+>
+
+<!ATTLIST subarea
+id CDATA #IMPLIED
+>
